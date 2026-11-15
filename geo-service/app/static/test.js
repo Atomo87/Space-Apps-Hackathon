@@ -183,26 +183,26 @@ $('assess-cultivation').onclick=()=>{
   try{body={...analysisBody(),crop:$('planned-crop').value,sowing_date:$('planned-sowing').value,harvest_date:$('planned-harvest').value,anomaly_tolerance_pct:num('anomaly-tolerance')};
     if(!body.crop||!body.sowing_date||!body.harvest_date)throw Error('Informe cultura, plantio e colheita estimada.');
   }catch(error){showStatus(error.message,true);return;}
-  return task('Avaliando condicoes historicas do cultivo.',async()=>{
+  return task('Avaliando condições históricas do cultivo.',async()=>{
     $('cultivation-result').replaceChildren();$('request-json').textContent=pretty(body);
     const data=await api('/v1/cultivation-assessment',body),target=$('cultivation-result');
     paragraph(target,data.summary);
-    if(data.catalog_evidence){paragraph(target,'Catalogo ainda sem validacao regional. Somente alguns coeficientes Kc foram conferidos bibliograficamente.');details(target,'Referencias e parametros pendentes',data.catalog_evidence);}
-    if(data.source_verification){paragraph(target,data.source_verification.meaning);list(target,'Integridade dos perfis',Object.entries(data.source_verification.profiles||{}).map(([key,value])=>key+': '+(value==='server_receipt_verified'?'Recibo do servidor conferido':'Origem nao comprovada')));}
-    const labels={compativel:'Compat?vel no hist?rico',atencao:'Aten??o',limitante:'Limitante',sem_dados:'Sem dados'};
-    for(const factor of data.factors||[]){const article=node('article');article.append(node('h3',factor.criterion+' ? '+(labels[factor.status]||factor.status)));paragraph(article,factor.explanation);paragraph(article,'Regra: '+factor.rule);paragraph(article,'Fonte: '+factor.source);details(article,'Dados utilizados',factor.evidence);if(factor.parameter_evidence){paragraph(article,'Regra exploratoria: parametros ainda sem validacao regional.');details(article,'Referencias e limites destes parametros',factor.parameter_evidence);}target.append(article);}
+    if(data.catalog_evidence){paragraph(target,'Catálogo ainda sem validação regional. Somente alguns coeficientes Kc foram conferidos bibliograficamente.');details(target,'Referências e parâmetros pendentes',data.catalog_evidence);}
+    if(data.source_verification){paragraph(target,data.source_verification.meaning);list(target,'Integridade dos perfis',Object.entries(data.source_verification.profiles||{}).map(([key,value])=>key+': '+(value==='server_receipt_verified'?'Recibo do servidor conferido':'Origem não comprovada')));}
+    const labels={compativel:'Compatível no histórico',atencao:'Atenção',limitante:'Limitante',sem_dados:'Sem dados'};
+    for(const factor of data.factors||[]){const article=node('article');article.append(node('h3',factor.criterion+' — '+(labels[factor.status]||factor.status)));paragraph(article,factor.explanation);paragraph(article,'Regra: '+factor.rule);paragraph(article,'Fonte: '+factor.source);details(article,'Dados utilizados',factor.evidence);if(factor.parameter_evidence){paragraph(article,'Regra exploratória: parâmetros ainda sem validação regional.');details(article,'Referências e limites destes parâmetros',factor.parameter_evidence);}target.append(article);}
     const temporal=data.temporal_comparison;
-    if(temporal){paragraph(target,'Comparacao entre safras: acumulados da mesma janela mensal.');if(!temporal.requested_year_available)paragraph(target,'O ano de plantio informado nao possui uma janela completa nesta serie. Nenhuma previsao foi calculada.');const classes={dentro_da_faixa:'Dentro da faixa',mais_seca:'Mais seca',mais_chuvosa:'Mais chuvosa',sem_dados:'Janela incompleta',referencia_insuficiente:'Referencia insuficiente'};table(target,['Safra','Chuva (mm)','ETo (mm)','Mediana das demais (mm)','Diferenca (%)','Tolerancia (mm)','Leitura'],temporal.seasons.map(s=>[s.sowing_year===s.harvest_year?String(s.sowing_year):s.sowing_year+'/'+s.harvest_year,fmt(s.rain_mm),fmt(s.eto_mm),fmt(s.reference_median_mm),fmt(s.rain_difference_pct),fmt(s.tolerance_mm),classes[s.classification]||s.classification]));list(target,'Como interpretar a comparacao',temporal.notes);}
-    list(target,'Limita??es da avalia??o',data.limitations);showStatus('Parecer historico conclu?do. Confira as ressalvas.');
+    if(temporal){paragraph(target,'Comparação entre safras: acumulados da mesma janela mensal.');if(!temporal.requested_year_available)paragraph(target,'O ano de plantio informado não possui uma janela completa nesta série. Nenhuma previsão foi calculada.');const classes={dentro_da_faixa:'Dentro da faixa',mais_seca:'Mais seca',mais_chuvosa:'Mais chuvosa',sem_dados:'Janela incompleta',referencia_insuficiente:'Referência insuficiente'};table(target,['Safra','Chuva (mm)','ETo (mm)','Mediana das demais (mm)','Diferença (%)','Tolerância (mm)','Leitura'],temporal.seasons.map(s=>[s.sowing_year===s.harvest_year?String(s.sowing_year):s.sowing_year+'/'+s.harvest_year,fmt(s.rain_mm),fmt(s.eto_mm),fmt(s.reference_median_mm),fmt(s.rain_difference_pct),fmt(s.tolerance_mm),classes[s.classification]||s.classification]));list(target,'Como interpretar a comparação',temporal.notes);}
+    list(target,'Limitações da avaliação',data.limitations);showStatus('Parecer histórico concluído. Confira as ressalvas.');
   });
 };
 
 
-$('load-progress').onclick=()=>task('Consultando revisao interna da entrega.',async()=>{
+$('load-progress').onclick=()=>task('Consultando revisão interna da entrega.',async()=>{
   const data=await api('/v1/delivery-progress'),target=$('progress-result');target.replaceChildren();
-  paragraph(target,'Conclusao dos criterios internos: '+fmt(data.overall_percent)+'% ? revisao '+data.reviewed_on);
+  paragraph(target,'Conclusão dos critérios internos: '+fmt(data.overall_percent)+'% — revisão '+data.reviewed_on);
   paragraph(target,data.interpretation);
-  table(target,['Objetivo','Peso (%)','Conclusao (%)'],data.objectives.map(o=>[o.title,o.weight,o.percent]));
-  for(const objective of data.objectives)list(target,objective.title+' ? pendencias',objective.criteria.filter(c=>!c.complete).map(c=>c.description+': '+c.evidence));
-  list(target,'Proximos passos',data.next_steps);
+  table(target,['Objetivo','Peso (%)','Conclusão (%)'],data.objectives.map(o=>[o.title,o.weight,o.percent]));
+  for(const objective of data.objectives)list(target,objective.title+' — pendências',objective.criteria.filter(c=>!c.complete).map(c=>c.description+': '+c.evidence));
+  list(target,'Próximos passos',data.next_steps);
 });

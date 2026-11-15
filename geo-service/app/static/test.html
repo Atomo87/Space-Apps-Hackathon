@@ -15,7 +15,7 @@
   </header>
   <nav aria-label="Etapas"><a href="#connection">01 · Local e acesso</a><a href="#datasets">02 · Dados NASA</a><a href="#field">03 · Talhão</a><a href="#results">04 · Comparação</a></nav>
   <noscript><p class="notice">Ative JavaScript para consultar o serviço.</p></noscript>
-  <section id="progress-panel"><h2>Evolucao para entrega</h2><p>Revisao interna dos criterios do MVP; nao e nota NASA ou acuracia cientifica.</p><button id="load-progress" type="button" class="secondary">Consultar evolucao</button><div id="progress-result" aria-live="polite"></div></section>
+  <section id="progress-panel"><h2>Evolução para entrega</h2><p>Revisão interna dos critérios do MVP; não é nota NASA ou acurácia científica.</p><button id="load-progress" type="button" class="secondary">Consultar evolução</button><div id="progress-result" aria-live="polite"></div></section>
   <section id="connection">
     <div class="section-title"><span>01</span><div><h2>Localização e acesso</h2><p>Os dados usados na análise pertencem ao ponto informado abaixo.</p></div></div>
     <div class="grid">
@@ -48,8 +48,8 @@
       <label>Origem do solo<select id="soil-source"><option value="unknown">Não informado</option><option value="farmer_estimate">Estimativa do produtor</option><option value="lab_analysis">Análise laboratorial</option></select></label>
       <label>Textura<select id="texture"><option value="">Não informada</option><option value="arenosa">Arenosa</option><option value="media">Média</option><option value="argilosa">Argilosa</option><option value="muito_argilosa">Muito argilosa</option></select></label>
       <label>Data de coleta do solo<input id="soil-sampled-at" type="date"></label>
-      <label>Laboratorio ou responsavel<input id="soil-provider" type="text" maxlength="180"></label>
-      <label>Referencia do laudo<input id="soil-report" type="text" maxlength="180"></label>
+      <label>Laboratório ou responsável<input id="soil-provider" type="text" maxlength="180"></label>
+      <label>Referência do laudo<input id="soil-report" type="text" maxlength="180"></label>
       <label>pH em água<input id="ph" type="number" min="3" max="9" step="any"></label>
       <label>Argila (%)<input id="clay" type="number" min="0" max="100" step="any"></label>
       <label>Matéria orgânica (%)<input id="organic" type="number" min="0" max="20" step="any"></label>
@@ -70,13 +70,13 @@
     </div><small>Use Ctrl + clique para selecionar mais de uma opção.</small>
   </section>
   <section>
-    <h2>A cultura encontrar? condi??es favor?veis?</h2>
-    <p>Avalia??o hist?rica explorat?ria por ?gua, clima e pH. N?o prev? a safra.</p>
+    <h2>A cultura encontrará condições favoráveis?</h2>
+    <p>Avaliação histórica exploratória por água, clima e pH. Não prevê a safra.</p>
     <div class="grid">
       <label>Cultura planejada<select id="planned-crop"></select></label>
       <label>Plantio<input id="planned-sowing" type="date"></label>
       <label>Colheita estimada<input id="planned-harvest" type="date"></label>
-      <label>Tolerancia de chuva (%)<input id="anomaly-tolerance" type="number" min="0" max="100" step="any" value="20"></label>
+      <label>Tolerância de chuva (%)<input id="anomaly-tolerance" type="number" min="0" max="100" step="any" value="20"></label>
     </div>
     <button id="assess-cultivation" type="button" disabled>Avaliar cultivo</button>
     <div id="cultivation-result" aria-live="polite"></div>
