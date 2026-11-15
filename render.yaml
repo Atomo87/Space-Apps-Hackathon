@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: geosafra-geo-service
+    rootDir: geo-service
+    region: ohio
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      - key: GEOSAFRA_TOKEN
+        generateValue: true
+      - key: REQUIRE_VERIFIED_PROFILES
+        value: "true"
+      - key: INSIGHTS_ENABLED
+        value: "false"
+      - key: CACHE_DIR
+        value: /tmp/geosafra-cache
+      - key: CORS_ORIGINS
+        value: http://localhost:5173,http://127.0.0.1:5173,http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000

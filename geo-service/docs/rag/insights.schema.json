@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["insights"],
+  "properties": {
+    "insights": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "title", "explanation", "fact_ids", "reference_ids", "limitations", "questions_for_farmer"],
+        "properties": {
+          "kind": {"type": "string", "enum": ["observation", "interpretation", "suggested_review"]},
+          "title": {"type": "string"},
+          "explanation": {"type": "string"},
+          "fact_ids": {"type": "array", "items": {"type": "string"}},
+          "reference_ids": {"type": "array", "items": {"type": "string"}},
+          "limitations": {"type": "array", "items": {"type": "string"}},
+          "questions_for_farmer": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    }
+  }
+}

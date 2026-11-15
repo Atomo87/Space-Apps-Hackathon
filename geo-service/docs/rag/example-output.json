@@ -1,0 +1,22 @@
+{
+  "insights": [
+    {
+      "kind": "observation",
+      "title": "Chuva disponível para análise",
+      "explanation": "Há um acumulado de chuva registrado no contexto, mas ele sozinho não permite concluir se a água foi suficiente durante o cultivo.",
+      "fact_ids": ["fact-rain"],
+      "reference_ids": [],
+      "limitations": ["Dados demonstrativos.", "A distribuição diária e a demanda da cultura não foram avaliadas neste exemplo."],
+      "questions_for_farmer": []
+    },
+    {
+      "kind": "observation",
+      "title": "Informação de solo pendente",
+      "explanation": "O pH não foi informado. Essa lacuna deve permanecer visível na avaliação.",
+      "fact_ids": ["fact-soil-missing"],
+      "reference_ids": [],
+      "limitations": ["Não permite concluir a compatibilidade do pH com a cultura."],
+      "questions_for_farmer": ["Você possui uma análise de solo com pH em água e data da coleta?"]
+    }
+  ]
+}
