@@ -77,7 +77,7 @@ it('abre e recupera o diagnóstico do exemplo público sem consultar o serviço 
     Http::fake();
 
     $this->post('/demo')->assertRedirect();
-    $demo = Field::sole();
+    $demo = Field::whereHas('farm', fn ($q) => $q->where('is_demo', true)->whereNull('user_id'))->sole();
     $demo->analysis()->delete();
     $demo->update(['status' => Field::STATUS_ERROR, 'status_message' => 'Old processing failure']);
 

@@ -37,6 +37,11 @@ const plantingDate = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 's
 function weekLabel(week: { date: string }): string {
     return plantingDate.format(new Date(`2000-${week.date}T00:00:00Z`));
 }
+
+function rangeDate(label: string, weeks: PlantingWeek[]): string {
+    const week = weeks.find((candidate) => candidate.label === label);
+    return week ? weekLabel(week) : label;
+}
 </script>
 
 <template>
@@ -56,10 +61,10 @@ function weekLabel(week: { date: string }): string {
                 <div class="mb-2 flex flex-wrap items-baseline justify-between gap-2">
                     <div>
                         <h3 class="font-bold text-stone-900">{{ $t(s.label) }}</h3>
-                        <p class="text-xs text-stone-500">{{ s.crops }} {{ $t('· precisa de ~') }}{{ s.need_mm }} {{ $t('mm em 90 dias') }}</p>
+                        <p class="text-xs text-stone-500">{{ $t(s.crops) }} {{ $t('· precisa de ~') }}{{ s.need_mm }} {{ $t('mm em 90 dias') }}</p>
                     </div>
                     <span v-if="s.best" class="badge ring-1 ring-inset" :class="BEST[s.best.level].cls">
-                        <template v-if="s.best.start">{{ s.best.start }}<template v-if="s.best.end !== s.best.start"> – {{ s.best.end }}</template> · {{ pct(s.best.score) }} {{ $t('dos anos') }}</template>
+                        <template v-if="s.best.start">{{ rangeDate(s.best.start, s.weeks) }}<template v-if="s.best.end && s.best.end !== s.best.start"> - {{ rangeDate(s.best.end, s.weeks) }}</template> · {{ pct(s.best.score) }} {{ $t('dos anos') }}</template>
                         <template v-else>{{ BEST.low.text }}</template>
                     </span>
                 </div>

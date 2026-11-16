@@ -63,6 +63,12 @@ class PublicDemo
         $result['diagnosis']['source']['grid_note'] = $note;
         $result['diagnosis']['source']['citation'] = $name;
         $result['diagnosis']['confidence']['notes'] = [$note];
+        foreach ($result['diagnosis']['highlights'] ?? [] as $i => $finding) {
+            $result['diagnosis']['highlights'][$i]['datasets'] = array_map(
+                fn ($dataset) => $dataset === 'POWER' ? 'DEMO' : $dataset,
+                $finding['datasets'],
+            );
+        }
         foreach ($result['sources'] ?? [] as $i => $source) {
             if ($source['code'] === 'POWER') {
                 $result['sources'][$i] = array_replace($source, [

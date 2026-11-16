@@ -84,6 +84,32 @@ it('consulta as fontes de novo quando o recibo do geo-service vence', function (
         && $r['field']['latitude'] === round($field->latitude, 4));
 });
 
+it('traduz respostas legadas e mantém o cache separado por idioma', function () {
+    $finding = [
+        'key' => 'bare_soil',
+        'text' => 'Pelo seu histórico, o solo fica descoberto em jul, ago, set e out (~118 dias no último ano).',
+        'datasets' => ['Histórico informado'],
+        'period' => 'últimos 12 meses',
+    ];
+    Http::fake(['geo.test/v1/analysis' => Http::response(['diagnosis' => ['highlights' => [$finding]]])]);
+    $this->post('/talhoes', fieldPayload())->assertRedirect();
+    $field = Field::sole();
+    $field->update(['status' => Field::STATUS_READY]);
+    $path = "/api/v1/fields/{$field->id}/analysis";
+
+    $this->getJson($path)->assertOk()->assertHeader('Content-Language', 'en-US')
+        ->assertJsonPath('diagnosis.highlights.0.text', 'Your crop history indicates bare soil in Jul, Aug, Sep and Oct (~118 days in the last year).')
+        ->assertJsonPath('diagnosis.highlights.0.datasets.0', 'Provided crop history')
+        ->assertJsonPath('diagnosis.highlights.0.period', 'last 12 months');
+    $this->withCredentials()->withUnencryptedCookie('geosafra_locale', 'pt-BR')->getJson($path)->assertOk()
+        ->assertHeader('Content-Language', 'pt-BR')
+        ->assertJsonPath('diagnosis.highlights.0', $finding);
+    $this->withUnencryptedCookie('geosafra_locale', 'en-US')->getJson($path)->assertOk()
+        ->assertJsonPath('diagnosis.highlights.0.period', 'last 12 months');
+
+    Http::assertSentCount(2);
+});
+
 it('segue a análise sem relevo nem NDVI quando esses serviços falham', function () {
     Http::fake([
         'geo.test/v1/climate-profile' => Http::response(['monthly' => [['month' => 1]], 'source' => [], 'engine_version' => 'test']),

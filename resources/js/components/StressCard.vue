@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { locale, t } from '@/lib/i18n';
+import { locale, t, tf } from '@/lib/i18n';
 import { computed } from 'vue';
 import { VChart } from '@/lib/echarts';
 import type { MonthlyClimate, Stress } from '@/types/contract';
@@ -85,11 +85,11 @@ const etChart = computed(() => {
             <div class="metric">
                 <p class="metric-label">{{ $t('Água evaporada') }}</p>
                 <p class="metric-value">{{ et ? `${et.et_mm} mm` : '—' }}</p>
-                <p class="metric-hint">{{ et ? `de ${et.pet_mm} mm possíveis por ano` : $t('sem dado') }}</p>
+                        <p class="metric-hint">{{ et ? tf('de {potential} mm possíveis por ano', { potential: et.pet_mm }) : $t('sem dado') }}</p>
             </div>
             <div class="metric">
                 <p class="metric-label">{{ $t('Estresse hídrico') }}</p>
-                <p class="mt-1.5"><span v-if="et" class="badge text-[13px] capitalize" :class="STRESS_TONE[et.stress]">{{ et.stress }}</span><span v-else class="metric-value">—</span></p>
+                        <p class="mt-1.5"><span v-if="et" class="badge text-[13px] capitalize" :class="STRESS_TONE[et.stress]">{{ $t(et.stress) }}</span><span v-else class="metric-value">—</span></p>
                 <p class="metric-hint">{{ et ? `ET/PET = ${Math.round(et.ratio * 100)}%` : '' }}</p>
             </div>
         </div>

@@ -745,6 +745,11 @@
   "moderado": "moderate",
   "escarpado": "escarpment",
   "Dados climáticos ilustrativos": "Illustrative climate data",
+  "POWER diário": "Daily POWER",
+  "de {potential} mm possíveis por ano": "of a potential {potential} mm per year",
+  "soja, milho verão, feijão das águas, algodão": "soybeans, summer corn, rainy-season beans, cotton",
+  "milho safrinha, sorgo, feijão, girassol": "second-season corn, sorghum, beans, sunflower",
+  "trigo, aveia, cevada, plantas de cobertura": "wheat, oats, barley, cover crops",
   "Dados climáticos ilustrativos · 0 = seco, 1 = saturado.": "Illustrative climate data. 0 = dry, 1 = saturated.",
   "Os dados climáticos deste exemplo são ilustrativos.": "This demo uses illustrative climate data.",
   "Clima ilustrativo e histórico de safras do exemplo, mês a mês.": "Illustrative climate and crop history, month by month."

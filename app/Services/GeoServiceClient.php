@@ -89,7 +89,7 @@ class GeoServiceClient
 
     public static function analysisCacheKey(array $payload): string
     {
-        return 'analysis:v2:'.self::analysisLanguage().':'.sha1(json_encode($payload));
+        return 'analysis:v3:'.self::analysisLanguage().':'.sha1(json_encode($payload));
     }
 
     private static function analysisLanguage(): string
@@ -113,7 +113,13 @@ class GeoServiceClient
             $response = $this->http($timeout)->withHeaders($headers)->{$method}($uri, $data);
             $response->throw();
 
-            return $response->json();
+            $result = $response->json();
+            if ($uri === '/v1/analysis' && self::analysisLanguage() === 'en-US'
+                && $response->header('Content-Language') !== 'en-US') {
+                return app(AnalysisEnglish::class)->response($result);
+            }
+
+            return $result;
         } catch (ConnectionException $e) {
             throw new RuntimeException(__('Não foi possível falar com o serviço de dados (geo-service). Ele pode estar iniciando; tente de novo em 1 minuto.'), 0, $e);
         } catch (RequestException $e) {

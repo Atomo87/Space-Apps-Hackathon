@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import time
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -23,7 +23,7 @@ from app.catalog.loader import load_catalog
 from app.climate.indicators import build_climate_profile
 from app.config import ENGINE_VERSION, settings
 from app.engine.engine import run
-from app.i18n import analysis_locale, localize_metadata, tr
+from app.i18n import analysis_locale, is_english, localize_metadata, tr
 from app.power.client import PowerClient, PowerError
 from app.schemas import AnalysisRequest, ClimateRequest, TerrainRequest, VegetationRequest
 from app.terrain.client import TerrainClient, TerrainError
@@ -127,11 +127,12 @@ async def earthdata(req: VegetationRequest) -> dict:
 
 
 @app.post("/v1/analysis", dependencies=[Depends(check_token)])
-def analysis(req: AnalysisRequest, accept_language: str | None = Header(default=None)) -> dict:
-    with analysis_locale(accept_language):
+def analysis(req: AnalysisRequest, response: Response, accept_language: str | None = Header(default=None)) -> dict:
+    with analysis_locale(accept_language or "en-US"):
         if not req.climate.get("monthly"):
             raise HTTPException(status_code=422, detail=tr("ClimateProfile ausente ou inválido."))
         unknown = [h.crop for h in req.history if h.crop not in load_catalog().crops]
         if unknown:
             raise HTTPException(status_code=422, detail=tr("Culturas fora do catálogo: {0}", ", ".join(unknown)))
+        response.headers["Content-Language"] = "en-US" if is_english() else "pt-BR"
         return localize_metadata(run(req))

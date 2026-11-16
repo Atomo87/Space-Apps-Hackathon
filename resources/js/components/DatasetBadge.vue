@@ -23,5 +23,5 @@ const tone = computed(() => TONES.find(([re]) => re.test(props.code))?.[1] ?? 'b
 </script>
 
 <template>
-    <span class="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10.5px] font-semibold tracking-wide whitespace-nowrap ring-1 ring-inset" :class="tone">{{ code }}</span>
+    <span class="inline-flex items-center rounded-md px-1.5 py-0.5 text-[10.5px] font-semibold tracking-wide whitespace-nowrap ring-1 ring-inset" :class="tone">{{ $t(code) }}</span>
 </template>
