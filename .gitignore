@@ -30,3 +30,15 @@ database/*.sqlite
 /index.html.txt
 /.claude
 
+
+# geo-service (Python)
+.env.*
+!.env.example
+.venv/
+.venv-local/
+.cache/
+cache/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.sqlite3

@@ -1,0 +1,10 @@
+{
+  "example_synthetic": true,
+  "analysis_id": "demo-snapshot-not-real-data",
+  "facts": [
+    {"id": "fact-rain", "path": "diagnosis.monthly[0].rain_mm.mean", "value": 120.02, "unit": "mm", "period": "jan/2024", "source": "synthetic_demo", "limitations": ["Exemplo; não representa consulta NASA real.", "Acumulado não descreve a distribuição diária."]},
+    {"id": "fact-soil-missing", "path": "request.soil.ph_water", "value": null, "unit": null, "period": null, "source": "synthetic_demo", "limitations": ["pH não informado pelo produtor."]}
+  ],
+  "references": [],
+  "scope": "Sem referências aprovadas: permitir somente observações fundamentadas e perguntas sobre lacunas."
+}

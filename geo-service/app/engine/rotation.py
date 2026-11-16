@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from datetime import date, timedelta
 from typing import Any
 
-from app.i18n import tr as translate
 from app.catalog.loader import Catalog
 from app.climate.indicators import MONTH_NAMES
 from app.schemas import HistoryEntry
@@ -46,7 +45,7 @@ class Step:
             "sow_month": self.sow_month,
             "end_month": self.end_month,
             "months": self.months,
-            "label": f"{translate(MONTH_NAMES[self.sow_month - 1])}–{translate(MONTH_NAMES[self.end_month - 1])}",
+            "label": f"{MONTH_NAMES[self.sow_month - 1]}–{MONTH_NAMES[self.end_month - 1]}",
             "purpose": self.purpose,
             "note": self.note,
         }
@@ -92,14 +91,14 @@ class Rotation:
             established = [s for s in steps if s.sow_month != m]
             if established:
                 dormant = all(not s.water_check for s in established)
-                cover[m] = (0.8, translate("cobertura viva (dormente na seca)")) if dormant else (1.0, translate("cultura em campo"))
+                cover[m] = (0.8, "cobertura viva (dormente na seca)") if dormant else (1.0, "cultura em campo")
             elif steps:
                 r = residue.get(m, 0.0)
-                cover[m] = (max(0.5, r), translate("semeadura sobre palhada") if r > 0.5 else translate("semeadura"))
+                cover[m] = (max(0.5, r), "semeadura sobre palhada" if r > 0.5 else "semeadura")
             elif residue.get(m):
-                cover[m] = (residue[m], translate("palhada"))
+                cover[m] = (residue[m], "palhada")
             else:
-                cover[m] = (0.0, translate("solo descoberto"))
+                cover[m] = (0.0, "solo descoberto")
         return cover
 
     def bare_months(self, catalog: Catalog) -> list[int]:
@@ -114,10 +113,10 @@ class Rotation:
 def rotation_from_template(tpl: dict[str, Any]) -> Rotation:
     return Rotation(
         key=tpl["key"],
-        title=translate(tpl["title"]),
-        focus=translate(tpl["focus"]),
+        title=tpl["title"],
+        focus=tpl["focus"],
         steps=[Step(crops=list(s["crops"]), sow_month=s["sow_month"], end_month=s["end_month"], purpose=s["purpose"],
-                    water_check=s.get("water_check", True), note=translate(s.get("note"))) for s in tpl["steps"]],
+                    water_check=s.get("water_check", True), note=s.get("note")) for s in tpl["steps"]],
     )
 
 
@@ -153,10 +152,10 @@ def current_rotation(history: list[HistoryEntry], catalog: Catalog) -> tuple[Rot
         d += timedelta(days=1)
     bare_months = sorted(m for m, n in bare_by_month.items() if n >= 15)
 
-    names = " → ".join(catalog.crop(s.crops[0]).name for s in steps) or translate("Sem cultura registrada")
+    names = " → ".join(catalog.crop(s.crops[0]).name for s in steps) or "Sem cultura registrada"
     if bare_months:
-        names += translate(" → pousio")
-    rot = Rotation(key="atual", title=translate("Atual: {0}", names), focus=translate("Referência (o que você já faz)"), steps=steps, is_current=True)
+        names += " → pousio"
+    rot = Rotation(key="atual", title=f"Atual: {names}", focus="Referência (o que você já faz)", steps=steps, is_current=True)
     return rot, {
         "window": {"start": start.isoformat(), "end": end.isoformat()},
         "bare_days": sum(bare_by_month.values()),

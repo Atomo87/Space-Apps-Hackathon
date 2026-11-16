@@ -51,7 +51,7 @@ class NdviClient:
             raise VegetationError("Nenhuma imagem MODIS encontrada para este ponto.")
         vals, failed = await pc.points(MODIS, [i["id"] for i in items], lat, lon, MODIS_ASSETS)
         obs = [
-            {"date": it["date"], "image_date": it["start"], "platform": it["platform"], "ndvi_raw": vals[it["id"]][0],
+            {"date": it["date"], "platform": it["platform"], "ndvi_raw": vals[it["id"]][0],
              "reliability": -1 if vals[it["id"]][1] is None else int(vals[it["id"]][1])}
             for it in items if it["id"] in vals
         ]

@@ -12,7 +12,6 @@ from __future__ import annotations
 import copy
 from typing import Any
 
-from app.i18n import tr as translate
 from app.climate.indicators import build_calendar
 
 ETO_PER_DEGREE = 0.03
@@ -57,9 +56,9 @@ def apply_scenario(profile: dict[str, Any], rain_delta_pct: float, temp_delta_c:
         "rain_delta_pct": rain_delta_pct,
         "temp_delta_c": temp_delta_c,
         "notes": [
-            translate("Cenário aplicado sobre a climatologia histórica (não é previsão)."),
-            translate("ETo ajustada em +3% por °C (aproximação)."),
-            translate("Veranicos e chuvas extremas mantidos como no histórico."),
+            "Cenário aplicado sobre a climatologia histórica (não é previsão).",
+            "ETo ajustada em +3% por °C (aproximação).",
+            "Veranicos e chuvas extremas mantidos como no histórico.",
         ],
     }
     return p

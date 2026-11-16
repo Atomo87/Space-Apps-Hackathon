@@ -19,7 +19,7 @@ class AnalysisEnglish
 
     public function __construct()
     {
-        $catalog = json_decode(file_get_contents(base_path('geo-service/app/en-US.json')), true, 512, JSON_THROW_ON_ERROR);
+        $catalog = json_decode(file_get_contents(database_path('data/analysis-en-US.json')), true, 512, JSON_THROW_ON_ERROR);
         $this->messages = $catalog;
 
         foreach ($catalog as $original => $english) {

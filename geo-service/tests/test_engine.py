@@ -3,7 +3,6 @@ import pytest
 from app.climate.indicators import build_climate_profile
 from app.engine.engine import run
 from app.engine.scenario import apply_scenario
-from app.i18n import analysis_locale, localize_metadata
 from app.schemas import AnalysisRequest
 from tests.synthetic import synthetic_series
 
@@ -41,22 +40,6 @@ def test_three_alternatives_plus_current_with_full_explanation(profile):
         assert s["benefits"] and s["local_review_risks"]
         assert len(s["criteria"]) == 10
     assert len({tuple(sorted(sum((st["crops"] for st in s["steps"]), []))) for s in out["strategies"]}) == len(out["strategies"])
-
-
-def test_english_uses_same_scores_and_reuses_portuguese_source_snapshot(profile):
-    req = _req(profile)
-    with analysis_locale("en-US"):
-        english = localize_metadata(run(req))
-    portuguese = run(req)
-    assert english["strategies"][0]["title"].startswith("Current: Soybean")
-    assert english["strategies"][0]["rationale"].startswith("This is your current rotation")
-    assert english["diagnosis"]["calendar"][1]["name"] == "Feb"
-    assert english["diagnosis"]["source"]["grid_note"].startswith("Gridded data")
-    assert portuguese["strategies"][0]["title"].startswith("Atual: Soja")
-    assert req.climate["monthly"][1]["name"] == "fev"
-    assert [(s["key"], s["score"]) for s in english["strategies"]] == [
-        (s["key"], s["score"]) for s in portuguese["strategies"]
-    ]
 
 
 def test_same_family_disease_filter(profile):

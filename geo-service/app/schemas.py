@@ -44,6 +44,9 @@ class FieldInfo(BaseModel):
 
 
 class SoilInfo(BaseModel):
+    sampled_at: date | None = Field(default=None, description='Data de coleta declarada pelo produtor; nao comprova autenticidade do laudo.')
+    analysis_provider: str | None = Field(default=None, min_length=2, max_length=180, description='Laboratorio ou responsavel informado.')
+    report_reference: str | None = Field(default=None, min_length=3, max_length=180, description='Referencia declarada do laudo; nao enviar documento sensivel neste campo.')
     source: Literal["lab_analysis", "farmer_estimate", "unknown"] = "unknown"
     texture: Literal["arenosa", "media", "argilosa", "muito_argilosa"] | None = None
     clay_pct: float | None = Field(default=None, ge=0, le=100)
@@ -105,3 +108,35 @@ class AnalysisRequest(BaseModel):
     priorities: Priorities = Priorities()
     constraints: Constraints = Constraints()
     scenario: Scenario = Scenario()
+
+    @model_validator(mode="after")
+    def validate_environment(self):
+        """Falhar antes do ranking: ausencia de evidencia nunca vira risco zero."""
+        import math
+        def finite(value):
+            return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
+        try:
+            if self.climate.get('source', {}).get('demo'):
+                raise ValueError('Perfis demonstrativos nao sao aceitos na aplicacao.')
+            monthly = self.climate["monthly"]
+            if not isinstance(monthly, list) or len(monthly) != 12:
+                raise ValueError("O perfil deve conter os doze meses.")
+            if {m["month"] for m in monthly} != set(range(1, 13)):
+                raise ValueError("Meses duplicados ou ausentes.")
+            common = set(str(y) for y in self.climate["yearly"]["years"])
+            for month in monthly:
+                for name in ("rain_by_year", "eto_by_year"):
+                    values = month[name]
+                    common &= {str(y) for y, v in values.items() if finite(v) and v >= 0}
+                for name in ("frost_prob", "heat_days"):
+                    if not month[name] or any(not finite(v) for v in month[name].values()):
+                        raise ValueError("Indicadores de frio/calor incompletos.")
+            if len(common) < 2:
+                raise ValueError("Exigidos pelo menos dois anos completos de chuva e ETo para comparar ciclos entre anos.")
+            if not finite(self.climate["season"]["pct_seasons_dry_spell_ge_10"]):
+                raise ValueError("Historico de veranicos insuficiente.")
+            if not finite(self.climate["confidence"]["value"]):
+                raise ValueError("Confianca invalida.")
+        except (KeyError, TypeError, AttributeError) as exc:
+            raise ValueError("ClimateProfile malformado; utilize a resposta de /v1/climate-profile.") from exc
+        return self

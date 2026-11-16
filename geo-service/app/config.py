@@ -31,6 +31,7 @@ def _env_int(name: str, default: int) -> int:
 
 @dataclass(frozen=True)
 class Settings:
+    require_verified_profiles: bool = os.environ.get('REQUIRE_VERIFIED_PROFILES', 'true').lower() == 'true'
     power_base_url: str = os.environ.get("POWER_BASE_URL", "https://power.larc.nasa.gov").rstrip("/")
     power_timeout: float = float(_env_int("POWER_TIMEOUT", 90))
     power_concurrency: int = _env_int("POWER_CONCURRENCY", 4)
@@ -67,6 +68,14 @@ class Settings:
     cache_dir: Path = Path(os.environ.get("CACHE_DIR", Path(__file__).resolve().parent.parent / "cache"))
     # Token compartilhado com o Laravel (cabeçalho X-GeoSafra-Token). Vazio = sem verificação (dev).
     api_token: str = os.environ.get("GEOSAFRA_TOKEN", "")
+    # Insights opt-in: nenhuma chamada Gemini ocorre apenas por calcular rotacoes.
+    insights_enabled: bool = os.environ.get("INSIGHTS_ENABLED", "false").lower() == "true"
+    gemini_api_key: str = os.environ.get("GEMINI_API_KEY", "")
+    gemini_model: str = os.environ.get("GEMINI_MODEL", "")
+    insights_timeout_seconds: int = max(1, min(120, _env_int("INSIGHTS_TIMEOUT_SECONDS", 30)))
+    insights_max_output_tokens: int = max(256, min(4096, _env_int("INSIGHTS_MAX_OUTPUT_TOKENS", 1600)))
+    insights_snapshot_ttl_hours: int = max(1, min(168, _env_int("INSIGHTS_SNAPSHOT_TTL_HOURS", 24)))
+    rag_knowledge_dir: Path = Path(os.environ.get("RAG_KNOWLEDGE_DIR", Path(__file__).resolve().parent.parent / "knowledge"))
     cors_origins: list[str] = field(
         default_factory=lambda: [o for o in os.environ.get("CORS_ORIGINS", "").split(",") if o]
     )

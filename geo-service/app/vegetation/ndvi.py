@@ -21,17 +21,14 @@ VERY_LOW_GREEN = 0.30
 MIN_OBS_PER_MONTH = 2
 
 
-def valid(obs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def valid(obs: list[dict[str, Any]]) -> list[tuple[date, float]]:
     out = []
     for o in obs:
         raw = o.get("ndvi_raw")
         if raw is None or raw <= -2000 or o.get("reliability") not in GOOD_RELIABILITY:
             continue
-        point = {"date": o["date"], "ndvi": round(raw * SCALE, 4)}
-        if o.get("image_date") and o.get("platform") in ("terra", "aqua"):
-            point.update(image_date=o["image_date"], platform=o["platform"])
-        out.append(point)
-    return sorted(out, key=lambda point: (point["date"], point["ndvi"]))
+        out.append((date.fromisoformat(o["date"]), round(raw * SCALE, 4)))
+    return sorted(out)
 
 
 def green_level(p50: float | None) -> int:
@@ -43,8 +40,7 @@ def green_level(p50: float | None) -> int:
 
 def summarize(obs: list[dict[str, Any]], today: date | None = None) -> dict[str, Any]:
     today = today or date.today()
-    series = valid(obs)
-    pts = [(date.fromisoformat(point["date"]), point["ndvi"]) for point in series]
+    pts = valid(obs)
     if len(pts) < 12:
         raise ValueError("Poucas observações NDVI válidas (nuvem ou falta de imagens) para resumir o talhão.")
 
@@ -104,7 +100,7 @@ def summarize(obs: list[dict[str, Any]], today: date | None = None) -> dict[str,
             "below_p10": below_p10,
         },
         "trend": trend,
-        "series": series,
+        "series": [{"date": d.isoformat(), "ndvi": v} for d, v in pts],
         "coverage": {
             "observations": total,
             "valid": len(pts),

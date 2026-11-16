@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
-
-from app.i18n import is_english, tr
 
 DATA_DIR = Path(__file__).resolve().parent
 
@@ -48,23 +46,6 @@ class Catalog:
         if slug not in self.crops:
             raise KeyError(f"Cultura desconhecida no catálogo: {slug}")
         return self.crops[slug]
-
-    def localized(self) -> Catalog:
-        if not is_english():
-            return self
-        return replace(
-            self,
-            crops={
-                slug: replace(crop, name=tr(crop.name), raw={
-                    **crop.raw,
-                    "local_review_risks": [tr(risk) for risk in crop.raw.get("local_review_risks", [])],
-                })
-                for slug, crop in self.crops.items()
-            },
-            pests={key: {**pest, "name": tr(pest["name"])} for key, pest in self.pests.items()},
-            equipment={key: tr(name) for key, name in self.equipment.items()},
-            disclaimer=tr(self.disclaimer),
-        )
 
     def public(self) -> dict[str, Any]:
         return {

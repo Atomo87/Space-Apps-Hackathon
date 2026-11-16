@@ -8,6 +8,8 @@ WORKDIR /srv
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY app ./app
+COPY docs/rag ./docs/rag
+COPY knowledge ./knowledge
 
-# O Render injeta $PORT; localmente cai para 8001.
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8001}"]
+# Uma instancia/worker: snapshots e recibos compartilham o mesmo SQLite local.
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-10000} --workers 1"]

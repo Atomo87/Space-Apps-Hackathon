@@ -79,9 +79,6 @@ def test_client_searches_queries_and_caches(tmp_path):
     v = asyncio.run(c.fetch(-18.9186, -48.2772, TODAY))
     assert v["citation"] and v["resolution_m"] == 250
     assert v["low_green_months"] == [5, 6, 7, 8, 9]
-    image = v["series"][0]
-    assert image["platform"] == "terra"
-    assert date.fromisoformat(image["image_date"]) == date.fromisoformat(image["date"]) - timedelta(days=7)
     first = calls["point"]
     asyncio.run(c.fetch(-18.9186, -48.2772, TODAY))
     assert calls["point"] == first  # segunda vez: tudo do cache

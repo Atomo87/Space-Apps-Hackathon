@@ -10,7 +10,6 @@ import statistics
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.i18n import is_english, tr as translate
 from app.catalog.loader import Catalog, Crop
 from app.climate.indicators import MONTH_NAMES, RAINY_SEASON, percentile
 from app.engine.rotation import CASH, Rotation, Step
@@ -79,9 +78,8 @@ class Criterion:
 
 
 def br(x: float, nd: int = 1) -> str:
-    """Format a number for the current analysis language."""
-    value = f"{x:.{nd}f}"
-    return value if is_english() else value.replace(".", ",")
+    """Número no formato brasileiro (vírgula decimal)."""
+    return f"{x:.{nd}f}".replace(".", ",")
 
 
 def clamp(x: float, lo: float = 0.0, hi: float = 100.0) -> float:
@@ -89,13 +87,14 @@ def clamp(x: float, lo: float = 0.0, hi: float = 100.0) -> float:
 
 
 def months_join(items: list[str]) -> str:
-    return ", ".join(items[:-1]) + (translate(" e ") if len(items) > 1 else "") + items[-1] if items else ""
+    return ", ".join(items[:-1]) + (" e " if len(items) > 1 else "") + items[-1] if items else ""
 
 
 def months_txt(months: list[int]) -> str:
     if not months:
-        return translate("nenhum mês")
-    return months_join([translate(MONTH_NAMES[m - 1]) for m in months])
+        return "nenhum mês"
+    names = [MONTH_NAMES[m - 1] for m in months]
+    return ", ".join(names[:-1]) + (" e " if len(names) > 1 else "") + names[-1]
 
 
 # ------------------------------------------------------------------ água
@@ -118,13 +117,15 @@ def step_water(ctx: Ctx, step: Step) -> dict[str, Any]:
     for y in ctx.years:
         prev = (months[0] - 2) % 12 + 1
         pm = ctx.monthly[prev]
-        prev_rain, prev_eto = pm["rain_by_year"].get(y), pm["eto_by_year"].get(y)
+        previous_year = str(int(y) - (1 if months[0] == 1 else 0))
+        prev_rain, prev_eto = pm["rain_by_year"].get(previous_year), pm["eto_by_year"].get(previous_year)
         storage = ctx.awc if (prev_rain or 0) >= (prev_eto or 1e9) else ctx.awc / 2
         etc_sum = deficit = 0.0
         ok = True
         for pos, m in enumerate(months):
             mo = ctx.monthly[m]
-            rain, eto = mo["rain_by_year"].get(y), mo["eto_by_year"].get(y)
+            season_year = str(int(y) + (1 if m < months[0] else 0))
+            rain, eto = mo["rain_by_year"].get(season_year), mo["eto_by_year"].get(season_year)
             if rain is None or eto is None:
                 ok = False
                 break
@@ -134,7 +135,7 @@ def step_water(ctx: Ctx, step: Step) -> dict[str, Any]:
             d = max(0.0, etc - supply)
             storage = min(ctx.awc, max(0.0, supply - etc))
             etc_sum += etc
-            deficit += d * tol
+            deficit += d  # Tolerancia biologica nao altera o deficit fisico em mm.
         if ok and etc_sum > 0:
             per_year[y] = deficit / etc_sum
             etc_total.append(etc_sum)
@@ -142,9 +143,9 @@ def step_water(ctx: Ctx, step: Step) -> dict[str, Any]:
     vals = list(per_year.values())
     return {
         "per_year": per_year,
-        "deficit_p50": percentile(vals, 0.5) or 0.0,
-        "deficit_p10": percentile(vals, 0.1) or 0.0,
-        "deficit_p90": percentile(vals, 0.9) or 0.0,
+        "deficit_p50": percentile(vals, 0.5),
+        "deficit_p10": percentile(vals, 0.1),
+        "deficit_p90": percentile(vals, 0.9),
         "share_years_over_filter": (sum(v > WATER_FILTER_DEFICIT for v in vals) / len(vals)) if vals else 0.0,
         "etc_mm": statistics.fmean(etc_total) if etc_total else 0.0,
         "deficit_mm": statistics.fmean(deficit_total) if deficit_total else 0.0,
@@ -154,12 +155,16 @@ def step_water(ctx: Ctx, step: Step) -> dict[str, Any]:
 def crit_water(ctx: Ctx, rot: Rotation) -> Criterion:
     steps = [s for s in rot.steps if s.water_check]
     if not steps:
-        return Criterion("save_water", 50, 0.3, translate("Sem etapas avaliáveis."))
+        return Criterion("save_water", 50, 0.3, "Sem etapas avaliáveis.")
     waters = [step_water(ctx, s) for s in steps]
+    if any(not w["per_year"] for w in waters):
+        raise ValueError("Historico insuficiente para avaliar o ciclo completo, incluindo a virada do ano.")
     etc = sum(w["etc_mm"] for w in waters)
     years = ctx.years
     yearly_frac = []
     for y in years:
+        if not all(y in w["per_year"] for w in waters):
+            continue  # Nunca comparar rotacao completa com apenas parte das etapas.
         e = d = 0.0
         for w, s in zip(waters, steps):
             if y in w["per_year"]:
@@ -168,7 +173,9 @@ def crit_water(ctx: Ctx, rot: Rotation) -> Criterion:
                 d += w["per_year"][y] * e_y
         if e > 0:
             yearly_frac.append(d / e)
-    p50 = percentile(yearly_frac, 0.5) or 0.0
+    if not yearly_frac:
+        raise ValueError("Sem safras completas em comum entre as etapas.")
+    p50 = percentile(yearly_frac, 0.5)
     # bônus: cultura tolerante à seca ocupando meses de veranico na estação chuvosa
     spell = ctx.profile["season"]["pct_seasons_dry_spell_ge_10"] or 0
     bonus = 0.0
@@ -180,12 +187,8 @@ def crit_water(ctx: Ctx, rot: Rotation) -> Criterion:
     conf = ctx.climate_conf * (1.0 if ctx.soil and ctx.soil.texture else 0.85)
     return Criterion(
         "save_water", score, conf,
-        translate(
-            "Em um ano típico falta cerca de {0}% da água que as culturas usariam (ETc ≈ {1} mm no ano, balanço mensal com {2} mm de água no solo).",
-            round(100 * p50),
-            round(etc),
-            round(ctx.awc),
-        ),
+        f"Em um ano típico falta cerca de {round(100 * p50)}% da água que as culturas usariam "
+        f"(ETc ≈ {round(etc)} mm no ano, balanço mensal com {round(ctx.awc)} mm de água no solo).",
         {"deficit_frac_p50": round(p50, 3), "deficit_frac_p10": round(percentile(yearly_frac, 0.1) or 0, 3),
          "deficit_frac_p90": round(percentile(yearly_frac, 0.9) or 0, 3), "etc_mm": round(etc),
          "yearly_scores": [clamp(100 * (1 - 1.6 * f) + bonus) for f in yearly_frac], "steps": waters},
@@ -221,21 +224,21 @@ def step_climate_loss(ctx: Ctx, step: Step) -> dict[str, Any]:
     loss = 1 - (1 - p_frost) * (1 - p_heat) * (1 - p_dry)
     reasons = []
     if p_frost >= 0.05:
-        reasons.append(translate("geada em {0}% dos anos", round(100 * p_frost)))
+        reasons.append(f"geada em {round(100 * p_frost)}% dos anos")
     if heat_days >= 1:
-        reasons.append(translate("~{0} dia(s)/mês acima de {1} °C na fase sensível", format(heat_days, '.0f'), format(crop['t_heat_stress_c'], '.0f')))
+        reasons.append(f"~{heat_days:.0f} dia(s)/mês acima de {crop['t_heat_stress_c']:.0f} °C na fase sensível")
     if p_dry >= 0.05:
-        reasons.append(translate("veranico ≥ 10 dias em {0}% das safras", round(pct * 100)))
+        reasons.append(f"veranico ≥ 10 dias em {round(pct * 100)}% das safras")
     return {"crop": crop.slug, "loss": loss, "reasons": reasons, "p_frost": p_frost, "heat_days": heat_days, "p_dry": p_dry}
 
 
 def crit_climate(ctx: Ctx, rot: Rotation) -> Criterion:
     risks = [(step_climate_loss(ctx, s), 1.0 if s.purpose in CASH else 0.5) for s in rot.steps]
     if not risks:
-        return Criterion("climate_risk", 50, 0.3, translate("Sem culturas para avaliar."))
+        return Criterion("climate_risk", 50, 0.3, "Sem culturas para avaliar.")
     loss = sum(r["loss"] * w for r, w in risks) / sum(w for _, w in risks)
     worst = max(risks, key=lambda rw: rw[0]["loss"])[0]
-    expl = (translate("Maior risco: {0} — ", ctx.catalog.crop(worst['crop']).name) + "; ".join(worst["reasons"])) if worst["reasons"] else translate("Sem riscos climáticos relevantes nas fases sensíveis.")
+    expl = (f"Maior risco: {ctx.catalog.crop(worst['crop']).name} — " + "; ".join(worst["reasons"])) if worst["reasons"] else "Sem riscos climáticos relevantes nas fases sensíveis."
     return Criterion("climate_risk", clamp(100 * (1 - loss)), ctx.climate_conf, expl, {"steps": [r for r, _ in risks]})
 
 
@@ -254,17 +257,12 @@ def crit_erosion(ctx: Ctx, rot: Rotation) -> Criterion:
     if ctx.terrain and ctx.terrain.get("ls_relative") is not None:
         ls_rel = clamp(float(ctx.terrain["ls_relative"]), 0.4, 2.5)
     score = clamp(100 * (1 - (1 - protected) * ls_rel))
-    expl = translate("Protege {0}% da chuva erosiva do ano", round(100 * protected))
-    expl += translate("; fica exposto em {0}", months_txt(exposed)) if exposed else translate("; sem meses chuvosos de solo exposto")
+    expl = f"Indice heuristico de cobertura ponderada pela chuva: {round(100 * protected)}%"
+    expl += f"; fica exposto em {months_txt(exposed)}" if exposed else "; sem meses chuvosos de solo exposto"
     if ctx.terrain:
         t = ctx.terrain
-        expl += (translate(
-            ". Relevo {0} (declividade média {1}% no SRTM, fator LS {2}): {3} o risco.",
-            translate(t['relief_class']),
-            br(t['slope_pct']['mean']),
-            br(t['ls_factor'], 2),
-            translate('aumenta' if ls_rel > 1.05 else 'reduz' if ls_rel < 0.95 else 'mantém'),
-        ))
+        expl += (f". Relevo {t['relief_class']} (declividade média {br(t['slope_pct']['mean'])}% no SRTM, "
+                 f"fator LS {br(t['ls_factor'], 2)}): {'aumenta' if ls_rel > 1.05 else 'reduz' if ls_rel < 0.95 else 'mantém'} o risco.")
     else:
         expl += "."
     conf = ctx.climate_conf * (0.95 if ctx.terrain else 0.85)
@@ -284,14 +282,14 @@ def crit_structure(ctx: Ctx, rot: Rotation) -> Criterion:
     pts += 10 if len(kinds) > 1 else 0
     bare = rot.bare_months(ctx.catalog)
     pts -= 5 * len(bare)
-    expl = translate("Raízes: {0}; {1} mês(es) de solo descoberto.", ', '.join(translate(kind) for kind in sorted(kinds)) or translate('nenhuma'), len(bare))
+    expl = f"Raízes: {', '.join(sorted(kinds)) or 'nenhuma'}; {len(bare)} mês(es) de solo descoberto."
     return Criterion("soil_structure", clamp(pts), 0.55, expl, {"bare_months": bare})
 
 
 def crit_nitrogen(ctx: Ctx, rot: Rotation) -> Criterion:
     n = sum(ctx.catalog.crop(c)["n_credit_kg_ha"] for s in rot.steps for c in s.crops)
     return Criterion("n_fixation", clamp(n / 120 * 100), 0.55,
-                     translate("Crédito estimado de ~{0} kg N/ha para a cultura seguinte (estimativa do catálogo).", n), {"n_kg_ha": n})
+                     f"Crédito estimado de ~{n} kg N/ha para a cultura seguinte (estimativa do catálogo).", {"n_kg_ha": n})
 
 
 def crit_organic(ctx: Ctx, rot: Rotation) -> Criterion:
@@ -303,7 +301,7 @@ def crit_organic(ctx: Ctx, rot: Rotation) -> Criterion:
             share = 0.6 if len(s.crops) > 1 else 1.0  # consórcio: cada cultura produz menos
             total += c["residue_t_ha"] * factor * share
     return Criterion("organic_matter", clamp(total / 16 * 100), 0.55,
-                     translate("Aporte equivalente de ~{0} t/ha/ano de palhada (ponderado pela relação C:N).", br(total)), {"residue_index": round(total, 1)})
+                     f"Aporte equivalente de ~{br(total)} t/ha/ano de palhada (ponderado pela relação C:N).", {"residue_index": round(total, 1)})
 
 
 # ------------------------------------------------------------------ pragas
@@ -316,7 +314,7 @@ def key_pests(ctx: Ctx, rot: Rotation) -> list[str]:
 def crit_pests(ctx: Ctx, rot: Rotation) -> Criterion:
     pests = key_pests(ctx, rot)
     if not pests:
-        return Criterion("pest_break", 50, 0.3, translate("Sem pragas-chave identificadas no catálogo."))
+        return Criterion("pest_break", 50, 0.3, "Sem pragas-chave identificadas no catálogo.")
     best = {}
     for p in pests:
         best[p] = max(ROLE_BREAK[ctx.catalog.crop(c).pest_role(p)] for c in rot.crop_slugs())
@@ -328,8 +326,8 @@ def crit_pests(ctx: Ctx, rot: Rotation) -> Criterion:
         part -= 10
     broken = [ctx.catalog.pests[p]["name"].split(" (")[0] for p, v in best.items() if v >= 0.5]
     open_ = [ctx.catalog.pests[p]["name"].split(" (")[0] for p, v in best.items() if v < 0.5]
-    expl = (translate("Interrompe: {0}. ", ', '.join(broken)) if broken else "") + (translate("Não interrompe: {0}. ", ', '.join(open_)) if open_ else "")
-    expl += translate("{0} família(s) botânica(s).", len(families))
+    expl = (f"Interrompe: {', '.join(broken)}. " if broken else "") + (f"Não interrompe: {', '.join(open_)}. " if open_ else "")
+    expl += f"{len(families)} família(s) botânica(s)."
     return Criterion("pest_break", clamp(part), 0.45, expl, {"pests": best, "families": sorted(families)})
 
 
@@ -339,9 +337,9 @@ def crit_forage(ctx: Ctx, rot: Rotation) -> Criterion:
     dry = [5, 6, 7, 8, 9]
     act = rot.active_months()
     pts = sum(max((val[ctx.catalog.crop(c)["forage_value"]] for s in act.get(m, []) for c in s.crops), default=0) for m in dry)
-    expl = translate("Oferta de forragem em ~{0} dos 5 meses de entressafra (mai–set).", br(pts))
+    expl = f"Oferta de forragem em ~{br(pts)} dos 5 meses de entressafra (mai–set)."
     if not ctx.constraints.has_livestock:
-        expl += translate(" Sem gado informado: só vale se houver comprador de forragem/feno.")
+        expl += " Sem gado informado: só vale se houver comprador de forragem/feno."
     return Criterion("forage", clamp(pts / 4 * 100), 0.55, expl, {"forage_months": round(pts, 1)})
 
 
@@ -352,16 +350,16 @@ def crit_income(ctx: Ctx, rot: Rotation) -> Criterion:
     forage_sale = 0.2 if ctx.constraints.has_livestock and any(s.purpose == "forage" for s in rot.steps) else 0.0
     score = clamp((v + forage_sale) * 100)
     names = [ctx.catalog.crop(s.crops[0]).name for s in extra]
-    expl = translate("Segunda fonte de renda: {0}.", ', '.join(names)) if names else translate("Sem segunda safra comercial.")
+    expl = f"Segunda fonte de renda: {', '.join(names)}." if names else "Sem segunda safra comercial."
     if forage_sale:
-        expl += translate(" Pastejo na entressafra conta como renda indireta.")
-    return Criterion("extra_income", score, 0.4, expl + translate(" (índice de mercado é hipótese a validar)"))
+        expl += " Pastejo na entressafra conta como renda indireta."
+    return Criterion("extra_income", score, 0.4, expl + " (índice de mercado é hipótese a validar)")
 
 
 def crit_market(ctx: Ctx, rot: Rotation) -> Criterion:
     cash = sorted({c for s in rot.steps if s.purpose in CASH for c in s.crops})
     if not cash:
-        return Criterion("market_fit", 60, 0.3, translate("Sem culturas comerciais."))
+        return Criterion("market_fit", 60, 0.3, "Sem culturas comerciais.")
     vals, unknown, nobuyer = [], [], []
     for c in cash:
         if c in ctx.constraints.buyer_crops:
@@ -374,11 +372,11 @@ def crit_market(ctx: Ctx, rot: Rotation) -> Criterion:
             unknown.append(ctx.catalog.crop(c).name)
     expl = []
     if nobuyer:
-        expl.append(translate("Sem comprador informado para {0}.", ', '.join(nobuyer)))
+        expl.append(f"Sem comprador informado para {', '.join(nobuyer)}.")
     if unknown:
-        expl.append(translate("Mercado não informado para {0}.", ', '.join(unknown)))
+        expl.append(f"Mercado não informado para {', '.join(unknown)}.")
     if not expl:
-        expl.append(translate("Há comprador conhecido para todas as culturas comerciais."))
+        expl.append("Há comprador conhecido para todas as culturas comerciais.")
     return Criterion("market_fit", clamp(statistics.fmean(vals) * 100), 0.8 if not unknown else 0.3, " ".join(expl),
                      {"unknown": unknown, "no_buyer": nobuyer})
 
@@ -405,30 +403,26 @@ def hard_filters(ctx: Ctx, rot: Rotation) -> list[str]:
         for slug in s.crops:
             c = cat.crop(slug)
             if slug in ctx.constraints.excluded_crops:
-                reasons.append(translate("{0} foi excluída por você.", c.name))
+                reasons.append(f"{c.name} foi excluída por você.")
             missing = [e for e in c["equipment"] if e in ctx.constraints.missing_equipment]
             if missing:
-                reasons.append(translate("{0} exige {1}, que você informou não ter.", c.name, cat.equipment[missing[0]].lower()))
+                reasons.append(f"{c.name} exige {cat.equipment[missing[0]].lower()}, que você informou não ter.")
             tmeans = [ctx.monthly[m]["tmean_c"] for m in s.months if ctx.monthly[m]["tmean_c"] is not None]
             if tmeans and min(tmeans) < c["t_base_c"]:
-                reasons.append(translate("{0}: temperatura média abaixo da base ({1} °C) durante o ciclo.", c.name, c['t_base_c']))
+                reasons.append(f"{c.name}: temperatura média abaixo da base ({c['t_base_c']} °C) durante o ciclo.")
             pf = max((ctx.monthly[m]["frost_prob"].get("2.0") or 0) for m in s.months)
             if (c["frost_tolerance"] == "none" and pf >= 0.3) or (c["frost_tolerance"] == "low" and pf >= 0.5):
-                reasons.append(translate("{0}: geada em {1}% dos anos na janela de cultivo.", c.name, round(100 * pf)))
+                reasons.append(f"{c.name}: geada em {round(100 * pf)}% dos anos na janela de cultivo.")
             if ctx.soil and ctx.soil.ph_water is not None:
                 lo, hi = c["ph_range"]
                 if ctx.soil.ph_water < lo - 1.0 or ctx.soil.ph_water > hi + 0.5:
-                    reasons.append(translate("{0}: pH {1} fora da faixa tolerada ({2}–{3}) sem correção viável.", c.name, ctx.soil.ph_water, lo, hi))
+                    reasons.append(f"{c.name}: pH {ctx.soil.ph_water} fora da faixa tolerada ({lo}–{hi}) sem correção viável.")
         if s.water_check:
             w = step_water(ctx, s)
             if w["share_years_over_filter"] >= 0.5:
                 reasons.append(
-                    translate(
-                        "{0} ({1}): falta mais da metade da água necessária em {2}% dos anos.",
-                        cat.crop(s.crops[0]).name,
-                        months_txt([s.sow_month]),
-                        round(100 * w['share_years_over_filter']),
-                    )
+                    f"{cat.crop(s.crops[0]).name} ({months_txt([s.sow_month])}): falta mais da metade da água necessária "
+                    f"em {round(100 * w['share_years_over_filter'])}% dos anos."
                 )
     # mesma família em sequência com praga/doença compartilhada (inclui a volta para o próximo ano)
     seq = rot.steps + rot.steps[:1] if len(rot.steps) > 1 else []
@@ -444,11 +438,6 @@ def hard_filters(ctx: Ctx, rot: Rotation) -> list[str]:
                           if info.get("sequence_filter") and A.pest_role(p) == "host" and B.pest_role(p) == "host"]
                 if shared:
                     names = [cat.pests[p]["name"].split(" (")[0].lower() for p in shared]
-                    reasons.append(translate(
-                        "{0} seguida de {1}: mesma família ({2}) e ambas hospedam {3}.",
-                        A.name,
-                        B.name,
-                        A.family,
-                        months_join(names),
-                    ))
+                    reasons.append(f"{A.name} seguida de {B.name}: mesma família ({A.family}) e ambas hospedam "
+                                   f"{months_join(names)}.")
     return list(dict.fromkeys(reasons))
