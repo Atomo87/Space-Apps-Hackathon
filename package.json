@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@inertiajs/vue3": "^2.3.29",
+    "@turf/area": "^7.4.0",
+    "@turf/centroid": "^7.4.0",
+    "echarts": "^6.1.0",
+    "maplibre-gl": "^6.18.0",
+    "vue": "^3.5.45",
+    "vue-echarts": "^8.3.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/geojson": "^7946.0.16",
+    "@vitejs/plugin-vue": "^6.0.11",
+    "concurrently": "^10.0.7",
+    "laravel-vite-plugin": "^3.2.1",
+    "tailwindcss": "^4.3.5",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.8",
+    "vue-tsc": "^3.3.14"
+  }
+}

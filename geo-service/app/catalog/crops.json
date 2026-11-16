@@ -1,0 +1,676 @@
+{
+  "version": "0.1.0",
+  "region": "Cerrado (Triângulo Mineiro e regiões semelhantes)",
+  "disclaimer": "Atributos médios e simplificados para apoio à decisão. Campos marcados como hipótese precisam ser validados com agrônomos da região.",
+  "pests": {
+    "meloidogyne": {
+      "name": "Nematoide-de-galhas (Meloidogyne spp.)",
+      "type": "nematode",
+      "sequence_filter": false
+    },
+    "pratylenchus": {
+      "name": "Nematoide-das-lesões (Pratylenchus brachyurus)",
+      "type": "nematode",
+      "sequence_filter": false
+    },
+    "heterodera": {
+      "name": "Nematoide-de-cisto da soja (Heterodera glycines)",
+      "type": "nematode",
+      "sequence_filter": true
+    },
+    "sclerotinia": {
+      "name": "Mofo-branco (Sclerotinia sclerotiorum)",
+      "type": "disease",
+      "sequence_filter": true
+    },
+    "cigarrinha": {
+      "name": "Cigarrinha-do-milho / enfezamentos (Dalbulus maidis)",
+      "type": "insect",
+      "sequence_filter": true
+    }
+  },
+  "equipment": {
+    "semeadora_graos_miudos": "Semeadora/distribuidor para sementes miúdas",
+    "plataforma_girassol": "Plataforma de colheita adaptada para girassol"
+  },
+  "crops": [
+    {
+      "slug": "soja",
+      "name_pt": "Soja",
+      "scientific_name": "Glycine max",
+      "family": "Fabaceae",
+      "category": "grain",
+      "cycle_days": [
+        100,
+        130
+      ],
+      "kc": {
+        "ini": 0.4,
+        "mid": 1.15,
+        "end": 0.5
+      },
+      "t_base_c": 10,
+      "t_heat_stress_c": 35,
+      "frost_tolerance": "low",
+      "drought_tolerance": "medium",
+      "root_system": "pivotante",
+      "root_depth": "medium",
+      "n_credit_kg_ha": 20,
+      "residue_t_ha": 3.0,
+      "cn_ratio": 20,
+      "forage_value": "none",
+      "ph_range": [
+        5.5,
+        7.0
+      ],
+      "market_index": 1.0,
+      "pests": {
+        "meloidogyne": "host",
+        "pratylenchus": "host",
+        "heterodera": "host",
+        "sclerotinia": "host"
+      },
+      "equipment": [],
+      "local_review_risks": [
+        "Respeitar o vazio sanitário da ferrugem-asiática definido para o estado",
+        "Pressão de percevejos e de nematoides varia muito entre talhões"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": [
+        "Fixa N, mas exporta a maior parte nos grãos; o crédito para a cultura seguinte é pequeno."
+      ]
+    },
+    {
+      "slug": "milho",
+      "name_pt": "Milho",
+      "scientific_name": "Zea mays",
+      "family": "Poaceae",
+      "category": "grain",
+      "cycle_days": [
+        110,
+        150
+      ],
+      "kc": {
+        "ini": 0.3,
+        "mid": 1.2,
+        "end": 0.6
+      },
+      "t_base_c": 10,
+      "t_heat_stress_c": 35,
+      "frost_tolerance": "low",
+      "drought_tolerance": "low",
+      "root_system": "fasciculada",
+      "root_depth": "medium",
+      "n_credit_kg_ha": 0,
+      "residue_t_ha": 6.0,
+      "cn_ratio": 60,
+      "forage_value": "medium",
+      "ph_range": [
+        5.5,
+        7.0
+      ],
+      "market_index": 0.8,
+      "pests": {
+        "meloidogyne": "host",
+        "pratylenchus": "host",
+        "heterodera": "non_host",
+        "sclerotinia": "non_host",
+        "cigarrinha": "host"
+      },
+      "equipment": [],
+      "local_review_risks": [
+        "Cigarrinha-do-milho e enfezamentos: evitar milho sobre milho e checar a pressão regional"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": []
+    },
+    {
+      "slug": "sorgo",
+      "name_pt": "Sorgo granífero",
+      "scientific_name": "Sorghum bicolor",
+      "family": "Poaceae",
+      "category": "grain",
+      "cycle_days": [
+        100,
+        130
+      ],
+      "kc": {
+        "ini": 0.3,
+        "mid": 1.05,
+        "end": 0.55
+      },
+      "t_base_c": 10,
+      "t_heat_stress_c": 38,
+      "frost_tolerance": "low",
+      "drought_tolerance": "high",
+      "root_system": "fasciculada",
+      "root_depth": "deep",
+      "n_credit_kg_ha": 0,
+      "residue_t_ha": 6.0,
+      "cn_ratio": 50,
+      "forage_value": "medium",
+      "ph_range": [
+        5.5,
+        7.5
+      ],
+      "market_index": 0.55,
+      "pests": {
+        "meloidogyne": "unknown",
+        "pratylenchus": "host",
+        "heterodera": "non_host",
+        "sclerotinia": "non_host"
+      },
+      "equipment": [],
+      "local_review_risks": [
+        "Avaliar o histórico de pulgão-da-cana e a liquidez de compra do grão na região"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": []
+    },
+    {
+      "slug": "milheto",
+      "name_pt": "Milheto",
+      "scientific_name": "Pennisetum glaucum",
+      "family": "Poaceae",
+      "category": "cover",
+      "cycle_days": [
+        70,
+        100
+      ],
+      "kc": {
+        "ini": 0.3,
+        "mid": 1.0,
+        "end": 0.3
+      },
+      "t_base_c": 12,
+      "t_heat_stress_c": 40,
+      "frost_tolerance": "none",
+      "drought_tolerance": "high",
+      "root_system": "fasciculada",
+      "root_depth": "deep",
+      "n_credit_kg_ha": 0,
+      "residue_t_ha": 7.0,
+      "cn_ratio": 40,
+      "forage_value": "high",
+      "ph_range": [
+        5.0,
+        7.0
+      ],
+      "market_index": 0.25,
+      "pests": {
+        "meloidogyne": "poor_host",
+        "pratylenchus": "host",
+        "heterodera": "non_host",
+        "sclerotinia": "non_host"
+      },
+      "equipment": [
+        "semeadora_graos_miudos"
+      ],
+      "local_review_risks": [
+        "Confirmar disponibilidade e qualidade de sementes"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": [
+        "Hospedeiro de Pratylenchus brachyurus: atenção em áreas com esse nematoide."
+      ]
+    },
+    {
+      "slug": "braquiaria",
+      "name_pt": "Braquiária (ruziziensis)",
+      "scientific_name": "Urochloa ruziziensis",
+      "family": "Poaceae",
+      "category": "forage",
+      "cycle_days": [
+        120,
+        240
+      ],
+      "kc": {
+        "ini": 0.4,
+        "mid": 0.95,
+        "end": 0.85
+      },
+      "t_base_c": 15,
+      "t_heat_stress_c": 38,
+      "frost_tolerance": "low",
+      "drought_tolerance": "high",
+      "root_system": "fasciculada",
+      "root_depth": "deep",
+      "n_credit_kg_ha": 0,
+      "residue_t_ha": 8.0,
+      "cn_ratio": 40,
+      "forage_value": "high",
+      "ph_range": [
+        4.5,
+        7.0
+      ],
+      "market_index": 0.2,
+      "pests": {
+        "meloidogyne": "poor_host",
+        "pratylenchus": "host",
+        "heterodera": "non_host",
+        "sclerotinia": "suppressor"
+      },
+      "equipment": [
+        "semeadora_graos_miudos"
+      ],
+      "local_review_risks": [
+        "Planejar a dessecação antes da semeadura da soja",
+        "Em consórcio, regular a população para não competir com o milho"
+      ],
+      "sources": {
+        "kc": "FAO-56 Tabela 12 — 'grazing pasture' (aproximação)",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": [
+        "A palhada de braquiária reduz a germinação de escleródios de mofo-branco (efeito supressor)."
+      ]
+    },
+    {
+      "slug": "crotalaria",
+      "name_pt": "Crotalária (spectabilis)",
+      "scientific_name": "Crotalaria spectabilis",
+      "family": "Fabaceae",
+      "category": "cover",
+      "cycle_days": [
+        90,
+        120
+      ],
+      "kc": {
+        "ini": 0.4,
+        "mid": 1.0,
+        "end": 0.8
+      },
+      "t_base_c": 15,
+      "t_heat_stress_c": 38,
+      "frost_tolerance": "none",
+      "drought_tolerance": "medium",
+      "root_system": "pivotante",
+      "root_depth": "deep",
+      "n_credit_kg_ha": 100,
+      "residue_t_ha": 6.0,
+      "cn_ratio": 20,
+      "forage_value": "none",
+      "ph_range": [
+        5.0,
+        7.0
+      ],
+      "market_index": 0.0,
+      "pests": {
+        "meloidogyne": "suppressor",
+        "pratylenchus": "suppressor",
+        "heterodera": "non_host",
+        "sclerotinia": "unknown"
+      },
+      "equipment": [
+        "semeadora_graos_miudos"
+      ],
+      "local_review_risks": [
+        "Crotalaria spectabilis é tóxica para animais: não usar como forragem",
+        "Confirmar disponibilidade de sementes (oferta costuma ser limitada)"
+      ],
+      "sources": {
+        "kc": "Hipótese da equipe — validar com agrônomo",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": [
+        "Usada como adubo verde; reduz populações de nematoides de galha e de lesões."
+      ]
+    },
+    {
+      "slug": "feijao",
+      "name_pt": "Feijão",
+      "scientific_name": "Phaseolus vulgaris",
+      "family": "Fabaceae",
+      "category": "legume",
+      "cycle_days": [
+        80,
+        100
+      ],
+      "kc": {
+        "ini": 0.4,
+        "mid": 1.15,
+        "end": 0.35
+      },
+      "t_base_c": 10,
+      "t_heat_stress_c": 30,
+      "frost_tolerance": "none",
+      "drought_tolerance": "low",
+      "root_system": "pivotante",
+      "root_depth": "shallow",
+      "n_credit_kg_ha": 10,
+      "residue_t_ha": 2.0,
+      "cn_ratio": 20,
+      "forage_value": "none",
+      "ph_range": [
+        5.5,
+        7.0
+      ],
+      "market_index": 0.9,
+      "pests": {
+        "meloidogyne": "host",
+        "pratylenchus": "host",
+        "heterodera": "host",
+        "sclerotinia": "host"
+      },
+      "equipment": [],
+      "local_review_risks": [
+        "Sensível a calor na floração (abortamento acima de ~30 °C)"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": []
+    },
+    {
+      "slug": "feijao_caupi",
+      "name_pt": "Feijão-caupi",
+      "scientific_name": "Vigna unguiculata",
+      "family": "Fabaceae",
+      "category": "legume",
+      "cycle_days": [
+        70,
+        90
+      ],
+      "kc": {
+        "ini": 0.4,
+        "mid": 1.05,
+        "end": 0.6
+      },
+      "t_base_c": 12,
+      "t_heat_stress_c": 35,
+      "frost_tolerance": "none",
+      "drought_tolerance": "high",
+      "root_system": "pivotante",
+      "root_depth": "medium",
+      "n_credit_kg_ha": 30,
+      "residue_t_ha": 3.0,
+      "cn_ratio": 18,
+      "forage_value": "medium",
+      "ph_range": [
+        5.0,
+        7.0
+      ],
+      "market_index": 0.6,
+      "pests": {
+        "meloidogyne": "host",
+        "pratylenchus": "host",
+        "heterodera": "unknown",
+        "sclerotinia": "unknown"
+      },
+      "equipment": [],
+      "local_review_risks": [
+        "Confirmar mercado comprador local (consumo regional varia)"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": []
+    },
+    {
+      "slug": "girassol",
+      "name_pt": "Girassol",
+      "scientific_name": "Helianthus annuus",
+      "family": "Asteraceae",
+      "category": "grain",
+      "cycle_days": [
+        90,
+        120
+      ],
+      "kc": {
+        "ini": 0.35,
+        "mid": 1.05,
+        "end": 0.35
+      },
+      "t_base_c": 6,
+      "t_heat_stress_c": 35,
+      "frost_tolerance": "medium",
+      "drought_tolerance": "medium",
+      "root_system": "pivotante",
+      "root_depth": "deep",
+      "n_credit_kg_ha": 0,
+      "residue_t_ha": 4.0,
+      "cn_ratio": 40,
+      "forage_value": "low",
+      "ph_range": [
+        5.5,
+        7.0
+      ],
+      "market_index": 0.6,
+      "pests": {
+        "meloidogyne": "host",
+        "pratylenchus": "host",
+        "heterodera": "non_host",
+        "sclerotinia": "host"
+      },
+      "equipment": [
+        "plataforma_girassol"
+      ],
+      "local_review_risks": [
+        "Exige boro e é sensível à acidez",
+        "Hospedeiro de mofo-branco: evitar em áreas com histórico"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": []
+    },
+    {
+      "slug": "nabo_forrageiro",
+      "name_pt": "Nabo-forrageiro",
+      "scientific_name": "Raphanus sativus var. oleiferus",
+      "family": "Brassicaceae",
+      "category": "cover",
+      "cycle_days": [
+        60,
+        90
+      ],
+      "kc": {
+        "ini": 0.7,
+        "mid": 0.9,
+        "end": 0.85
+      },
+      "t_base_c": 5,
+      "t_heat_stress_c": 30,
+      "frost_tolerance": "high",
+      "drought_tolerance": "medium",
+      "root_system": "pivotante",
+      "root_depth": "deep",
+      "n_credit_kg_ha": 0,
+      "residue_t_ha": 4.0,
+      "cn_ratio": 20,
+      "forage_value": "medium",
+      "ph_range": [
+        5.0,
+        7.0
+      ],
+      "market_index": 0.0,
+      "pests": {
+        "meloidogyne": "unknown",
+        "pratylenchus": "unknown",
+        "heterodera": "non_host",
+        "sclerotinia": "host"
+      },
+      "equipment": [],
+      "local_review_risks": [
+        "Hospedeiro de mofo-branco",
+        "Melhor desempenho com alguma chuva no outono"
+      ],
+      "sources": {
+        "kc": "FAO-56 Tabela 12 — rabanete (aproximação)",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": []
+    },
+    {
+      "slug": "algodao",
+      "name_pt": "Algodão",
+      "scientific_name": "Gossypium hirsutum",
+      "family": "Malvaceae",
+      "category": "fiber",
+      "cycle_days": [
+        150,
+        180
+      ],
+      "kc": {
+        "ini": 0.35,
+        "mid": 1.15,
+        "end": 0.6
+      },
+      "t_base_c": 15,
+      "t_heat_stress_c": 38,
+      "frost_tolerance": "none",
+      "drought_tolerance": "medium",
+      "root_system": "pivotante",
+      "root_depth": "deep",
+      "n_credit_kg_ha": 0,
+      "residue_t_ha": 3.0,
+      "cn_ratio": 30,
+      "forage_value": "none",
+      "ph_range": [
+        5.5,
+        7.0
+      ],
+      "market_index": 1.0,
+      "pests": {
+        "meloidogyne": "host",
+        "pratylenchus": "host",
+        "heterodera": "non_host",
+        "sclerotinia": "host"
+      },
+      "equipment": [],
+      "local_review_risks": [
+        "Destruição obrigatória de soqueira conforme a legislação estadual"
+      ],
+      "sources": {
+        "kc": "FAO-56 (Allen et al., 1998), Tabela 12 — Kc",
+        "cycle_days": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "temperatures": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "tolerances": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "roots": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "n_credit_kg_ha": "Hipótese da equipe — validar com agrônomo",
+        "residue_t_ha": "Hipótese da equipe — validar com agrônomo",
+        "cn_ratio": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "forage_value": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "ph_range": "Literatura agronômica geral (Embrapa/FAO) — conferir para a região",
+        "market_index": "Hipótese da equipe — validar com agrônomo",
+        "pests": "Hipótese da equipe — validar com agrônomo"
+      },
+      "notes": []
+    }
+  ]
+}

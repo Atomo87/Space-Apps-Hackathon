@@ -1,0 +1,47 @@
+{
+ "climate": {
+  "...": "ClimateProfile devolvido por POST /v1/climate-profile (ver climate-profile.sintetico.json)"
+ },
+ "field": {
+  "latitude": -18.9186,
+  "longitude": -48.2772,
+  "area_ha": 48.5
+ },
+ "soil": {
+  "source": "unknown"
+ },
+ "history": [
+  {
+   "crop": "soja",
+   "sown_at": "2024-10-25",
+   "harvested_at": "2025-02-20"
+  },
+  {
+   "crop": "milho",
+   "sown_at": "2025-02-28",
+   "harvested_at": "2025-07-05"
+  }
+ ],
+ "priorities": {
+  "save_water": 4,
+  "soil_structure": 3,
+  "n_fixation": 2,
+  "erosion_control": 4,
+  "organic_matter": 3,
+  "pest_break": 3,
+  "forage": 2,
+  "extra_income": 4,
+  "market_fit": 3
+ },
+ "constraints": {
+  "buyer_crops": [
+   "soja",
+   "milho"
+  ],
+  "has_livestock": true
+ },
+ "scenario": {
+  "rain_delta_pct": 0,
+  "temp_delta_c": 0
+ }
+}

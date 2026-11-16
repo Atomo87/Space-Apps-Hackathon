@@ -1,0 +1,486 @@
+@import 'tailwindcss';
+@import 'maplibre-gl/dist/maplibre-gl.css';
+
+@source '../views';
+@source '../js';
+
+/* ================================================================== tokens */
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+    --color-safra-50: #f0fdf4;
+    --color-safra-100: #dcfce7;
+    --color-safra-200: #bbf7d0;
+    --color-safra-500: #22c55e;
+    --color-safra-600: #16a34a;
+    --color-safra-700: #15803d;
+    --color-safra-800: #166534;
+    --color-safra-900: #0f3d22;
+    --color-safra-950: #052e16;
+
+    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 1px 3px rgb(0 0 0 / 0.06);
+    --shadow-lift: 0 8px 24px -8px rgb(0 0 0 / 0.1), 0 2px 6px rgb(0 0 0 / 0.05);
+    --shadow-hero: 0 24px 48px -16px rgb(5 46 22 / 0.4);
+    --shadow-glow: 0 8px 32px -4px rgb(163 230 53 / 0.5);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-feature-settings: 'cv11', 'ss01';
+    line-height: 1.55;
+}
+
+::selection {
+    background: var(--color-lime-200);
+    color: var(--color-safra-950);
+}
+
+:focus-visible {
+    outline: 2px solid var(--color-safra-600);
+    outline-offset: 2px;
+}
+
+.maplibregl-ctrl-group .mapboxgl-ctrl-group,
+.mapboxgl-ctrl-group {
+    background: #fff;
+}
+
+/* ============================================================== componentes */
+@layer components {
+    /* ---- cartões */
+    .card {
+        @apply relative rounded-2xl border border-stone-200 bg-white p-5 shadow-[var(--shadow-soft)];
+    }
+
+    .card-hover {
+        @apply transition duration-200 hover:-translate-y-0.5 hover:border-stone-300 hover:shadow-[var(--shadow-lift)];
+    }
+
+    .card-accent {
+        @apply overflow-hidden before:absolute before:inset-x-0 before:top-0 before:h-[3px] before:bg-gradient-to-r before:from-safra-600 before:to-lime-400 before:content-[''];
+    }
+
+    .card-title {
+        @apply text-base font-bold tracking-tight text-stone-900;
+    }
+
+    /* ---- botões */
+    .btn,
+    .btn-primary,
+    .btn-lime,
+    .btn-secondary,
+    .btn-ghost,
+    .btn-danger {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-[15px] font-semibold whitespace-nowrap transition duration-150 select-none active:translate-y-px disabled:pointer-events-none disabled:opacity-50;
+    }
+
+    .btn-primary {
+        @apply bg-gradient-to-br from-safra-700 to-safra-800 text-white shadow-[0_6px_18px_-6px_rgb(21_128_61/0.6)] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-6px_rgb(21_128_61/0.65)];
+    }
+
+    .btn-lime {
+        @apply bg-gradient-to-br from-lime-300 to-lime-400 text-safra-950 shadow-[var(--shadow-glow)] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_-4px_rgb(163_230_53/0.65)];
+    }
+
+    .btn-secondary {
+        @apply border border-stone-300 bg-white text-stone-800 shadow-[var(--shadow-soft)] hover:border-stone-400 hover:bg-stone-50;
+    }
+
+    .btn-ghost {
+        @apply border border-white/30 bg-white/10 text-white backdrop-blur hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/15;
+    }
+
+    .btn-danger {
+        @apply border border-red-200 bg-white text-red-700 hover:border-red-300 hover:bg-red-50;
+    }
+
+    .btn-sm {
+        @apply rounded-lg px-3 py-2 text-sm;
+    }
+
+    .btn svg,
+    .btn-primary svg,
+    .btn-lime svg,
+    .btn-secondary svg,
+    .btn-ghost svg,
+    .btn-danger svg {
+        @apply h-[17px] w-[17px] shrink-0;
+    }
+
+    .link {
+        @apply font-semibold text-safra-700 underline-offset-2 hover:underline;
+    }
+
+    /* ---- formulários */
+    .input {
+        @apply w-full rounded-xl border border-stone-300 bg-white px-3.5 py-3 text-[15px] text-stone-900 shadow-[var(--shadow-soft)] transition placeholder:text-stone-400 focus:border-safra-600 focus:ring-4 focus:ring-safra-100 focus:outline-none aria-[invalid=true]:border-red-400 aria-[invalid=true]:ring-red-100;
+    }
+
+    .label {
+        @apply mb-1.5 block text-sm font-semibold text-stone-700;
+    }
+
+    .field-error {
+        @apply mt-1.5 block text-sm font-medium text-red-700;
+    }
+
+    .field-hint {
+        @apply mt-1.5 block text-xs text-stone-500;
+    }
+
+    .choice {
+        @apply flex cursor-pointer items-center gap-2.5 rounded-xl border border-stone-200 bg-white p-3.5 text-sm font-medium transition hover:border-stone-300 has-[:checked]:border-safra-600 has-[:checked]:bg-safra-50 has-[:checked]:ring-4 has-[:checked]:ring-safra-100;
+    }
+
+    /* ---- títulos de seção */
+    .section-title {
+        @apply flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-stone-900 sm:text-[1.4rem];
+    }
+
+    .section-lead {
+        @apply mt-1.5 max-w-[68ch] text-[15px] text-stone-600;
+    }
+
+    .h-icon {
+        @apply inline-grid h-8 w-8 shrink-0 place-items-center rounded-[9px] bg-gradient-to-br from-emerald-50 to-emerald-100 text-safra-700 ring-1 ring-safra-600/15 ring-inset;
+    }
+
+    .h-icon svg {
+        @apply h-[17px] w-[17px];
+    }
+
+    .icon-tile-good,
+    .icon-tile-bad,
+    .icon-tile-info,
+    .icon-tile-warn {
+        @apply grid h-10 w-10 shrink-0 place-items-center rounded-[11px] ring-1 ring-inset;
+    }
+
+    .icon-tile-good svg,
+    .icon-tile-bad svg,
+    .icon-tile-info svg,
+    .icon-tile-warn svg {
+        @apply h-5 w-5;
+    }
+
+    .icon-tile-good {
+        @apply bg-gradient-to-br from-emerald-50 to-emerald-100 text-safra-700 ring-safra-600/15;
+    }
+
+    .icon-tile-bad {
+        @apply bg-gradient-to-br from-red-50 to-red-100 text-red-600 ring-red-600/15;
+    }
+
+    .icon-tile-info {
+        @apply bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 ring-blue-600/15;
+    }
+
+    .icon-tile-warn {
+        @apply bg-gradient-to-br from-amber-50 to-amber-100 text-amber-700 ring-amber-600/15;
+    }
+
+    .eyebrow {
+        @apply inline-flex items-center gap-2 rounded-full border border-lime-300/25 bg-lime-300/10 px-3 py-1.5 text-[11.5px] font-bold tracking-[0.14em] text-lime-300 uppercase;
+    }
+
+    /* ---- selos e chips */
+    .badge {
+        @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-semibold whitespace-nowrap;
+    }
+
+    .chip {
+        @apply inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-[13.5px] font-medium text-stone-700 transition hover:-translate-y-0.5 hover:border-safra-600 hover:bg-safra-50;
+    }
+
+    .chip-dot {
+        @apply h-[7px] w-[7px] rounded-full bg-safra-600 ring-[3px] ring-safra-600/15;
+    }
+
+    .stat {
+        @apply relative flex flex-col gap-1 rounded-2xl border border-stone-200 bg-white p-5 shadow-[var(--shadow-soft)];
+    }
+
+    .stat-label {
+        @apply text-xs font-semibold tracking-wide text-stone-500 uppercase;
+    }
+
+    .stat-value {
+        @apply text-2xl font-bold tracking-tight text-stone-900 tabular-nums;
+    }
+
+    /* ---- métricas dentro de cards (rótulo, valor, contexto) */
+    .metric {
+        @apply flex min-w-0 flex-col rounded-xl border border-stone-200/80 bg-gradient-to-b from-white to-stone-50/80 px-4 py-3.5;
+    }
+
+    .metric-label {
+        @apply flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.06em] text-stone-500 uppercase;
+    }
+
+    .metric-value {
+        @apply mt-1.5 text-[1.375rem] leading-none font-bold tracking-tight text-stone-900 tabular-nums;
+    }
+
+    .metric-hint {
+        @apply mt-1.5 text-xs leading-snug text-stone-500;
+    }
+
+    /* ---- KPIs do topo da análise */
+    .kpi {
+        @apply flex min-w-0 items-start gap-3 rounded-2xl border border-stone-200 bg-white px-3.5 py-3.5 shadow-[var(--shadow-soft)] sm:px-4 sm:py-4;
+    }
+
+    .kpi-icon {
+        @apply hidden h-9 w-9 shrink-0 place-items-center rounded-[10px] ring-1 ring-inset sm:grid;
+    }
+
+    .kpi-icon svg {
+        @apply h-[18px] w-[18px];
+    }
+
+    /* ---- cabeçalho de bloco dentro de um card */
+    .card-head {
+        @apply mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-stone-100 pb-4;
+    }
+
+    .card-head h2 {
+        @apply flex items-center gap-2.5 text-[17px] font-bold tracking-tight text-stone-900;
+    }
+
+    .card-head p {
+        @apply mt-1 text-[13px] text-stone-500;
+    }
+
+    /* ---- rótulo de grupo de seções */
+    .section-kicker {
+        @apply flex items-center gap-3 pt-2 text-[11px] font-bold tracking-[0.14em] text-stone-500 uppercase after:h-px after:flex-1 after:bg-stone-200 after:content-[''];
+    }
+
+    /* ---- abas sublinhadas */
+    .tabs {
+        @apply flex gap-1 overflow-x-auto border-b border-stone-200 [scrollbar-width:none];
+    }
+
+    .tab {
+        @apply relative -mb-px flex items-center gap-2 border-b-2 border-transparent px-3 py-3 text-sm font-semibold whitespace-nowrap text-stone-500 transition hover:text-stone-900 sm:px-4;
+    }
+
+    .tab[aria-selected='true'] {
+        @apply border-safra-700 text-safra-800;
+    }
+
+    .tab svg {
+        @apply h-4 w-4;
+    }
+
+    /* ---- avisos */
+    .notice-warn,
+    .notice-error,
+    .notice-info {
+        @apply relative flex items-start gap-3.5 overflow-hidden rounded-2xl border p-4 pl-5 text-sm before:absolute before:inset-y-0 before:left-0 before:w-1 before:content-[''];
+    }
+
+    .notice-warn {
+        @apply border-amber-200 bg-gradient-to-br from-amber-50 to-amber-100/60 text-amber-900 before:bg-gradient-to-b before:from-amber-500 before:to-amber-600;
+    }
+
+    .notice-error {
+        @apply border-red-200 bg-red-50 text-red-900 before:bg-red-500;
+    }
+
+    .notice-info {
+        @apply border-safra-200 bg-safra-50 text-safra-900 before:bg-gradient-to-b before:from-safra-600 before:to-lime-400;
+    }
+
+    .notice-warn > svg,
+    .notice-error > svg,
+    .notice-info > svg {
+        @apply mt-0.5 h-5 w-5 shrink-0;
+    }
+
+    /* ---- abas segmentadas */
+    .segmented {
+        @apply flex gap-1 rounded-2xl border border-stone-200 bg-white p-1 shadow-[var(--shadow-soft)];
+    }
+
+    .segmented-item {
+        @apply flex flex-1 items-center justify-center gap-1.5 rounded-xl px-2 py-2.5 text-[13px] font-semibold whitespace-nowrap text-stone-600 transition hover:bg-stone-50 hover:text-stone-900 sm:gap-2 sm:px-3 sm:text-sm;
+    }
+
+    .segmented-item[aria-selected='true'] {
+        @apply bg-gradient-to-br from-safra-800 to-safra-950 text-white shadow-[0_4px_12px_-2px_rgb(5_46_22/0.35)] hover:bg-transparent hover:text-white;
+    }
+
+    .segmented-item svg {
+        @apply h-4 w-4;
+    }
+
+    /* ---- detalhes recolhíveis */
+    details.card > summary {
+        @apply flex cursor-pointer list-none items-center justify-between gap-2 font-semibold [&::-webkit-details-marker]:hidden;
+    }
+
+    details.card > summary::after {
+        content: '';
+        @apply h-2 w-2 shrink-0 rotate-45 border-r-2 border-b-2 border-stone-400 transition-transform;
+    }
+
+    details.card[open] > summary::after {
+        @apply -rotate-[135deg];
+    }
+}
+
+/* ============================================================ animações */
+@keyframes hero-shift {
+    0%,
+    100% {
+        background-position: 0% 50%, 100% 50%, 0% 50%;
+    }
+    50% {
+        background-position: 20% 80%, 80% 20%, 100% 50%;
+    }
+}
+
+@keyframes float-y {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes spin-slow {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes pulse-ring {
+    0% {
+        transform: scale(0.6);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1.8);
+        opacity: 0;
+    }
+}
+
+@keyframes beam {
+    0%,
+    100% {
+        opacity: 0.15;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes sway {
+    0%,
+    100% {
+        transform: skewX(0deg);
+    }
+    50% {
+        transform: skewX(2deg);
+    }
+}
+
+@keyframes shimmer {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.hero-surface {
+    background:
+        radial-gradient(1200px 500px at 85% -20%, rgb(163 230 53 / 0.28), transparent 60%),
+        radial-gradient(900px 400px at -10% 120%, rgb(34 197 94 / 0.35), transparent 60%),
+        linear-gradient(135deg, var(--color-safra-950) 0%, var(--color-safra-800) 60%, var(--color-safra-700) 100%);
+    background-size: 200% 200%;
+    animation: hero-shift 14s ease-in-out infinite;
+}
+
+.hero-grid-overlay {
+    background-image:
+        linear-gradient(rgb(255 255 255 / 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at 70% 20%, black, transparent 75%);
+}
+
+.text-shimmer {
+    background: linear-gradient(90deg, var(--color-lime-300), var(--color-lime-400), var(--color-lime-300));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s linear infinite;
+}
+
+.animate-float {
+    animation: float-y 6s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+    animation: spin-slow 22s linear infinite;
+}
+
+.animate-pulse-ring {
+    animation: pulse-ring 3s ease-out infinite;
+}
+
+.animate-beam {
+    animation: beam 3s ease-in-out infinite;
+}
+
+.animate-sway {
+    animation: sway 4s ease-in-out infinite;
+}
+
+.animate-fade-up {
+    animation: fade-up 0.35s ease-out both;
+}
+
+/* O vue-echarts injeta "x-vue-echarts { height: 100% }" fora de camadas, o que vence os utilitários
+   do Tailwind (h-56, h-64…) e achatava os gráficos. Devolvemos a altura para a classe do componente. */
+x-vue-echarts[class*='h-'] {
+    height: revert-layer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media print {
+    .card {
+        box-shadow: none;
+    }
+}

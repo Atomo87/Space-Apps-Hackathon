@@ -1,0 +1,276 @@
+{
+  "version": "0.1.0",
+  "region_bbox": {
+    "lat_min": -24.0,
+    "lat_max": -3.0,
+    "lon_min": -62.0,
+    "lon_max": -40.0
+  },
+  "templates": [
+    {
+      "key": "soja_milho_braquiaria",
+      "title": "Soja → Milho safrinha + braquiária → pastejo/cobertura",
+      "focus": "Cobertura do solo, forragem e controle de erosão",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "milho",
+            "braquiaria"
+          ],
+          "sow_month": 2,
+          "end_month": 6,
+          "purpose": "cash",
+          "water_check": true,
+          "note": "Consórcio: braquiária semeada junto com o milho"
+        },
+        {
+          "crops": [
+            "braquiaria"
+          ],
+          "sow_month": 7,
+          "end_month": 9,
+          "purpose": "forage",
+          "water_check": false,
+          "note": "Braquiária já estabelecida atravessa a seca"
+        }
+      ]
+    },
+    {
+      "key": "soja_sorgo",
+      "title": "Soja → Sorgo safrinha",
+      "focus": "Menor risco hídrico na safrinha (sorgo tolera seca)",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "sorgo"
+          ],
+          "sow_month": 2,
+          "end_month": 6,
+          "purpose": "cash",
+          "water_check": true
+        }
+      ]
+    },
+    {
+      "key": "soja_crotalaria",
+      "title": "Soja → Crotalária (adubo verde)",
+      "focus": "Quebra de nematoides e nitrogênio para a próxima safra",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "crotalaria"
+          ],
+          "sow_month": 2,
+          "end_month": 5,
+          "purpose": "green_manure",
+          "water_check": true
+        }
+      ]
+    },
+    {
+      "key": "soja_milheto",
+      "title": "Soja → Milheto de cobertura",
+      "focus": "Palhada e raízes profundas com pouca água",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "milheto"
+          ],
+          "sow_month": 2,
+          "end_month": 5,
+          "purpose": "cover",
+          "water_check": true
+        }
+      ]
+    },
+    {
+      "key": "soja_girassol",
+      "title": "Soja → Girassol safrinha",
+      "focus": "Renda complementar e raiz pivotante profunda",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "girassol"
+          ],
+          "sow_month": 2,
+          "end_month": 5,
+          "purpose": "cash",
+          "water_check": true
+        }
+      ]
+    },
+    {
+      "key": "milho_braquiaria_ilp",
+      "title": "Milho verão + braquiária → pastejo na seca (ILP)",
+      "focus": "Quebrar a sequência da soja e produzir forragem",
+      "steps": [
+        {
+          "crops": [
+            "milho",
+            "braquiaria"
+          ],
+          "sow_month": 11,
+          "end_month": 3,
+          "purpose": "cash",
+          "water_check": true,
+          "note": "Consórcio de verão"
+        },
+        {
+          "crops": [
+            "braquiaria"
+          ],
+          "sow_month": 4,
+          "end_month": 9,
+          "purpose": "forage",
+          "water_check": false,
+          "note": "Pastejo/cobertura na entressafra"
+        }
+      ]
+    },
+    {
+      "key": "caupi_milheto",
+      "title": "Feijão-caupi → Milheto",
+      "focus": "Baixa demanda de água e solo coberto",
+      "steps": [
+        {
+          "crops": [
+            "feijao_caupi"
+          ],
+          "sow_month": 11,
+          "end_month": 1,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "milheto"
+          ],
+          "sow_month": 2,
+          "end_month": 5,
+          "purpose": "cover",
+          "water_check": true
+        }
+      ]
+    },
+    {
+      "key": "soja_nabo",
+      "title": "Soja → Nabo-forrageiro",
+      "focus": "Raízes pivotantes para descompactar o solo",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "nabo_forrageiro"
+          ],
+          "sow_month": 3,
+          "end_month": 6,
+          "purpose": "cover",
+          "water_check": true
+        }
+      ]
+    },
+    {
+      "key": "soja_feijao",
+      "title": "Soja → Feijão safrinha",
+      "focus": "Renda com duas leguminosas",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "feijao"
+          ],
+          "sow_month": 2,
+          "end_month": 5,
+          "purpose": "cash",
+          "water_check": true
+        }
+      ]
+    },
+    {
+      "key": "soja_milho",
+      "title": "Soja → Milho safrinha",
+      "focus": "Sistema predominante na região",
+      "steps": [
+        {
+          "crops": [
+            "soja"
+          ],
+          "sow_month": 10,
+          "end_month": 2,
+          "purpose": "cash",
+          "water_check": true
+        },
+        {
+          "crops": [
+            "milho"
+          ],
+          "sow_month": 2,
+          "end_month": 6,
+          "purpose": "cash",
+          "water_check": true
+        }
+      ]
+    }
+  ]
+}

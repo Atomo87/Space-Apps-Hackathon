@@ -1,0 +1,35 @@
+# Blueprint do Render: New + > Blueprint > selecione o repositório.
+# Só o geo-service (Python) vai para o Render; o Laravel fica na Hostinger.
+services:
+  - type: web
+    name: geosafra-geo-service
+    runtime: docker
+    rootDir: geo-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    region: ohio
+    healthCheckPath: /health
+    envVars:
+      - key: GEOSAFRA_TOKEN
+        generateValue: true   # copie o valor gerado para GEO_SERVICE_TOKEN no .env do Laravel
+      - key: POWER_START_YEAR
+        value: "2005"
+      - key: POWER_END_YEAR
+        value: "2025"
+      - key: POWER_CONCURRENCY
+        value: "4"
+      # Elevação SRTM (~30 m) para a declividade. API pública, sem chave (limite: 1 chamada/s, 1.000/dia).
+      - key: TERRAIN_BASE_URL
+        value: "https://api.opentopodata.org/v1/srtm30m"
+      # Satélites da NASA (MODIS NDVI/LST/ET e HLS) pelo Microsoft Planetary Computer. Público, sem chave.
+      - key: NDVI_YEARS
+        value: "5"
+      - key: HLS_YEARS
+        value: "2"
+      - key: LST_YEARS
+        value: "3"
+      - key: PC_CONCURRENCY
+        value: "10"
+      # Token de serviço NASA Earthdata (SMAP, GPM, ECOSTRESS, GRACE-FO). Preencha no painel do Render; nunca no repositório.
+      - key: EARTHDATA_TOKEN
+        sync: false
