@@ -163,6 +163,15 @@ class EvidenceCatalog
             $c->add('estrategia.'.($str['label'] ?? $i), __($str['is_current'] ?? false ? 'Nota da rotação atual: :title' : 'Nota da estratégia :label: :title', ['label' => $str['label'] ?? '', 'title' => $str['title'] ?? '']), $str['score'] ?? null, __('pontos de 100').($range ? ' ('.__('faixa :p10–:p90 entre anos secos e chuvosos', $range).')' : ''), $climate, 'Motor GeoSafra (10 critérios, prioridades do produtor)', 'GeoSafra');
         }
 
+        if (($d['source']['dataset_code'] ?? null) === 'DEMO') {
+            foreach ($c->facts as $id => $fact) {
+                if ($fact['dataset'] === 'POWER' || $fact['dataset'] === 'GeoSafra') {
+                    $c->facts[$id]['source'] = __('Dados climáticos ilustrativos');
+                    $c->facts[$id]['dataset'] = 'DEMO';
+                }
+            }
+        }
+
         return $c;
     }
 

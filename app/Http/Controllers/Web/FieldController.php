@@ -8,6 +8,7 @@ use App\Models\Crop;
 use App\Models\FarmerPriority;
 use App\Models\Field;
 use App\Services\FieldWriter;
+use App\Services\PublicDemo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -64,15 +65,17 @@ class FieldController extends Controller
         return redirect()->route('fields.show', $field)->with('success', __('Talhão salvo! Agora vamos buscar os dados da NASA.'));
     }
 
-    public function show(Field $field): Response
+    public function show(Field $field, PublicDemo $demo): Response
     {
         Gate::authorize('view', $field);
+        $field = $demo->prepare($field);
         $field->load(['farm.priorities', 'soil', 'history.crop']);
+        $isPublicDemo = $demo->appliesTo($field);
 
         return Inertia::render('Fields/Show', [
             'field' => [
                 'id' => $field->id,
-                'name' => $field->name,
+                'name' => $isPublicDemo ? __($field->name) : $field->name,
                 'latitude' => $field->latitude,
                 'longitude' => $field->longitude,
                 'boundary' => $field->boundary,
@@ -88,7 +91,8 @@ class FieldController extends Controller
                 'status' => $field->status,
                 'status_message' => $field->status_message,
                 'is_demo' => $field->farm->is_demo,
-                'farm' => ['id' => $field->farm->id, 'name' => $field->farm->name, 'municipality' => $field->farm->municipality, 'state' => $field->farm->state],
+                'is_public_demo' => $isPublicDemo,
+                'farm' => ['id' => $field->farm->id, 'name' => $isPublicDemo ? __($field->farm->name) : $field->farm->name, 'municipality' => $field->farm->municipality, 'state' => $field->farm->state],
                 'soil_source' => $field->soil?->source ?? 'unknown',
                 'history' => $field->history->map(fn ($h) => ['crop' => $h->crop->name_pt, 'sown_at' => $h->sown_at->toDateString(), 'harvested_at' => $h->harvested_at->toDateString()]),
                 'priorities' => $field->farm->priorities?->weights() ?? array_fill_keys(FarmerPriority::KEYS, 3),

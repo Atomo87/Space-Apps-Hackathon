@@ -8,6 +8,7 @@ use App\Models\Field;
 use App\Services\AnalysisPayload;
 use App\Services\FieldProcessor;
 use App\Services\GeoServiceClient;
+use App\Services\PublicDemo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -16,7 +17,7 @@ use RuntimeException;
 /** GET /api/v1/fields/{field}/analysis — diagnóstico + estratégias (com cenário opcional). */
 class AnalysisController extends Controller
 {
-    public function __invoke(Request $request, Field $field, GeoServiceClient $geo, FieldProcessor $processor): JsonResponse
+    public function __invoke(Request $request, Field $field, GeoServiceClient $geo, FieldProcessor $processor, PublicDemo $demo): JsonResponse
     {
         $data = $request->validate([
             'rain_delta_pct' => ['nullable', 'numeric', 'between:-40,20'],
@@ -25,6 +26,9 @@ class AnalysisController extends Controller
             'priorities' => ['nullable', 'array:'.implode(',', FarmerPriority::KEYS)],
             'priorities.*' => ['integer', 'between:0,5'],
         ]);
+
+        $isPublicDemo = $demo->appliesTo($field);
+        $field = $isPublicDemo ? $demo->prepare($field) : $field;
 
         if ($field->status !== Field::STATUS_READY) {
             return response()->json([
@@ -44,8 +48,17 @@ class AnalysisController extends Controller
         $key = GeoServiceClient::analysisCacheKey($payload);
 
         try {
-            $result = Cache::remember($key, now()->addMinutes(10), fn () => $geo->analysis($payload));
+            $result = $isPublicDemo && $demo->isBaseline($payload)
+                ? $demo->baseline()
+                : Cache::remember($key, now()->addMinutes(10), fn () => $geo->analysis($payload));
         } catch (RuntimeException $e) {
+            if ($isPublicDemo) {
+                return response()->json([
+                    'type' => 'about:blank', 'title' => __('Serviço de dados indisponível'), 'status' => 503,
+                    'detail' => __('O serviço de análise está indisponível para recalcular a simulação. Restaure os valores iniciais para consultar o diagnóstico de demonstração.'),
+                ], 503, ['Content-Type' => 'application/problem+json']);
+            }
+
             if (GeoServiceClient::isStaleProfileError($e)) {
                 // Recibo das fontes vencido: renova as fontes em segundo plano; o navegador acompanha por /status.
                 $processor->start($field, 'Atualizando os dados da NASA deste talhão…');
@@ -63,6 +76,8 @@ class AnalysisController extends Controller
         }
 
         // Recursos calculados no próprio GeoSafra (fora do motor): janela de plantio.
-        return response()->json($result + ['field_id' => $field->id, 'planting' => $field->analysis?->planting]);
+        return response()->json(($isPublicDemo ? $demo->label($result) : $result) + [
+            'field_id' => $field->id, 'planting' => $field->analysis?->planting,
+        ]);
     }
 }

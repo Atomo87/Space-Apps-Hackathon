@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\AnalyzeFieldJob;
 use App\Models\Field;
 use App\Services\FieldProcessor;
+use App\Services\PublicDemo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,16 +22,24 @@ class FieldProcessController extends Controller
     /** Retomadas automáticas antes de desistir e mostrar "Tentar de novo". */
     private const MAX_RESUMES = 2;
 
-    public function status(Field $field, FieldProcessor $processor): JsonResponse
+    public function status(Field $field, FieldProcessor $processor, PublicDemo $demo): JsonResponse
     {
+        if ($demo->appliesTo($field)) {
+            return response()->json($this->state($demo->prepare($field)));
+        }
+
         $this->recoverIfStale($field, $processor);
 
         return response()->json($this->state($field));
     }
 
     /** Responde na hora; o processamento segue em segundo plano (o navegador acompanha por /status). */
-    public function process(Field $field, FieldProcessor $processor): JsonResponse
+    public function process(Field $field, FieldProcessor $processor, PublicDemo $demo): JsonResponse
     {
+        if ($demo->appliesTo($field)) {
+            return response()->json($this->state($demo->prepare($field)));
+        }
+
         $this->recoverIfStale($field, $processor);
 
         if ($field->status === Field::STATUS_READY && ! request()->boolean('force')) {

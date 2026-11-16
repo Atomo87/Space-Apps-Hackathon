@@ -60,20 +60,39 @@ it('protege o exemplo público contra edição e exclusão, sem duplicar', funct
 
 it('simula prioridades no exemplo público sem gravar', function () {
     Http::fake([
-        'geo.test/v1/climate-profile' => Http::response(['monthly' => [], 'source' => [], 'engine_version' => 'test']),
-        'geo.test/v1/terrain' => Http::response(['slope_pct' => ['mean' => 2.0]]),
-        'geo.test/v1/vegetation' => Http::response(['monthly' => []]),
-        'geo.test/v1/stress' => Http::response(['lst' => null, 'et' => null]),
-        'geo.test/v1/earthdata' => Http::response(['detail' => 'sem token'], 502),
         'geo.test/v1/analysis' => Http::response(['strategies' => [], 'diagnosis' => []]),
     ]);
     $this->post('/demo');
     $demo = Field::whereHas('farm', fn ($f) => $f->where('is_demo', true))->sole();
 
-    $this->postJson("/api/v1/fields/{$demo->id}/process")->assertAccepted();
+    $this->postJson("/api/v1/fields/{$demo->id}/process")->assertOk()->assertJsonPath('status', 'ready');
     $this->getJson("/api/v1/fields/{$demo->id}/status")->assertJson(['status' => 'ready']);
     $this->getJson("/api/v1/fields/{$demo->id}/analysis?priorities[forage]=5&priorities[save_water]=0")->assertOk();
 
     Http::assertSent(fn ($r) => str_ends_with($r->url(), '/v1/analysis') && $r['priorities']['forage'] === 5 && $r['priorities']['save_water'] === 0);
     expect($demo->farm->priorities()->first()->forage)->toBe(2);
+});
+
+it('abre e recupera o diagnóstico do exemplo público sem consultar o serviço externo', function () {
+    Http::fake();
+
+    $this->post('/demo')->assertRedirect();
+    $demo = Field::sole();
+    $demo->analysis()->delete();
+    $demo->update(['status' => Field::STATUS_ERROR, 'status_message' => 'Old processing failure']);
+
+    $this->get("/talhoes/{$demo->id}")->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('field.status', 'ready')
+            ->where('field.is_public_demo', true));
+
+    $this->getJson("/api/v1/fields/{$demo->id}/analysis")
+        ->assertOk()
+        ->assertJsonPath('field_id', $demo->id)
+        ->assertJsonPath('diagnosis.source.dataset_code', 'DEMO')
+        ->assertJsonPath('diagnosis.source.dataset', 'Illustrative climate data')
+        ->assertJsonCount(12, 'diagnosis.monthly')
+        ->assertJsonStructure(['strategies' => ['*' => ['title', 'score']], 'planting' => ['seasons']]);
+
+    Http::assertNothingSent();
 });

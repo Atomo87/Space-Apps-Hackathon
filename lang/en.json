@@ -151,5 +151,11 @@
   "fasciculada": "fibrous",
   "Safra de verão": "Summer growing season",
   "Segunda safra (safrinha)": "Second growing season",
-  "Inverno": "Winter"
+  "Inverno": "Winter",
+  "Fazenda Demonstração": "Demo Farm",
+  "Talhão 1 (demo)": "Field 1 (demo)",
+  "Exemplo de Uberlândia (MG). Para analisar o seu, use \"Cadastrar talhão\".": "Demo from Uberlândia, Brazil. Select \"Add field\" to analyze your own.",
+  "Dados climáticos ilustrativos": "Illustrative climate data",
+  "Série sintética de 2005 a 2025 para demonstrar o GeoSafra.": "Synthetic 2005–2025 series for the GeoSafra demo.",
+  "O serviço de análise está indisponível para recalcular a simulação. Restaure os valores iniciais para consultar o diagnóstico de demonstração.": "The analysis service is unavailable to recalculate this simulation. Reset the inputs to view the demo analysis."
 }

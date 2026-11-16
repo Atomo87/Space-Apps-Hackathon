@@ -10,6 +10,7 @@ use App\Services\Assistant\FieldAssistant;
 use App\Services\Assistant\KnowledgeBase;
 use App\Services\FirmsClient;
 use App\Services\GeoServiceClient;
+use App\Services\PublicDemo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -23,7 +24,7 @@ use Throwable;
  */
 class FieldAskController extends Controller
 {
-    public function __invoke(Request $request, Field $field, GeoServiceClient $geo, FirmsClient $firms, FieldAssistant $assistant, KnowledgeBase $knowledge): JsonResponse
+    public function __invoke(Request $request, Field $field, GeoServiceClient $geo, FirmsClient $firms, FieldAssistant $assistant, KnowledgeBase $knowledge, PublicDemo $demo): JsonResponse
     {
         $data = $request->validate(['question' => ['required', 'string', 'min:3', 'max:500']]);
         $question = $data['question'];
@@ -35,6 +36,9 @@ class FieldAskController extends Controller
             ]);
         }
 
+        $isPublicDemo = $demo->appliesTo($field);
+        $field = $isPublicDemo ? $demo->prepare($field) : $field;
+
         if ($field->status !== Field::STATUS_READY) {
             return response()->json([
                 'type' => 'about:blank', 'title' => __('Talhão ainda não processado'), 'status' => 409,
@@ -45,7 +49,9 @@ class FieldAskController extends Controller
         // Mesma análise da tela (pesos salvos, sem cenário), reaproveitando o cache.
         $payload = AnalysisPayload::for($field);
         try {
-            $analysis = Cache::remember(GeoServiceClient::analysisCacheKey($payload), now()->addMinutes(10), fn () => $geo->analysis($payload));
+            $analysis = $isPublicDemo
+                ? $demo->baseline()
+                : Cache::remember(GeoServiceClient::analysisCacheKey($payload), now()->addMinutes(10), fn () => $geo->analysis($payload));
         } catch (RuntimeException $e) {
             return response()->json([
                 'type' => 'about:blank', 'title' => __('Serviço de dados indisponível'), 'status' => 502,
@@ -54,7 +60,7 @@ class FieldAskController extends Controller
         }
 
         try {
-            $fires = $firms->near((float) $field->latitude, (float) $field->longitude);
+            $fires = $isPublicDemo ? null : $firms->near((float) $field->latitude, (float) $field->longitude);
         } catch (Throwable) {
             $fires = null;
         }

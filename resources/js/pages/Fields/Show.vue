@@ -33,6 +33,7 @@ interface FieldProps {
     status: FieldStatus['status'];
     status_message: string | null;
     is_demo: boolean;
+    is_public_demo: boolean;
     farm: { id: number; name: string; municipality: string | null; state: string | null };
     soil_source: string;
     history: { crop: string; sown_at: string; harvested_at: string }[];
@@ -53,7 +54,7 @@ const askOpen = ref(false);
 const fires = ref<Fires | null>(null);
 const firesLoading = ref(false);
 async function loadFires() {
-    if (fires.value || firesLoading.value) return;
+    if (props.field.is_public_demo || fires.value || firesLoading.value) return;
     firesLoading.value = true;
     try {
         fires.value = await api<Fires>(`/api/v1/fields/${props.field.id}/fires`);
@@ -357,7 +358,7 @@ onBeforeUnmount(() => {
                             <div class="flex items-center gap-1.5">
                                 <dt class="sr-only">{{ $t('Período do clima') }}</dt><Icon name="calendar" class="h-3.5 w-3.5 text-stone-400" />
                                 <dd>
-                                    {{ $t('Clima NASA POWER') }}
+                                    {{ $t(field.is_public_demo ? 'Dados climáticos ilustrativos' : 'Clima NASA POWER') }}
                                     <span v-if="usedPeriod" class="font-medium tabular-nums">{{ usedPeriod.start }}–{{ usedPeriod.end }}</span>
                                     <span v-else>{{ $t('período padrão') }}</span>
                                     <button v-if="can.update && status !== 'processing'" type="button" class="ml-1 font-semibold text-safra-700 underline-offset-2 hover:underline print:hidden" :aria-expanded="periodOpen" aria-controls="period-panel" @click="periodOpen ? (periodOpen = false) : openPeriod()">{{ $t('alterar') }}</button>
@@ -409,7 +410,7 @@ onBeforeUnmount(() => {
         </section>
 
         <div v-if="!can.update" class="notice-warn mb-6 flex-wrap items-center justify-between print:hidden">
-            <div class="flex items-start gap-3"><Icon name="eye" class="mt-0.5 h-5 w-5 shrink-0" /><span>{{ $t('Este é o') }} <strong>{{ $t('exemplo público') }}</strong> {{ $t('de referência: não pode ser editado nem excluído. Mude prioridades e cenários à vontade: nada é gravado.') }}</span></div>
+            <div class="flex items-start gap-3"><Icon name="eye" class="mt-0.5 h-5 w-5 shrink-0" /><span>{{ $t('Este é o') }} <strong>{{ $t('exemplo público') }}</strong> {{ $t('de referência: não pode ser editado nem excluído. Mude prioridades e cenários à vontade: nada é gravado.') }} <template v-if="field.is_public_demo">{{ $t('Os dados climáticos deste exemplo são ilustrativos.') }}</template></span></div>
             <Link :href="$url('/talhoes/novo')" class="btn-primary btn-sm"><Icon name="plus" /> {{ $t('Analisar o meu talhão') }}</Link>
         </div>
 
@@ -521,12 +522,12 @@ onBeforeUnmount(() => {
                 <section v-show="tab === 'diag'" class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
                     <div class="min-w-0 space-y-5">
                         <h2 class="section-kicker">{{ $t('Agora no talhão') }}</h2>
-                        <CropMonitorCard :vegetation="data.diagnosis.vegetation" :earthdata="data.diagnosis.earthdata" :fires="fires" :fires-loading="firesLoading" />
+                        <CropMonitorCard v-if="!field.is_public_demo" :vegetation="data.diagnosis.vegetation" :earthdata="data.diagnosis.earthdata" :fires="fires" :fires-loading="firesLoading" />
                         <FieldImagery :latitude="field.latitude" :longitude="field.longitude" :boundary="field.boundary" :vegetation="data.diagnosis.vegetation" :fires="fires" />
 
                         <template v-if="data.planting">
                             <h2 class="section-kicker">{{ $t('Quando plantar') }}</h2>
-                            <PlantingCard :planting="data.planting" />
+                            <PlantingCard :planting="data.planting" :illustrative="field.is_public_demo" />
                         </template>
 
                         <h2 class="section-kicker">{{ $t('Riscos ao longo do ano') }}</h2>
@@ -534,7 +535,7 @@ onBeforeUnmount(() => {
                             <div class="card-head">
                                 <div>
                                     <h2><span class="h-icon"><Icon name="calendar" /></span> {{ $t('Calendário de vulnerabilidade') }}</h2>
-                                    <p>{{ $t('Clima de 20 anos (NASA POWER), seu histórico de safras e o que os satélites observam, mês a mês.') }}</p>
+                                    <p>{{ $t(field.is_public_demo ? 'Clima ilustrativo e histórico de safras do exemplo, mês a mês.' : 'Clima de 20 anos (NASA POWER), seu histórico de safras e o que os satélites observam, mês a mês.') }}</p>
                                 </div>
                                 <ConfidenceBadge :level="data.diagnosis.confidence.level" :value="data.diagnosis.confidence.value" />
                             </div>
@@ -592,7 +593,7 @@ onBeforeUnmount(() => {
 
                         <EarthdataCard v-if="data.diagnosis.earthdata" :data="data.diagnosis.earthdata" :power-monthly="data.diagnosis.monthly.map((m) => m.rain_mm.mean)" />
 
-                        <h2 class="section-kicker">{{ $t('Clima histórico · NASA POWER') }}</h2>
+                        <h2 class="section-kicker">{{ $t(field.is_public_demo ? 'Dados climáticos ilustrativos' : 'Clima histórico · NASA POWER') }}</h2>
                         <ClimateCharts :diagnosis="data.diagnosis" />
 
                         <details class="card text-sm">

@@ -76,7 +76,7 @@ const soil = computed(() => ({
         </div>
         <div v-if="hasSoilMoisture" class="card">
             <h3 class="text-[15px] font-bold tracking-tight text-stone-900">{{ $t('Umidade do solo') }}</h3>
-            <p class="mt-0.5 text-xs text-stone-500">{{ $t('Modelo NASA POWER/MERRA-2 · 0 = seco, 1 = saturado.') }}</p>
+            <p class="mt-0.5 text-xs text-stone-500">{{ $t(diagnosis.source.dataset_code === 'DEMO' ? 'Dados climáticos ilustrativos · 0 = seco, 1 = saturado.' : 'Modelo NASA POWER/MERRA-2 · 0 = seco, 1 = saturado.') }}</p>
             <VChart :option="soil" autoresize class="mt-2 h-56" />
         </div>
     </div>

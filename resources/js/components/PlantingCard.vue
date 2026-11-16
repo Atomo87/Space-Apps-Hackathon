@@ -6,7 +6,7 @@ import DatasetBadge from './DatasetBadge.vue';
 import Icon from './Icon.vue';
 
 /** Janela de plantio: para cada safra, a chance de um ano "bom" semeando em cada semana (clima diário da NASA POWER). */
-const props = defineProps<{ planting: Planting }>();
+const props = defineProps<{ planting: Planting; illustrative?: boolean }>();
 
 const pct = (x: number | null) => (x === null ? '—' : `${Math.round(x * 100)}%`);
 const selected = ref<Record<string, PlantingWeek | null>>({});
@@ -48,7 +48,7 @@ function weekLabel(week: { date: string }): string {
                     {{ $t('Semana a semana, em quantos anos (') }}{{ planting.period.start }}–{{ planting.period.end }}{{ $t(') semear naquela data teria dado certo: umidade para germinar, sem veranico no início, chuva suficiente no ciclo e sem geada.') }}
                 </p>
             </div>
-            <DatasetBadge code="POWER diário" />
+            <DatasetBadge :code="illustrative ? 'DEMO' : 'POWER diário'" />
         </div>
 
         <div class="space-y-6">

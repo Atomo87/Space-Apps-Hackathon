@@ -743,5 +743,9 @@
   "Semear em {date}: {pct} dos anos bons": "Plant on {date}: {pct} favorable years",
   "{date}: {pct} dos anos bons": "{date}: {pct} favorable years",
   "moderado": "moderate",
-  "escarpado": "escarpment"
+  "escarpado": "escarpment",
+  "Dados climáticos ilustrativos": "Illustrative climate data",
+  "Dados climáticos ilustrativos · 0 = seco, 1 = saturado.": "Illustrative climate data. 0 = dry, 1 = saturated.",
+  "Os dados climáticos deste exemplo são ilustrativos.": "This demo uses illustrative climate data.",
+  "Clima ilustrativo e histórico de safras do exemplo, mês a mês.": "Illustrative climate and crop history, month by month."
 }
