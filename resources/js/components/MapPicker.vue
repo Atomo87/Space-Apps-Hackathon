@@ -201,7 +201,7 @@ onBeforeUnmount(() => map.value?.remove());
         </div>
         <p class="flex items-start gap-2 text-sm text-stone-600">
             <Icon name="info" class="mt-0.5 h-4 w-4 shrink-0 text-safra-700" />
-            <span v-if="cityMarker">{{ $t('O ponto inicial é o centro do município. Clique no mapa para marcar a localização do talhão.') }}</span>
+            <span v-if="cityMarker">{{ $t('O ponto inicial é o centro da cidade. Clique no mapa para marcar a localização do talhão.') }}</span>
             <span v-else>{{ $t('Toque nos') }} <strong>{{ $t('cantos do talhão') }}</strong> {{ $t('(3 toques já formam a área). Se preferir, um toque só marca o ponto.') }}</span>
         </p>
         <p v-if="geoError" class="field-error">{{ geoError }}</p>

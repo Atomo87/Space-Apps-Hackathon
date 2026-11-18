@@ -1,23 +1,17 @@
 <script setup lang="ts">
 import { t } from '@/lib/i18n';
-import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { url } from '@/lib/url';
-import { computed, ref } from 'vue';
+import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import heroImage from '@/assets/geosafra-fields.webp';
 import heroImageMobile from '@/assets/geosafra-fields-mobile.webp';
 import Icon, { type IconName } from '@/components/Icon.vue';
+import DemoPicker, { type DemoRegion } from '@/components/DemoPicker.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { SharedProps } from '@/types/global';
 
 const page = usePage<SharedProps>();
 const glossary = computed(() => page.props.glossary);
-const creatingDemo = ref(false);
-
-function demo() {
-    if (creatingDemo.value) return;
-    creatingDemo.value = true;
-    router.post(url('/demo'), {}, { onFinish: () => (creatingDemo.value = false) });
-}
+defineProps<{ demoRegions: DemoRegion[] }>();
 
 const steps: { title: string; text: string; icon: IconName }[] = [
     { title: t('Localize o talhão'), text: t('Busque o município, ajuste o ponto no mapa e informe o histórico da área.'), icon: 'map' },
@@ -72,9 +66,12 @@ const terms = [{ key: 'et' }, { key: 'balanco' }, { key: 'declividade' }];
                         <Link :href="$url('/talhoes/novo')" class="btn-lime min-h-12">
                             {{ $t('Cadastrar meu talhão') }} <Icon name="arrowRight" />
                         </Link>
-                        <button type="button" class="btn-ghost min-h-12" :aria-busy="creatingDemo" :disabled="creatingDemo" @click="demo">
-                            <Icon name="play" /> {{ creatingDemo ? $t('Abrindo…') : $t('Ver demonstração') }}
-                        </button>
+                        <details>
+                            <summary class="btn-ghost min-h-12 cursor-pointer list-none">
+                                <Icon name="play" /> {{ $t('Ver demonstração') }}
+                            </summary>
+                            <DemoPicker :regions="demoRegions" dark class="mt-3" />
+                        </details>
                     </div>
                     <p class="mt-4 flex items-center gap-2 text-sm text-white/70">
                         <Icon name="check" class="h-4 w-4 shrink-0 text-[#c8e89b]" />

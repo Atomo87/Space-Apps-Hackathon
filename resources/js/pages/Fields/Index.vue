@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import { t } from '@/lib/i18n';
+import { countryName, t } from '@/lib/i18n';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, ref, watch } from 'vue';
 import FieldGrid, { type FieldRow } from '@/components/FieldGrid.vue';
+import DemoPicker, { type DemoRegion } from '@/components/DemoPicker.vue';
 import Icon from '@/components/Icon.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { fmt } from '@/lib/labels';
 
 /** Tela "Meus talhões": todos os talhões cadastrados, com busca e filtro por situação. */
-const props = defineProps<{ fields: FieldRow[]; stats: { fields: number; area_ha: number; ready: number } }>();
+const props = defineProps<{ fields: FieldRow[]; stats: { fields: number; area_ha: number; ready: number }; demoRegions: DemoRegion[] }>();
 
 const query = ref('');
 const status = ref<'all' | 'ready' | 'processing' | 'error'>('all');
@@ -24,7 +25,7 @@ const shown = computed(() =>
     props.fields.filter((f) => {
         const okStatus = status.value === 'all' || (status.value === 'processing' ? ['processing', 'pending'].includes(f.status) : f.status === status.value);
         const q = norm(query.value.trim());
-        return okStatus && (!q || norm(`${f.name} ${f.farm} ${f.municipality ?? ''} ${f.state ?? ''}`).includes(q));
+        return okStatus && (!q || norm([f.name, f.farm, f.municipality, f.state, countryName(f.country_code)].join(' ')).includes(q));
     }),
 );
 
@@ -56,11 +57,16 @@ onBeforeUnmount(() => clearInterval(refresh));
             <Link :href="$url('/talhoes/novo')" class="btn-primary"><Icon name="plus" /> {{ $t('Novo talhão') }}</Link>
         </header>
 
+        <section class="card mb-6 flex flex-wrap items-center justify-between gap-3">
+            <h2 class="font-semibold">{{ $t('Exemplos de talhões') }}</h2>
+            <DemoPicker :regions="demoRegions" />
+        </section>
+
         <div v-if="fields.length" class="mb-5 flex flex-wrap items-center gap-3">
             <label class="relative min-w-[16rem] flex-1">
                 <span class="sr-only">{{ $t('Buscar talhão') }}</span>
                 <Icon name="target" class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-stone-400" />
-                <input v-model="query" type="search" class="input w-full pl-9" :placeholder="$t('Buscar por talhão, fazenda ou município')" />
+                <input v-model="query" type="search" class="input w-full pl-9" :placeholder="$t('Buscar por talhão, fazenda, cidade ou país')" />
             </label>
             <div class="tabs !mb-0" role="tablist" :aria-label="$t('Filtrar por situação')">
                 <button v-for="f in FILTERS" :key="f.k" type="button" role="tab" class="tab" :aria-selected="status === f.k" @click="status = f.k">{{ f.l }}</button>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { locale, t, tf } from '@/lib/i18n';
+import { countryName, locale, t, tf } from '@/lib/i18n';
 import { Head, useForm } from '@inertiajs/vue3';
 import { url } from '@/lib/url';
 import type { Polygon } from 'geojson';
@@ -28,7 +28,7 @@ interface HistoryRow {
 }
 interface Initial {
     id: number;
-    farm: { name: string; municipality: string | null; state: string | null; has_livestock: boolean };
+    farm: { name: string; municipality: string | null; state: string | null; country_code: string; has_livestock: boolean };
     field: { name: string; latitude: number; longitude: number; boundary: Polygon | null; area_ha: number | null; irrigated: boolean; irrigation_mm_day: number | null };
     soil: Record<string, string | number | null>;
     history: HistoryRow[];
@@ -44,7 +44,13 @@ const editing = !!props.initial;
 const defaults: Priorities = { save_water: 3, soil_structure: 3, n_fixation: 3, erosion_control: 3, organic_matter: 3, pest_break: 3, forage: 3, extra_income: 3, market_fit: 3 };
 
 const form = useForm({
-    farm: { name: props.initial?.farm.name ?? '', municipality: props.initial?.farm.municipality ?? '', state: props.initial?.farm.state ?? 'MG', has_livestock: props.initial?.farm.has_livestock ?? false },
+    farm: {
+        name: props.initial?.farm.name ?? '',
+        municipality: props.initial?.farm.municipality ?? '',
+        state: props.initial ? props.initial.farm.state : 'MG',
+        country_code: props.initial?.farm.country_code ?? 'BR',
+        has_livestock: props.initial?.farm.has_livestock ?? false,
+    },
     field: {
         name: props.initial?.field.name ?? t('Talhão 1'),
         latitude: (props.initial?.field.latitude ?? null) as number | null,
@@ -100,7 +106,7 @@ async function selectMunicipality(city: Municipality) {
     if (form.field.boundary) {
         const confirmed = await confirmAction({
             title: t('Mudar a localização do talhão?'),
-            message: t('O mapa irá para o centro do município escolhido. O contorno atual e a área calculada serão removidos.'),
+            message: t('O mapa irá para o centro da cidade escolhida. O contorno atual e a área calculada serão removidos.'),
             confirmText: t('Mudar localização'),
             icon: 'pin',
         });
@@ -114,7 +120,8 @@ async function selectMunicipality(city: Municipality) {
 
     municipalityText.value = city.name;
     form.farm.municipality = city.name;
-    form.farm.state = city.state;
+    form.farm.state = city.stateCode ?? city.state;
+    form.farm.country_code = city.countryCode;
     form.field.latitude = city.latitude;
     form.field.longitude = city.longitude;
     cityCenter.value = { latitude: city.latitude, longitude: city.longitude };
@@ -260,12 +267,13 @@ async function submit() {
                         <span class="label">{{ $t('Nome do talhão') }}</span>
                         <input v-model="form.field.name" class="input" required />
                     </label>
-                    <div class="grid grid-cols-[minmax(0,1fr)_4.2rem] gap-2 sm:col-span-2 lg:col-span-1">
-                        <MunicipalityPicker v-model="municipalityText" :state="form.farm.state" @select="selectMunicipality" />
+                    <div class="grid gap-2 sm:col-span-2 lg:col-span-1" :class="{ 'grid-cols-[minmax(0,1fr)_4.2rem]': form.farm.country_code === 'BR' }">
+                        <MunicipalityPicker v-model="municipalityText" :state="form.farm.country_code === 'BR' ? form.farm.state : null" @select="selectMunicipality" />
                         <label>
-                            <span class="label">{{ $t('UF') }}</span>
-                            <input v-model="form.farm.state" class="input uppercase" maxlength="2" />
+                            <span class="label">{{ $t(form.farm.country_code === 'BR' ? 'UF' : 'Estado ou região') }}</span>
+                            <input v-model="form.farm.state" class="input" :class="{ uppercase: form.farm.country_code === 'BR' }" :maxlength="form.farm.country_code === 'BR' ? 2 : 150" />
                         </label>
+                        <p v-if="form.farm.municipality" class="col-span-full text-sm text-stone-600">{{ $t('País') }} · {{ countryName(form.farm.country_code) }} ({{ form.farm.country_code }})</p>
                     </div>
                   </div>
                   <details class="rounded-xl border border-stone-200 bg-stone-50 p-3 text-sm">

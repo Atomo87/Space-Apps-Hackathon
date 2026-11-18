@@ -181,7 +181,7 @@ def crit_water(ctx: Ctx, rot: Rotation) -> Criterion:
     bonus = 0.0
     for s in steps:
         crop = ctx.catalog.crop(s.crops[0])
-        if crop["drought_tolerance"] == "high" and any(m in RAINY_SEASON for m in s.months) and spell >= 30:
+        if crop["drought_tolerance"] == "high" and any(m in ctx.profile["season"].get("rainy_months", RAINY_SEASON) for m in s.months) and spell >= 30:
             bonus = 8.0
     score = clamp(100 * (1 - 1.6 * p50) + bonus)
     conf = ctx.climate_conf * (1.0 if ctx.soil and ctx.soil.texture else 0.85)
@@ -218,7 +218,7 @@ def step_climate_loss(ctx: Ctx, step: Step) -> dict[str, Any]:
     heat_days = max(interp_threshold(ctx.monthly[m]["heat_days"], crop["t_heat_stress_c"]) for m in sensitive)
     p_heat = min(0.6, heat_days / 15)
     p_dry = 0.0
-    if any(m in RAINY_SEASON for m in sensitive):
+    if any(m in ctx.profile["season"].get("rainy_months", RAINY_SEASON) for m in sensitive):
         pct = (ctx.profile["season"]["pct_seasons_dry_spell_ge_10"] or 0) / 100
         p_dry = pct * {"low": 0.6, "medium": 0.4, "high": 0.15}[crop["drought_tolerance"]]
     loss = 1 - (1 - p_frost) * (1 - p_heat) * (1 - p_dry)

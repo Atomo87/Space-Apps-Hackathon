@@ -1,7 +1,7 @@
 {
  "engine_version": "0.1.0-spaceapps",
  "catalog_version": "0.1.0",
- "disclaimer": "Esta ferramenta apoia, mas não substitui, o conhecimento do agricultor e da assistência técnica local.",
+ "disclaimer": "Use this tool alongside grower knowledge and local agronomic advice.",
  "scenario": {
   "rain_delta_pct": 0.0,
   "temp_delta_c": 0.0
@@ -9,61 +9,61 @@
  "weights": [
   {
    "key": "save_water",
-   "label": "Uso de água",
+   "label": "Water use",
    "weight": 4.0,
    "adjustable": true
   },
   {
    "key": "soil_structure",
-   "label": "Estrutura e infiltração",
+   "label": "Soil structure and infiltration",
    "weight": 3.0,
    "adjustable": true
   },
   {
    "key": "n_fixation",
-   "label": "Nitrogênio",
+   "label": "Nitrogen",
    "weight": 2.0,
    "adjustable": true
   },
   {
    "key": "erosion_control",
-   "label": "Controle de erosão",
+   "label": "Erosion control",
    "weight": 4.0,
    "adjustable": true
   },
   {
    "key": "organic_matter",
-   "label": "Matéria orgânica (palhada)",
+   "label": "Organic matter (residue)",
    "weight": 3.0,
    "adjustable": true
   },
   {
    "key": "pest_break",
-   "label": "Quebra de pragas e doenças",
+   "label": "Pest and disease management",
    "weight": 3.0,
    "adjustable": true
   },
   {
    "key": "forage",
-   "label": "Forragem",
+   "label": "Forage",
    "weight": 2.0,
    "adjustable": true
   },
   {
    "key": "extra_income",
-   "label": "Renda complementar",
+   "label": "Additional income",
    "weight": 4.0,
    "adjustable": true
   },
   {
    "key": "market_fit",
-   "label": "Adequação ao mercado",
+   "label": "Market fit",
    "weight": 3.0,
    "adjustable": true
   },
   {
    "key": "climate_risk",
-   "label": "Segurança climática",
+   "label": "Climate resilience",
    "weight": 3.0,
    "adjustable": false
   }
@@ -72,92 +72,92 @@
   "calendar": [
    {
     "month": 1,
-    "name": "jan",
+    "name": "Jan",
     "heat": 0,
     "frost": 0,
     "drought": 0,
     "heavy_rain": 2,
     "bare_soil": 0,
     "current_crops": [
-     "Soja"
+     "Soybean"
     ]
    },
    {
     "month": 2,
-    "name": "fev",
+    "name": "Feb",
     "heat": 0,
     "frost": 0,
     "drought": 0,
     "heavy_rain": 2,
     "bare_soil": 0,
     "current_crops": [
-     "Milho",
-     "Soja"
+     "Corn",
+     "Soybean"
     ]
    },
    {
     "month": 3,
-    "name": "mar",
+    "name": "Mar",
     "heat": 1,
     "frost": 0,
     "drought": 0,
     "heavy_rain": 2,
     "bare_soil": 0,
     "current_crops": [
-     "Milho"
+     "Corn"
     ]
    },
    {
     "month": 4,
-    "name": "abr",
+    "name": "Apr",
     "heat": 1,
     "frost": 0,
     "drought": 0,
     "heavy_rain": 1,
     "bare_soil": 0,
     "current_crops": [
-     "Milho"
+     "Corn"
     ]
    },
    {
     "month": 5,
-    "name": "mai",
+    "name": "May",
     "heat": 1,
     "frost": 0,
     "drought": 2,
     "heavy_rain": 0,
     "bare_soil": 0,
     "current_crops": [
-     "Milho"
+     "Corn"
     ]
    },
    {
     "month": 6,
-    "name": "jun",
+    "name": "Jun",
     "heat": 0,
     "frost": 0,
     "drought": 2,
     "heavy_rain": 0,
     "bare_soil": 0,
     "current_crops": [
-     "Milho"
+     "Corn"
     ]
    },
    {
     "month": 7,
-    "name": "jul",
+    "name": "Jul",
     "heat": 0,
     "frost": 0,
     "drought": 2,
     "heavy_rain": 0,
     "bare_soil": 1,
     "current_crops": [
-     "Milho"
+     "Corn"
     ]
    },
    {
     "month": 8,
-    "name": "ago",
+    "name": "Aug",
     "heat": 0,
     "frost": 0,
     "drought": 2,
@@ -167,7 +167,7 @@
    },
    {
     "month": 9,
-    "name": "set",
+    "name": "Sep",
     "heat": 0,
     "frost": 0,
     "drought": 2,
@@ -177,50 +177,50 @@
    },
    {
     "month": 10,
-    "name": "out",
+    "name": "Oct",
     "heat": 0,
     "frost": 0,
     "drought": 0,
     "heavy_rain": 1,
     "bare_soil": 2,
     "current_crops": [
-     "Soja"
+     "Soybean"
     ]
    },
    {
     "month": 11,
-    "name": "nov",
+    "name": "Nov",
     "heat": 0,
     "frost": 0,
     "drought": 0,
     "heavy_rain": 1,
     "bare_soil": 0,
     "current_crops": [
-     "Soja"
+     "Soybean"
     ]
    },
    {
     "month": 12,
-    "name": "dez",
+    "name": "Dec",
     "heat": 0,
     "frost": 0,
     "drought": 0,
     "heavy_rain": 1,
     "bare_soil": 0,
     "current_crops": [
-     "Soja"
+     "Soybean"
     ]
    }
   ],
   "current": {
-   "title": "Atual: Soja → Milho → pousio",
+   "title": "Current: Soybean → Corn → fallow",
    "steps": [
     {
      "crops": [
-      "soja"
+      "soybean"
      ],
      "crop_names": [
-      "Soja"
+      "Soybean"
      ],
      "sow_month": 10,
      "end_month": 2,
@@ -231,16 +231,16 @@
       1,
       2
      ],
-     "label": "out–fev",
+     "label": "Oct–Feb",
      "purpose": "cash",
      "note": null
     },
     {
      "crops": [
-      "milho"
+      "corn"
      ],
      "crop_names": [
-      "Milho"
+      "Corn"
      ],
      "sow_month": 2,
      "end_month": 7,
@@ -252,7 +252,7 @@
       6,
       7
      ],
-     "label": "fev–jul",
+     "label": "Feb–Jul",
      "purpose": "cash",
      "note": null
     }
@@ -273,70 +273,70 @@
   "current_crop_vulnerable": [
    {
     "month": 1,
-    "name": "jan",
+    "name": "Jan",
     "crops": [
-     "Soja"
+     "Soybean"
     ],
     "risks": [
-     "chuva extrema"
+     "extreme rainfall"
     ]
    },
    {
     "month": 2,
-    "name": "fev",
+    "name": "Feb",
     "crops": [
-     "Milho",
-     "Soja"
+     "Corn",
+     "Soybean"
     ],
     "risks": [
-     "chuva extrema"
+     "extreme rainfall"
     ]
    },
    {
     "month": 3,
-    "name": "mar",
+    "name": "Mar",
     "crops": [
-     "Milho"
+     "Corn"
     ],
     "risks": [
-     "chuva extrema"
+     "extreme rainfall"
     ]
    },
    {
     "month": 5,
-    "name": "mai",
+    "name": "May",
     "crops": [
-     "Milho"
+     "Corn"
     ],
     "risks": [
-     "falta de água / veranico"
+     "water deficit or dry spell"
     ]
    },
    {
     "month": 6,
-    "name": "jun",
+    "name": "Jun",
     "crops": [
-     "Milho"
+     "Corn"
     ],
     "risks": [
-     "falta de água / veranico"
+     "water deficit or dry spell"
     ]
    },
    {
     "month": 7,
-    "name": "jul",
+    "name": "Jul",
     "crops": [
-     "Milho"
+     "Corn"
     ],
     "risks": [
-     "falta de água / veranico"
+     "water deficit or dry spell"
     ]
    }
   ],
   "highlights": [
    {
     "key": "dry_spell",
-    "text": "Veranico de 10 dias ou mais em 10% das safras (média do maior veranico: 8 dias).",
+    "text": "A dry spell of at least 10 days occurred in 10% of growing seasons (average longest dry spell: 8 days).",
     "datasets": [
      "POWER"
     ],
@@ -344,7 +344,7 @@
    },
    {
     "key": "water_deficit",
-    "text": "Chuva abaixo da evapotranspiração em mai, jun, jul, ago e set; pior mês: jul (-142 mm).",
+    "text": "Rainfall was below evapotranspiration in May, Jun, Jul, Aug and Sep. The largest deficit occurred in Jul (-142 mm).",
     "datasets": [
      "POWER"
     ],
@@ -352,15 +352,15 @@
    },
    {
     "key": "bare_soil",
-    "text": "Pelo seu histórico, o solo fica descoberto em jul, ago, set e out (~118 dias no último ano).",
+    "text": "Your crop history indicates bare soil in Jul, Aug, Sep and Oct (~118 days in the last year).",
     "datasets": [
-     "Histórico informado"
+     "Provided crop history"
     ],
-    "period": "últimos 12 meses"
+    "period": "last 12 months"
    },
    {
     "key": "heavy_rain",
-    "text": "Chuvas fortes (acima de 44 mm/dia) concentradas em jan, fev e mar.",
+    "text": "Heavy rain (above 44 mm per day) was concentrated in Jan, Feb and Mar.",
     "datasets": [
      "POWER"
     ],
@@ -370,7 +370,7 @@
   "monthly": [
    {
     "month": 1,
-    "name": "jan",
+    "name": "Jan",
     "rain_mm": {
      "mean": 309.1,
      "p10": 218.9,
@@ -391,7 +391,7 @@
    },
    {
     "month": 2,
-    "name": "fev",
+    "name": "Feb",
     "rain_mm": {
      "mean": 290.8,
      "p10": 210.8,
@@ -412,7 +412,7 @@
    },
    {
     "month": 3,
-    "name": "mar",
+    "name": "Mar",
     "rain_mm": {
      "mean": 242.0,
      "p10": 172.5,
@@ -433,7 +433,7 @@
    },
    {
     "month": 4,
-    "name": "abr",
+    "name": "Apr",
     "rain_mm": {
      "mean": 145.0,
      "p10": 85.1,
@@ -454,7 +454,7 @@
    },
    {
     "month": 5,
-    "name": "mai",
+    "name": "May",
     "rain_mm": {
      "mean": 77.4,
      "p10": 21.2,
@@ -475,7 +475,7 @@
    },
    {
     "month": 6,
-    "name": "jun",
+    "name": "Jun",
     "rain_mm": {
      "mean": 23.5,
      "p10": 5.0,
@@ -496,7 +496,7 @@
    },
    {
     "month": 7,
-    "name": "jul",
+    "name": "Jul",
     "rain_mm": {
      "mean": 13.2,
      "p10": 0.0,
@@ -517,7 +517,7 @@
    },
    {
     "month": 8,
-    "name": "ago",
+    "name": "Aug",
     "rain_mm": {
      "mean": 16.7,
      "p10": 0.0,
@@ -538,7 +538,7 @@
    },
    {
     "month": 9,
-    "name": "set",
+    "name": "Sep",
     "rain_mm": {
      "mean": 76.4,
      "p10": 39.0,
@@ -559,7 +559,7 @@
    },
    {
     "month": 10,
-    "name": "out",
+    "name": "Oct",
     "rain_mm": {
      "mean": 155.5,
      "p10": 88.7,
@@ -580,7 +580,7 @@
    },
    {
     "month": 11,
-    "name": "nov",
+    "name": "Nov",
     "rain_mm": {
      "mean": 224.7,
      "p10": 142.2,
@@ -601,7 +601,7 @@
    },
    {
     "month": 12,
-    "name": "dez",
+    "name": "Dec",
     "rain_mm": {
      "mean": 288.3,
      "p10": 198.0,
@@ -844,7 +844,7 @@
    ]
   },
   "source": {
-   "dataset": "SINTÉTICO (teste) — NÃO são dados da NASA",
+   "dataset": "SYNTHETIC (test) — contains no NASA observations",
    "dataset_code": "POWER",
    "community": "ag",
    "api_version": "test",
@@ -908,8 +908,8 @@
    "fetched_at": "synthetic",
    "messages": [],
    "missing_optional": [],
-   "grid_note": "Dados em grade (~0,5° × 0,625° para meteorologia, MERRA-2; ~1° para radiação, CERES). Representam a região do talhão, não uma estação dentro dele.",
-   "citation": "NASA Langley Research Center (LaRC) POWER Project, financiado pelo NASA Earth Science/Applied Science Program. https://power.larc.nasa.gov",
+   "grid_note": "Gridded data (~0.5° × 0.625° for MERRA-2 weather; ~1° for CERES radiation). These describe conditions around the field.",
+   "citation": "NASA Langley Research Center (LaRC) POWER Project, funded by the NASA Earth Science/Applied Science Program. https://power.larc.nasa.gov",
    "requests": 0,
    "cache_hits": 0
   },
@@ -917,7 +917,7 @@
    "value": 0.6,
    "level": "media",
    "notes": [
-    "Dados em grade (~0,5° × 0,625° para meteorologia, MERRA-2; ~1° para radiação, CERES). Representam a região do talhão, não uma estação dentro dele."
+    "Gridded data (~0.5° × 0.625° for MERRA-2 weather; ~1° for CERES radiation). These describe conditions around the field."
    ]
   },
   "scenario": null
@@ -926,15 +926,15 @@
   {
    "key": "atual",
    "is_current": true,
-   "title": "Atual: Soja → Milho → pousio",
-   "focus": "Referência (o que você já faz)",
+   "title": "Current: Soybean → Corn → fallow",
+   "focus": "Baseline (your current practice)",
    "steps": [
     {
      "crops": [
-      "soja"
+      "soybean"
      ],
      "crop_names": [
-      "Soja"
+      "Soybean"
      ],
      "sow_month": 10,
      "end_month": 2,
@@ -945,16 +945,16 @@
       1,
       2
      ],
-     "label": "out–fev",
+     "label": "Oct–Feb",
      "purpose": "cash",
      "note": null
     },
     {
      "crops": [
-      "milho"
+      "corn"
      ],
      "crop_names": [
-      "Milho"
+      "Corn"
      ],
      "sow_month": 2,
      "end_month": 7,
@@ -966,7 +966,7 @@
       6,
       7
      ],
-     "label": "fev–jul",
+     "label": "Feb–Jul",
      "purpose": "cash",
      "note": null
     }
@@ -975,62 +975,62 @@
     {
      "month": 1,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 2,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 3,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 4,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 5,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 6,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 7,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 8,
      "factor": 0.7,
-     "kind": "palhada"
+     "kind": "crop residue"
     },
     {
      "month": 9,
      "factor": 0.7,
-     "kind": "palhada"
+     "kind": "crop residue"
     },
     {
      "month": 10,
      "factor": 0.7,
-     "kind": "semeadura sobre palhada"
+     "kind": "planting into crop residue"
     },
     {
      "month": 11,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 12,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     }
    ],
    "score": 64,
@@ -1046,109 +1046,109 @@
    "criteria": [
     {
      "key": "save_water",
-     "label": "Uso de água",
+     "label": "Water use",
      "score": 57,
      "weight": 4.0,
      "weighted": 7.4,
      "confidence": 0.51,
-     "explanation": "Em um ano típico falta cerca de 27% da água que as culturas usariam (ETc ≈ 1252 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "explanation": "In a typical year, the water deficit is about 27% of crop demand (annual ETc about 1252 mm, using a monthly water balance with 70 mm of soil water storage).",
      "delta_vs_current": null
     },
     {
      "key": "soil_structure",
-     "label": "Estrutura e infiltração",
+     "label": "Soil structure and infiltration",
      "score": 24,
      "weight": 3.0,
      "weighted": 2.3,
      "confidence": 0.55,
-     "explanation": "Raízes: fasciculada, pivotante; 2 mês(es) de solo descoberto.",
+     "explanation": "Root systems: fibrous, taproot; 2 months with bare soil.",
      "delta_vs_current": null
     },
     {
      "key": "n_fixation",
-     "label": "Nitrogênio",
+     "label": "Nitrogen",
      "score": 17,
      "weight": 2.0,
      "weighted": 1.1,
      "confidence": 0.55,
-     "explanation": "Crédito estimado de ~20 kg N/ha para a cultura seguinte (estimativa do catálogo).",
+     "explanation": "Estimated nitrogen credit of about 20 kg N/ha for the next crop (catalog estimate).",
      "delta_vs_current": null
     },
     {
      "key": "erosion_control",
-     "label": "Controle de erosão",
+     "label": "Erosion control",
      "score": 98,
      "weight": 4.0,
      "weighted": 12.6,
      "confidence": 0.51,
-     "explanation": "Protege 98% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "explanation": "Ground cover protects against 98% of annual erosive rainfall; ground cover is present in all rainy months.",
      "delta_vs_current": null
     },
     {
      "key": "organic_matter",
-     "label": "Matéria orgânica (palhada)",
+     "label": "Organic matter (residue)",
      "score": 58,
      "weight": 3.0,
      "weighted": 5.6,
      "confidence": 0.55,
-     "explanation": "Aporte equivalente de ~9.3 t/ha/ano de palhada (ponderado pela relação C:N).",
+     "explanation": "Equivalent residue input of about 9.3 t/ha per year, weighted by the C:N ratio.",
      "delta_vs_current": null
     },
     {
      "key": "pest_break",
-     "label": "Quebra de pragas e doenças",
+     "label": "Pest and disease management",
      "score": 39,
      "weight": 3.0,
      "weighted": 3.8,
      "confidence": 0.45,
-     "explanation": "Interrompe: Nematoide-de-cisto da soja, Mofo-branco. Não interrompe: Nematoide-de-galhas, Nematoide-das-lesões, Cigarrinha-do-milho / enfezamentos. 2 família(s) botânica(s).",
+     "explanation": "Breaks the cycle of: Soybean cyst nematode, White mold. Does not break the cycle of: Root-knot nematode, Root-lesion nematode, Corn leafhopper and corn stunt. 2 crop families.",
      "delta_vs_current": null
     },
     {
      "key": "forage",
-     "label": "Forragem",
+     "label": "Forage",
      "score": 45,
      "weight": 2.0,
      "weighted": 2.9,
      "confidence": 0.55,
-     "explanation": "Oferta de forragem em ~1.8 dos 5 meses de entressafra (mai–set).",
+     "explanation": "Provides forage for about 1.8 of the five dry-season months (May–Sep).",
      "delta_vs_current": null
     },
     {
      "key": "extra_income",
-     "label": "Renda complementar",
+     "label": "Additional income",
      "score": 80,
      "weight": 4.0,
      "weighted": 10.3,
      "confidence": 0.4,
-     "explanation": "Segunda fonte de renda: Milho. (índice de mercado é hipótese a validar)",
+     "explanation": "Second income source: Corn. (market value is an assumption to verify)",
      "delta_vs_current": null
     },
     {
      "key": "market_fit",
-     "label": "Adequação ao mercado",
+     "label": "Market fit",
      "score": 100,
      "weight": 3.0,
      "weighted": 9.7,
      "confidence": 0.8,
-     "explanation": "Há comprador conhecido para todas as culturas comerciais.",
+     "explanation": "All cash crops have a known buyer.",
      "delta_vs_current": null
     },
     {
      "key": "climate_risk",
-     "label": "Segurança climática",
+     "label": "Climate resilience",
      "score": 90,
      "weight": 3.0,
      "weighted": 8.7,
      "confidence": 0.6,
-     "explanation": "Maior risco: Milho — ~2 dia(s)/mês acima de 35 °C na fase sensível; veranico ≥ 10 dias em 10% das safras",
+     "explanation": "Highest risk: Corn — ~2 days per month above 35 °C during the sensitive stage; dry spells of at least 10 days in 10% of growing seasons",
      "delta_vs_current": null
     }
    ],
-   "rationale": "É o que você já faz; serve de referência para comparar as alternativas.",
+   "rationale": "This is your current rotation, used as the baseline for comparisons.",
    "evidences": [
     {
-     "text": "Chuva abaixo da evapotranspiração em mai, jun, jul, ago e set; pior mês: jul (-142 mm).",
+     "text": "Rainfall was below evapotranspiration in May, Jun, Jul, Aug and Sep. The largest deficit occurred in Jul (-142 mm).",
      "datasets": [
       "POWER"
      ],
@@ -1156,7 +1156,7 @@
      "indicator": "water_deficit"
     },
     {
-     "text": "Veranico de 10 dias ou mais em 10% das safras (média do maior veranico: 8 dias).",
+     "text": "A dry spell of at least 10 days occurred in 10% of growing seasons (average longest dry spell: 8 days).",
      "datasets": [
       "POWER"
      ],
@@ -1164,7 +1164,7 @@
      "indicator": "dry_spell"
     },
     {
-     "text": "Chuvas fortes (acima de 44 mm/dia) concentradas em jan, fev e mar.",
+     "text": "Heavy rain (above 44 mm per day) was concentrated in Jan, Feb and Mar.",
      "datasets": [
       "POWER"
      ],
@@ -1172,63 +1172,63 @@
      "indicator": "heavy_rain"
     },
     {
-     "text": "Uso de água: Em um ano típico falta cerca de 27% da água que as culturas usariam (ETc ≈ 1252 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "text": "Water use: In a typical year, the water deficit is about 27% of crop demand (annual ETc about 1252 mm, using a monthly water balance with 70 mm of soil water storage).",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "water_balance"
     },
     {
-     "text": "Erosão: Protege 98% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "text": "Erosion: Ground cover protects against 98% of annual erosive rainfall; ground cover is present in all rainy months.",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "erosion_cover"
     },
     {
-     "text": "Pragas: Interrompe: Nematoide-de-cisto da soja, Mofo-branco. Não interrompe: Nematoide-de-galhas, Nematoide-das-lesões, Cigarrinha-do-milho / enfezamentos. 2 família(s) botânica(s).",
+     "text": "Pests: Breaks the cycle of: Soybean cyst nematode, White mold. Does not break the cycle of: Root-knot nematode, Root-lesion nematode, Corn leafhopper and corn stunt. 2 crop families.",
      "datasets": [
-      "Catálogo GeoSafra (hipótese)"
+      "GeoSafra catalog (assumption)"
      ],
      "period": "—",
      "indicator": "pest_break"
     }
    ],
    "benefits": [
-    "Sistema conhecido: sem custo de aprendizado nem de sementes novas"
+    "Familiar system with no learning costs or new seed requirements"
    ],
    "information_gaps": [
-    "Sem análise de solo: textura e pH não confirmados (água no solo assumida em 70 mm).",
-    "Declividade não medida (SRTM/NASADEM fica para a próxima fase): a erosão considera só chuva e cobertura.",
-    "Atributos de Milho, Soja vêm de um catálogo simplificado com hipóteses a validar.",
-    "Dado climático em grade de ~50 km: não capta o microclima do talhão."
+    "Soil texture and pH are unconfirmed. The model assumes a 70 mm soil water capacity.",
+    "Slope measurements are pending in the planned SRTM/NASADEM phase. The erosion estimate uses rainfall and ground cover only.",
+    "Attributes for Corn, Soybean come from a simplified catalog and require local validation.",
+    "The ~50 km climate grid cannot resolve this field's microclimate."
    ],
    "local_review_risks": [
-    "Respeitar o vazio sanitário da ferrugem-asiática definido para o estado",
-    "Pressão de percevejos e de nematoides varia muito entre talhões",
-    "Cigarrinha-do-milho e enfezamentos: evitar milho sobre milho e checar a pressão regional"
+    "Follow the state's soybean-free period for Asian soybean rust.",
+    "Stink bug and nematode pressure varies considerably by field.",
+    "For corn leafhopper and corn stunt, avoid continuous corn and check regional pressure."
    ],
    "conflicts": [
-    "Boa para controle de erosão, renda complementar, mas fraca em estrutura e infiltração, nitrogênio."
+    "Strong for erosion control, additional income, with weaker performance in soil structure and infiltration, nitrogen."
    ],
    "label": "A"
   },
   {
    "key": "soja_milho_braquiaria",
    "is_current": false,
-   "title": "Soja → Milho safrinha + braquiária → pastejo/cobertura",
-   "focus": "Cobertura do solo, forragem e controle de erosão",
+   "title": "Soybean → second-season corn + brachiaria → grazing or ground cover",
+   "focus": "Ground cover, forage, and erosion control",
    "steps": [
     {
      "crops": [
-      "soja"
+      "soybean"
      ],
      "crop_names": [
-      "Soja"
+      "Soybean"
      ],
      "sow_month": 10,
      "end_month": 2,
@@ -1239,18 +1239,18 @@
       1,
       2
      ],
-     "label": "out–fev",
+     "label": "Oct–Feb",
      "purpose": "cash",
      "note": null
     },
     {
      "crops": [
-      "milho",
+      "corn",
       "braquiaria"
      ],
      "crop_names": [
-      "Milho",
-      "Braquiária (ruziziensis)"
+      "Corn",
+      "Brachiaria (ruzigrass)"
      ],
      "sow_month": 2,
      "end_month": 6,
@@ -1261,16 +1261,16 @@
       5,
       6
      ],
-     "label": "fev–jun",
+     "label": "Feb–Jun",
      "purpose": "cash",
-     "note": "Consórcio: braquiária semeada junto com o milho"
+     "note": "Intercrop: brachiaria planted with corn"
     },
     {
      "crops": [
       "braquiaria"
      ],
      "crop_names": [
-      "Braquiária (ruziziensis)"
+      "Brachiaria (ruzigrass)"
      ],
      "sow_month": 7,
      "end_month": 9,
@@ -1279,71 +1279,71 @@
       8,
       9
      ],
-     "label": "jul–set",
+     "label": "Jul–Sep",
      "purpose": "forage",
-     "note": "Braquiária já estabelecida atravessa a seca"
+     "note": "Established brachiaria can persist through the dry season"
     }
    ],
    "cover_by_month": [
     {
      "month": 1,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 2,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 3,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 4,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 5,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 6,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 7,
      "factor": 0.7,
-     "kind": "semeadura sobre palhada"
+     "kind": "planting into crop residue"
     },
     {
      "month": 8,
      "factor": 0.8,
-     "kind": "cobertura viva (dormente na seca)"
+     "kind": "living cover (dormant during the dry season)"
     },
     {
      "month": 9,
      "factor": 0.8,
-     "kind": "cobertura viva (dormente na seca)"
+     "kind": "living cover (dormant during the dry season)"
     },
     {
      "month": 10,
      "factor": 0.7,
-     "kind": "semeadura sobre palhada"
+     "kind": "planting into crop residue"
     },
     {
      "month": 11,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 12,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     }
    ],
    "score": 82,
@@ -1359,109 +1359,109 @@
    "criteria": [
     {
      "key": "save_water",
-     "label": "Uso de água",
+     "label": "Water use",
      "score": 73,
      "weight": 4.0,
      "weighted": 9.4,
      "confidence": 0.51,
-     "explanation": "Em um ano típico falta cerca de 17% da água que as culturas usariam (ETc ≈ 1093 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "explanation": "In a typical year, the water deficit is about 17% of crop demand (annual ETc about 1093 mm, using a monthly water balance with 70 mm of soil water storage).",
      "delta_vs_current": 16
     },
     {
      "key": "soil_structure",
-     "label": "Estrutura e infiltração",
+     "label": "Soil structure and infiltration",
      "score": 84,
      "weight": 3.0,
      "weighted": 8.1,
      "confidence": 0.55,
-     "explanation": "Raízes: fasciculada, pivotante; 0 mês(es) de solo descoberto.",
+     "explanation": "Root systems: fibrous, taproot; 0 months with bare soil.",
      "delta_vs_current": 60
     },
     {
      "key": "n_fixation",
-     "label": "Nitrogênio",
+     "label": "Nitrogen",
      "score": 17,
      "weight": 2.0,
      "weighted": 1.1,
      "confidence": 0.55,
-     "explanation": "Crédito estimado de ~20 kg N/ha para a cultura seguinte (estimativa do catálogo).",
+     "explanation": "Estimated nitrogen credit of about 20 kg N/ha for the next crop (catalog estimate).",
      "delta_vs_current": 0
     },
     {
      "key": "erosion_control",
-     "label": "Controle de erosão",
+     "label": "Erosion control",
      "score": 98,
      "weight": 4.0,
      "weighted": 12.6,
      "confidence": 0.51,
-     "explanation": "Protege 98% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "explanation": "Ground cover protects against 98% of annual erosive rainfall; ground cover is present in all rainy months.",
      "delta_vs_current": 0
     },
     {
      "key": "organic_matter",
-     "label": "Matéria orgânica (palhada)",
+     "label": "Organic matter (residue)",
      "score": 100,
      "weight": 3.0,
      "weighted": 9.7,
      "confidence": 0.55,
-     "explanation": "Aporte equivalente de ~21.8 t/ha/ano de palhada (ponderado pela relação C:N).",
+     "explanation": "Equivalent residue input of about 21.8 t/ha per year, weighted by the C:N ratio.",
      "delta_vs_current": 42
     },
     {
      "key": "pest_break",
-     "label": "Quebra de pragas e doenças",
+     "label": "Pest and disease management",
      "score": 51,
      "weight": 3.0,
      "weighted": 4.9,
      "confidence": 0.45,
-     "explanation": "Interrompe: Nematoide-de-galhas, Nematoide-de-cisto da soja, Mofo-branco. Não interrompe: Nematoide-das-lesões, Cigarrinha-do-milho / enfezamentos. 2 família(s) botânica(s).",
+     "explanation": "Breaks the cycle of: Root-knot nematode, Soybean cyst nematode, White mold. Does not break the cycle of: Root-lesion nematode, Corn leafhopper and corn stunt. 2 crop families.",
      "delta_vs_current": 12
     },
     {
      "key": "forage",
-     "label": "Forragem",
+     "label": "Forage",
      "score": 100,
      "weight": 2.0,
      "weighted": 6.5,
      "confidence": 0.55,
-     "explanation": "Oferta de forragem em ~5.0 dos 5 meses de entressafra (mai–set).",
+     "explanation": "Provides forage for about 5.0 of the five dry-season months (May–Sep).",
      "delta_vs_current": 55
     },
     {
      "key": "extra_income",
-     "label": "Renda complementar",
+     "label": "Additional income",
      "score": 100,
      "weight": 4.0,
      "weighted": 12.9,
      "confidence": 0.4,
-     "explanation": "Segunda fonte de renda: Milho. Pastejo na entressafra conta como renda indireta. (índice de mercado é hipótese a validar)",
+     "explanation": "Second income source: Corn. Dry-season grazing counts as indirect income. (market value is an assumption to verify)",
      "delta_vs_current": 20
     },
     {
      "key": "market_fit",
-     "label": "Adequação ao mercado",
+     "label": "Market fit",
      "score": 83,
      "weight": 3.0,
      "weighted": 8.1,
      "confidence": 0.3,
-     "explanation": "Mercado não informado para Braquiária (ruziziensis).",
+     "explanation": "Market information is missing for Brachiaria (ruzigrass).",
      "delta_vs_current": -17
     },
     {
      "key": "climate_risk",
-     "label": "Segurança climática",
+     "label": "Climate resilience",
      "score": 92,
      "weight": 3.0,
      "weighted": 8.9,
      "confidence": 0.6,
-     "explanation": "Maior risco: Milho — ~2 dia(s)/mês acima de 35 °C na fase sensível; veranico ≥ 10 dias em 10% das safras",
+     "explanation": "Highest risk: Corn — ~2 days per month above 35 °C during the sensitive stage; dry spells of at least 10 days in 10% of growing seasons",
      "delta_vs_current": 2
     }
    ],
-   "rationale": "Pelo seu histórico, o solo fica descoberto em jul, ago, set e out (~118 dias no último ano). Foco desta opção: cobertura do solo, forragem e controle de erosão. Comparada ao que você faz hoje, o maior ganho é em estrutura e infiltração (+60 pontos).",
+   "rationale": "Your crop history indicates bare soil in Jul, Aug, Sep and Oct (~118 days in the last year). Focus of this option: ground cover, forage, and erosion control. Compared with your current rotation, the largest gain is in soil structure and infiltration (+60 points).",
    "evidences": [
     {
-     "text": "Chuva abaixo da evapotranspiração em mai, jun, jul, ago e set; pior mês: jul (-142 mm).",
+     "text": "Rainfall was below evapotranspiration in May, Jun, Jul, Aug and Sep. The largest deficit occurred in Jul (-142 mm).",
      "datasets": [
       "POWER"
      ],
@@ -1469,7 +1469,7 @@
      "indicator": "water_deficit"
     },
     {
-     "text": "Veranico de 10 dias ou mais em 10% das safras (média do maior veranico: 8 dias).",
+     "text": "A dry spell of at least 10 days occurred in 10% of growing seasons (average longest dry spell: 8 days).",
      "datasets": [
       "POWER"
      ],
@@ -1477,7 +1477,7 @@
      "indicator": "dry_spell"
     },
     {
-     "text": "Chuvas fortes (acima de 44 mm/dia) concentradas em jan, fev e mar.",
+     "text": "Heavy rain (above 44 mm per day) was concentrated in Jan, Feb and Mar.",
      "datasets": [
       "POWER"
      ],
@@ -1485,76 +1485,76 @@
      "indicator": "heavy_rain"
     },
     {
-     "text": "Uso de água: Em um ano típico falta cerca de 17% da água que as culturas usariam (ETc ≈ 1093 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "text": "Water use: In a typical year, the water deficit is about 17% of crop demand (annual ETc about 1093 mm, using a monthly water balance with 70 mm of soil water storage).",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "water_balance"
     },
     {
-     "text": "Erosão: Protege 98% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "text": "Erosion: Ground cover protects against 98% of annual erosive rainfall; ground cover is present in all rainy months.",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "erosion_cover"
     },
     {
-     "text": "Pragas: Interrompe: Nematoide-de-galhas, Nematoide-de-cisto da soja, Mofo-branco. Não interrompe: Nematoide-das-lesões, Cigarrinha-do-milho / enfezamentos. 2 família(s) botânica(s).",
+     "text": "Pests: Breaks the cycle of: Root-knot nematode, Soybean cyst nematode, White mold. Does not break the cycle of: Root-lesion nematode, Corn leafhopper and corn stunt. 2 crop families.",
      "datasets": [
-      "Catálogo GeoSafra (hipótese)"
+      "GeoSafra catalog (assumption)"
      ],
      "period": "—",
      "indicator": "pest_break"
     }
    ],
    "benefits": [
-    "Uso de água: +16 pontos em relação ao que você faz hoje",
-    "Estrutura e infiltração: +60 pontos em relação ao que você faz hoje",
-    "Matéria orgânica (palhada): +42 pontos em relação ao que você faz hoje",
-    "Quebra de pragas e doenças: +12 pontos em relação ao que você faz hoje",
-    "Forragem: +55 pontos em relação ao que você faz hoje",
-    "Renda complementar: +20 pontos em relação ao que você faz hoje",
-    "2 mês(es) a menos de solo descoberto",
-    "−37% de falta de água estimada num ano típico",
-    "Forragem na entressafra seca"
+    "Water use: +16 points compared with the current rotation",
+    "Soil structure and infiltration: +60 points compared with the current rotation",
+    "Organic matter (residue): +42 points compared with the current rotation",
+    "Pest and disease management: +12 points compared with the current rotation",
+    "Forage: +55 points compared with the current rotation",
+    "Additional income: +20 points compared with the current rotation",
+    "2 fewer months with bare soil",
+    "−37% estimated water deficit in a typical year",
+    "Forage during the dry season"
    ],
    "information_gaps": [
-    "Sem análise de solo: textura e pH não confirmados (água no solo assumida em 70 mm).",
-    "Braquiária (ruziziensis): mercado comprador não informado.",
-    "Declividade não medida (SRTM/NASADEM fica para a próxima fase): a erosão considera só chuva e cobertura.",
-    "Atributos de Braquiária (ruziziensis), Milho, Soja vêm de um catálogo simplificado com hipóteses a validar.",
-    "Dado climático em grade de ~50 km: não capta o microclima do talhão."
+    "Soil texture and pH are unconfirmed. The model assumes a 70 mm soil water capacity.",
+    "Brachiaria (ruzigrass): local buyers are unknown.",
+    "Slope measurements are pending in the planned SRTM/NASADEM phase. The erosion estimate uses rainfall and ground cover only.",
+    "Attributes for Brachiaria (ruzigrass), Corn, Soybean come from a simplified catalog and require local validation.",
+    "The ~50 km climate grid cannot resolve this field's microclimate."
    ],
    "local_review_risks": [
-    "Respeitar o vazio sanitário da ferrugem-asiática definido para o estado",
-    "Pressão de percevejos e de nematoides varia muito entre talhões",
-    "Cigarrinha-do-milho e enfezamentos: evitar milho sobre milho e checar a pressão regional",
-    "Planejar a dessecação antes da semeadura da soja",
-    "Em consórcio, regular a população para não competir com o milho",
-    "Consórcio: braquiária semeada junto com o milho",
-    "Braquiária já estabelecida atravessa a seca"
+    "Follow the state's soybean-free period for Asian soybean rust.",
+    "Stink bug and nematode pressure varies considerably by field.",
+    "For corn leafhopper and corn stunt, avoid continuous corn and check regional pressure.",
+    "Plan cover-crop termination before planting soybeans.",
+    "Adjust the intercropped plant density to limit competition with corn.",
+    "Intercrop: brachiaria planted with corn",
+    "Established brachiaria can persist through the dry season"
    ],
    "conflicts": [
-    "Boa para uso de água, estrutura e infiltração, mas fraca em nitrogênio."
+    "Strong for water use, soil structure and infiltration, with weaker performance in nitrogen."
    ],
    "label": "B"
   },
   {
    "key": "soja_sorgo",
    "is_current": false,
-   "title": "Soja → Sorgo safrinha",
-   "focus": "Menor risco hídrico na safrinha (sorgo tolera seca)",
+   "title": "Soybean → second-season sorghum",
+   "focus": "Lower second-season water risk from drought-tolerant sorghum",
    "steps": [
     {
      "crops": [
-      "soja"
+      "soybean"
      ],
      "crop_names": [
-      "Soja"
+      "Soybean"
      ],
      "sow_month": 10,
      "end_month": 2,
@@ -1565,7 +1565,7 @@
       1,
       2
      ],
-     "label": "out–fev",
+     "label": "Oct–Feb",
      "purpose": "cash",
      "note": null
     },
@@ -1574,7 +1574,7 @@
       "sorgo"
      ],
      "crop_names": [
-      "Sorgo granífero"
+      "Grain sorghum"
      ],
      "sow_month": 2,
      "end_month": 6,
@@ -1585,7 +1585,7 @@
       5,
       6
      ],
-     "label": "fev–jun",
+     "label": "Feb–Jun",
      "purpose": "cash",
      "note": null
     }
@@ -1594,62 +1594,62 @@
     {
      "month": 1,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 2,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 3,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 4,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 5,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 6,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 7,
      "factor": 0.7,
-     "kind": "palhada"
+     "kind": "crop residue"
     },
     {
      "month": 8,
      "factor": 0.7,
-     "kind": "palhada"
+     "kind": "crop residue"
     },
     {
      "month": 9,
      "factor": 0.7,
-     "kind": "palhada"
+     "kind": "crop residue"
     },
     {
      "month": 10,
      "factor": 0.5,
-     "kind": "semeadura"
+     "kind": "planting"
     },
     {
      "month": 11,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 12,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     }
    ],
    "score": 64,
@@ -1665,109 +1665,109 @@
    "criteria": [
     {
      "key": "save_water",
-     "label": "Uso de água",
+     "label": "Water use",
      "score": 90,
      "weight": 4.0,
      "weighted": 11.6,
      "confidence": 0.51,
-     "explanation": "Em um ano típico falta cerca de 6% da água que as culturas usariam (ETc ≈ 997 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "explanation": "In a typical year, the water deficit is about 6% of crop demand (annual ETc about 997 mm, using a monthly water balance with 70 mm of soil water storage).",
      "delta_vs_current": 33
     },
     {
      "key": "soil_structure",
-     "label": "Estrutura e infiltração",
+     "label": "Soil structure and infiltration",
      "score": 32,
      "weight": 3.0,
      "weighted": 3.1,
      "confidence": 0.55,
-     "explanation": "Raízes: fasciculada, pivotante; 3 mês(es) de solo descoberto.",
+     "explanation": "Root systems: fibrous, taproot; 3 months with bare soil.",
      "delta_vs_current": 8
     },
     {
      "key": "n_fixation",
-     "label": "Nitrogênio",
+     "label": "Nitrogen",
      "score": 17,
      "weight": 2.0,
      "weighted": 1.1,
      "confidence": 0.55,
-     "explanation": "Crédito estimado de ~20 kg N/ha para a cultura seguinte (estimativa do catálogo).",
+     "explanation": "Estimated nitrogen credit of about 20 kg N/ha for the next crop (catalog estimate).",
      "delta_vs_current": 0
     },
     {
      "key": "erosion_control",
-     "label": "Controle de erosão",
+     "label": "Erosion control",
      "score": 97,
      "weight": 4.0,
      "weighted": 12.5,
      "confidence": 0.51,
-     "explanation": "Protege 97% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "explanation": "Ground cover protects against 97% of annual erosive rainfall; ground cover is present in all rainy months.",
      "delta_vs_current": -1
     },
     {
      "key": "organic_matter",
-     "label": "Matéria orgânica (palhada)",
+     "label": "Organic matter (residue)",
      "score": 58,
      "weight": 3.0,
      "weighted": 5.6,
      "confidence": 0.55,
-     "explanation": "Aporte equivalente de ~9.3 t/ha/ano de palhada (ponderado pela relação C:N).",
+     "explanation": "Equivalent residue input of about 9.3 t/ha per year, weighted by the C:N ratio.",
      "delta_vs_current": 0
     },
     {
      "key": "pest_break",
-     "label": "Quebra de pragas e doenças",
+     "label": "Pest and disease management",
      "score": 42,
      "weight": 3.0,
      "weighted": 4.1,
      "confidence": 0.45,
-     "explanation": "Interrompe: Nematoide-de-cisto da soja, Mofo-branco. Não interrompe: Nematoide-de-galhas, Nematoide-das-lesões, Cigarrinha-do-milho / enfezamentos. 2 família(s) botânica(s).",
+     "explanation": "Breaks the cycle of: Soybean cyst nematode, White mold. Does not break the cycle of: Root-knot nematode, Root-lesion nematode, Corn leafhopper and corn stunt. 2 crop families.",
      "delta_vs_current": 3
     },
     {
      "key": "forage",
-     "label": "Forragem",
+     "label": "Forage",
      "score": 30,
      "weight": 2.0,
      "weighted": 1.9,
      "confidence": 0.55,
-     "explanation": "Oferta de forragem em ~1.2 dos 5 meses de entressafra (mai–set).",
+     "explanation": "Provides forage for about 1.2 of the five dry-season months (May–Sep).",
      "delta_vs_current": -15
     },
     {
      "key": "extra_income",
-     "label": "Renda complementar",
+     "label": "Additional income",
      "score": 55,
      "weight": 4.0,
      "weighted": 7.1,
      "confidence": 0.4,
-     "explanation": "Segunda fonte de renda: Sorgo granífero. (índice de mercado é hipótese a validar)",
+     "explanation": "Second income source: Grain sorghum. (market value is an assumption to verify)",
      "delta_vs_current": -25
     },
     {
      "key": "market_fit",
-     "label": "Adequação ao mercado",
+     "label": "Market fit",
      "score": 75,
      "weight": 3.0,
      "weighted": 7.3,
      "confidence": 0.3,
-     "explanation": "Mercado não informado para Sorgo granífero.",
+     "explanation": "Market information is missing for Grain sorghum.",
      "delta_vs_current": -25
     },
     {
      "key": "climate_risk",
-     "label": "Segurança climática",
+     "label": "Climate resilience",
      "score": 97,
      "weight": 3.0,
      "weighted": 9.4,
      "confidence": 0.6,
-     "explanation": "Sem riscos climáticos relevantes nas fases sensíveis.",
+     "explanation": "No material climate risks in the sensitive stages.",
      "delta_vs_current": 7
     }
    ],
-   "rationale": "Veranico de 10 dias ou mais em 10% das safras (média do maior veranico: 8 dias). Chuva abaixo da evapotranspiração em mai, jun, jul, ago e set; pior mês: jul (-142 mm). Foco desta opção: menor risco hídrico na safrinha (sorgo tolera seca). Comparada ao que você faz hoje, o maior ganho é em uso de água (+33 pontos).",
+   "rationale": "A dry spell of at least 10 days occurred in 10% of growing seasons (average longest dry spell: 8 days). Rainfall was below evapotranspiration in May, Jun, Jul, Aug and Sep. The largest deficit occurred in Jul (-142 mm). Focus of this option: lower second-season water risk from drought-tolerant sorghum. Compared with your current rotation, the largest gain is in water use (+33 points).",
    "evidences": [
     {
-     "text": "Chuva abaixo da evapotranspiração em mai, jun, jul, ago e set; pior mês: jul (-142 mm).",
+     "text": "Rainfall was below evapotranspiration in May, Jun, Jul, Aug and Sep. The largest deficit occurred in Jul (-142 mm).",
      "datasets": [
       "POWER"
      ],
@@ -1775,7 +1775,7 @@
      "indicator": "water_deficit"
     },
     {
-     "text": "Veranico de 10 dias ou mais em 10% das safras (média do maior veranico: 8 dias).",
+     "text": "A dry spell of at least 10 days occurred in 10% of growing seasons (average longest dry spell: 8 days).",
      "datasets": [
       "POWER"
      ],
@@ -1783,7 +1783,7 @@
      "indicator": "dry_spell"
     },
     {
-     "text": "Chuvas fortes (acima de 44 mm/dia) concentradas em jan, fev e mar.",
+     "text": "Heavy rain (above 44 mm per day) was concentrated in Jan, Feb and Mar.",
      "datasets": [
       "POWER"
      ],
@@ -1791,65 +1791,65 @@
      "indicator": "heavy_rain"
     },
     {
-     "text": "Uso de água: Em um ano típico falta cerca de 6% da água que as culturas usariam (ETc ≈ 997 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "text": "Water use: In a typical year, the water deficit is about 6% of crop demand (annual ETc about 997 mm, using a monthly water balance with 70 mm of soil water storage).",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "water_balance"
     },
     {
-     "text": "Erosão: Protege 97% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "text": "Erosion: Ground cover protects against 97% of annual erosive rainfall; ground cover is present in all rainy months.",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "erosion_cover"
     },
     {
-     "text": "Pragas: Interrompe: Nematoide-de-cisto da soja, Mofo-branco. Não interrompe: Nematoide-de-galhas, Nematoide-das-lesões, Cigarrinha-do-milho / enfezamentos. 2 família(s) botânica(s).",
+     "text": "Pests: Breaks the cycle of: Soybean cyst nematode, White mold. Does not break the cycle of: Root-knot nematode, Root-lesion nematode, Corn leafhopper and corn stunt. 2 crop families.",
      "datasets": [
-      "Catálogo GeoSafra (hipótese)"
+      "GeoSafra catalog (assumption)"
      ],
      "period": "—",
      "indicator": "pest_break"
     }
    ],
    "benefits": [
-    "Uso de água: +33 pontos em relação ao que você faz hoje",
-    "−76% de falta de água estimada num ano típico"
+    "Water use: +33 points compared with the current rotation",
+    "−76% estimated water deficit in a typical year"
    ],
    "information_gaps": [
-    "Sem análise de solo: textura e pH não confirmados (água no solo assumida em 70 mm).",
-    "Sorgo granífero: mercado comprador não informado.",
-    "Declividade não medida (SRTM/NASADEM fica para a próxima fase): a erosão considera só chuva e cobertura.",
-    "Atributos de Soja, Sorgo granífero vêm de um catálogo simplificado com hipóteses a validar.",
-    "Dado climático em grade de ~50 km: não capta o microclima do talhão."
+    "Soil texture and pH are unconfirmed. The model assumes a 70 mm soil water capacity.",
+    "Grain sorghum: local buyers are unknown.",
+    "Slope measurements are pending in the planned SRTM/NASADEM phase. The erosion estimate uses rainfall and ground cover only.",
+    "Attributes for Soybean, Grain sorghum come from a simplified catalog and require local validation.",
+    "The ~50 km climate grid cannot resolve this field's microclimate."
    ],
    "local_review_risks": [
-    "Respeitar o vazio sanitário da ferrugem-asiática definido para o estado",
-    "Pressão de percevejos e de nematoides varia muito entre talhões",
-    "Avaliar o histórico de pulgão-da-cana e a liquidez de compra do grão na região"
+    "Follow the state's soybean-free period for Asian soybean rust.",
+    "Stink bug and nematode pressure varies considerably by field.",
+    "Check historical sugarcane aphid pressure and whether regional grain buyers are available."
    ],
    "conflicts": [
-    "Boa para uso de água, controle de erosão, mas fraca em estrutura e infiltração, nitrogênio."
+    "Strong for water use, erosion control, with weaker performance in soil structure and infiltration, nitrogen."
    ],
    "label": "C"
   },
   {
    "key": "soja_crotalaria",
    "is_current": false,
-   "title": "Soja → Crotalária (adubo verde)",
-   "focus": "Quebra de nematoides e nitrogênio para a próxima safra",
+   "title": "Soybean → showy crotalaria (green manure)",
+   "focus": "Nematode cycle disruption and nitrogen for the next crop",
    "steps": [
     {
      "crops": [
-      "soja"
+      "soybean"
      ],
      "crop_names": [
-      "Soja"
+      "Soybean"
      ],
      "sow_month": 10,
      "end_month": 2,
@@ -1860,7 +1860,7 @@
       1,
       2
      ],
-     "label": "out–fev",
+     "label": "Oct–Feb",
      "purpose": "cash",
      "note": null
     },
@@ -1869,7 +1869,7 @@
       "crotalaria"
      ],
      "crop_names": [
-      "Crotalária (spectabilis)"
+      "Showy crotalaria"
      ],
      "sow_month": 2,
      "end_month": 5,
@@ -1879,7 +1879,7 @@
       4,
       5
      ],
-     "label": "fev–mai",
+     "label": "Feb–May",
      "purpose": "green_manure",
      "note": null
     }
@@ -1888,62 +1888,62 @@
     {
      "month": 1,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 2,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 3,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 4,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 5,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 6,
      "factor": 0.4,
-     "kind": "palhada"
+     "kind": "crop residue"
     },
     {
      "month": 7,
      "factor": 0.0,
-     "kind": "solo descoberto"
+     "kind": "bare soil"
     },
     {
      "month": 8,
      "factor": 0.0,
-     "kind": "solo descoberto"
+     "kind": "bare soil"
     },
     {
      "month": 9,
      "factor": 0.0,
-     "kind": "solo descoberto"
+     "kind": "bare soil"
     },
     {
      "month": 10,
      "factor": 0.5,
-     "kind": "semeadura"
+     "kind": "planting"
     },
     {
      "month": 11,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     },
     {
      "month": 12,
      "factor": 1.0,
-     "kind": "cultura em campo"
+     "kind": "crop in the field"
     }
    ],
    "score": 61,
@@ -1959,109 +1959,109 @@
    "criteria": [
     {
      "key": "save_water",
-     "label": "Uso de água",
+     "label": "Water use",
      "score": 100,
      "weight": 4.0,
      "weighted": 12.9,
      "confidence": 0.51,
-     "explanation": "Em um ano típico falta cerca de 0% da água que as culturas usariam (ETc ≈ 844 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "explanation": "In a typical year, the water deficit is about 0% of crop demand (annual ETc about 844 mm, using a monthly water balance with 70 mm of soil water storage).",
      "delta_vs_current": 43
     },
     {
      "key": "soil_structure",
-     "label": "Estrutura e infiltração",
+     "label": "Soil structure and infiltration",
      "score": 17,
      "weight": 3.0,
      "weighted": 1.6,
      "confidence": 0.55,
-     "explanation": "Raízes: pivotante; 4 mês(es) de solo descoberto.",
+     "explanation": "Root systems: taproot; 4 months with bare soil.",
      "delta_vs_current": -7
     },
     {
      "key": "n_fixation",
-     "label": "Nitrogênio",
+     "label": "Nitrogen",
      "score": 100,
      "weight": 2.0,
      "weighted": 6.5,
      "confidence": 0.55,
-     "explanation": "Crédito estimado de ~120 kg N/ha para a cultura seguinte (estimativa do catálogo).",
+     "explanation": "Estimated nitrogen credit of about 120 kg N/ha for the next crop (catalog estimate).",
      "delta_vs_current": 83
     },
     {
      "key": "erosion_control",
-     "label": "Controle de erosão",
+     "label": "Erosion control",
      "score": 96,
      "weight": 4.0,
      "weighted": 12.3,
      "confidence": 0.51,
-     "explanation": "Protege 96% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "explanation": "Ground cover protects against 96% of annual erosive rainfall; ground cover is present in all rainy months.",
      "delta_vs_current": -2
     },
     {
      "key": "organic_matter",
-     "label": "Matéria orgânica (palhada)",
+     "label": "Organic matter (residue)",
      "score": 39,
      "weight": 3.0,
      "weighted": 3.8,
      "confidence": 0.55,
-     "explanation": "Aporte equivalente de ~6.3 t/ha/ano de palhada (ponderado pela relação C:N).",
+     "explanation": "Equivalent residue input of about 6.3 t/ha per year, weighted by the C:N ratio.",
      "delta_vs_current": -19
     },
     {
      "key": "pest_break",
-     "label": "Quebra de pragas e doenças",
+     "label": "Pest and disease management",
      "score": 46,
      "weight": 3.0,
      "weighted": 4.5,
      "confidence": 0.45,
-     "explanation": "Interrompe: Nematoide-de-galhas, Nematoide-das-lesões, Nematoide-de-cisto da soja. Não interrompe: Mofo-branco, Cigarrinha-do-milho / enfezamentos. 1 família(s) botânica(s).",
+     "explanation": "Breaks the cycle of: Root-knot nematode, Root-lesion nematode, Soybean cyst nematode. Does not break the cycle of: White mold, Corn leafhopper and corn stunt. 1 crop families.",
      "delta_vs_current": 8
     },
     {
      "key": "forage",
-     "label": "Forragem",
+     "label": "Forage",
      "score": 0,
      "weight": 2.0,
      "weighted": 0.0,
      "confidence": 0.55,
-     "explanation": "Oferta de forragem em ~0.0 dos 5 meses de entressafra (mai–set).",
+     "explanation": "Provides forage for about 0.0 of the five dry-season months (May–Sep).",
      "delta_vs_current": -45
     },
     {
      "key": "extra_income",
-     "label": "Renda complementar",
+     "label": "Additional income",
      "score": 0,
      "weight": 4.0,
      "weighted": 0.0,
      "confidence": 0.4,
-     "explanation": "Sem segunda safra comercial. (índice de mercado é hipótese a validar)",
+     "explanation": "No second cash crop. (market value is an assumption to verify)",
      "delta_vs_current": -80
     },
     {
      "key": "market_fit",
-     "label": "Adequação ao mercado",
+     "label": "Market fit",
      "score": 100,
      "weight": 3.0,
      "weighted": 9.7,
      "confidence": 0.8,
-     "explanation": "Há comprador conhecido para todas as culturas comerciais.",
+     "explanation": "All cash crops have a known buyer.",
      "delta_vs_current": 0
     },
     {
      "key": "climate_risk",
-     "label": "Segurança climática",
+     "label": "Climate resilience",
      "score": 96,
      "weight": 3.0,
      "weighted": 9.3,
      "confidence": 0.6,
-     "explanation": "Sem riscos climáticos relevantes nas fases sensíveis.",
+     "explanation": "No material climate risks in the sensitive stages.",
      "delta_vs_current": 6
     }
    ],
-   "rationale": "Pelo seu histórico, o solo fica descoberto em jul, ago, set e out (~118 dias no último ano). Foco desta opção: quebra de nematoides e nitrogênio para a próxima safra. Comparada ao que você faz hoje, o maior ganho é em nitrogênio (+83 pontos).",
+   "rationale": "Your crop history indicates bare soil in Jul, Aug, Sep and Oct (~118 days in the last year). Focus of this option: nematode cycle disruption and nitrogen for the next crop. Compared with your current rotation, the largest gain is in nitrogen (+83 points).",
    "evidences": [
     {
-     "text": "Chuva abaixo da evapotranspiração em mai, jun, jul, ago e set; pior mês: jul (-142 mm).",
+     "text": "Rainfall was below evapotranspiration in May, Jun, Jul, Aug and Sep. The largest deficit occurred in Jul (-142 mm).",
      "datasets": [
       "POWER"
      ],
@@ -2069,7 +2069,7 @@
      "indicator": "water_deficit"
     },
     {
-     "text": "Veranico de 10 dias ou mais em 10% das safras (média do maior veranico: 8 dias).",
+     "text": "A dry spell of at least 10 days occurred in 10% of growing seasons (average longest dry spell: 8 days).",
      "datasets": [
       "POWER"
      ],
@@ -2077,7 +2077,7 @@
      "indicator": "dry_spell"
     },
     {
-     "text": "Chuvas fortes (acima de 44 mm/dia) concentradas em jan, fev e mar.",
+     "text": "Heavy rain (above 44 mm per day) was concentrated in Jan, Feb and Mar.",
      "datasets": [
       "POWER"
      ],
@@ -2085,52 +2085,52 @@
      "indicator": "heavy_rain"
     },
     {
-     "text": "Uso de água: Em um ano típico falta cerca de 0% da água que as culturas usariam (ETc ≈ 844 mm no ano, balanço mensal com 70 mm de água no solo).",
+     "text": "Water use: In a typical year, the water deficit is about 0% of crop demand (annual ETc about 844 mm, using a monthly water balance with 70 mm of soil water storage).",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "water_balance"
     },
     {
-     "text": "Erosão: Protege 96% da chuva erosiva do ano; sem meses chuvosos de solo exposto.",
+     "text": "Erosion: Ground cover protects against 96% of annual erosive rainfall; ground cover is present in all rainy months.",
      "datasets": [
       "POWER",
-      "Catálogo GeoSafra"
+      "GeoSafra catalog"
      ],
      "period": "2005–2025",
      "indicator": "erosion_cover"
     },
     {
-     "text": "Pragas: Interrompe: Nematoide-de-galhas, Nematoide-das-lesões, Nematoide-de-cisto da soja. Não interrompe: Mofo-branco, Cigarrinha-do-milho / enfezamentos. 1 família(s) botânica(s).",
+     "text": "Pests: Breaks the cycle of: Root-knot nematode, Root-lesion nematode, Soybean cyst nematode. Does not break the cycle of: White mold, Corn leafhopper and corn stunt. 1 crop families.",
      "datasets": [
-      "Catálogo GeoSafra (hipótese)"
+      "GeoSafra catalog (assumption)"
      ],
      "period": "—",
      "indicator": "pest_break"
     }
    ],
    "benefits": [
-    "Uso de água: +43 pontos em relação ao que você faz hoje",
-    "Nitrogênio: +83 pontos em relação ao que você faz hoje",
-    "Praticamente sem falta de água estimada num ano típico (a atual tem ~27%)",
-    "~120 kg N/ha deixados para a próxima cultura (estimativa)"
+    "Water use: +43 points compared with the current rotation",
+    "Nitrogen: +83 points compared with the current rotation",
+    "Virtually no estimated water deficit in a typical year (about 27% for the current rotation)",
+    "About 120 kg N/ha available for the next crop (estimate)"
    ],
    "information_gaps": [
-    "Sem análise de solo: textura e pH não confirmados (água no solo assumida em 70 mm).",
-    "Declividade não medida (SRTM/NASADEM fica para a próxima fase): a erosão considera só chuva e cobertura.",
-    "Atributos de Crotalária (spectabilis), Soja vêm de um catálogo simplificado com hipóteses a validar.",
-    "Dado climático em grade de ~50 km: não capta o microclima do talhão."
+    "Soil texture and pH are unconfirmed. The model assumes a 70 mm soil water capacity.",
+    "Slope measurements are pending in the planned SRTM/NASADEM phase. The erosion estimate uses rainfall and ground cover only.",
+    "Attributes for Showy crotalaria, Soybean come from a simplified catalog and require local validation.",
+    "The ~50 km climate grid cannot resolve this field's microclimate."
    ],
    "local_review_risks": [
-    "Respeitar o vazio sanitário da ferrugem-asiática definido para o estado",
-    "Pressão de percevejos e de nematoides varia muito entre talhões",
-    "Crotalaria spectabilis é tóxica para animais: não usar como forragem",
-    "Confirmar disponibilidade de sementes (oferta costuma ser limitada)"
+    "Follow the state's soybean-free period for Asian soybean rust.",
+    "Stink bug and nematode pressure varies considerably by field.",
+    "Crotalaria spectabilis is toxic to livestock. Do not use it as forage.",
+    "Confirm seed availability, which is often limited."
    ],
    "conflicts": [
-    "Boa para uso de água, nitrogênio, mas fraca em estrutura e infiltração, forragem."
+    "Strong for water use, nitrogen, with weaker performance in soil structure and infiltration, forage."
    ],
    "label": "D"
   }
@@ -2138,38 +2138,38 @@
  "discarded": [
   {
    "key": "soja_feijao",
-   "title": "Soja → Feijão safrinha",
+   "title": "Soybean → second-season common bean",
    "reasons": [
-    "Soja seguida de Feijão: mesma família (Fabaceae) e ambas hospedam nematoide-de-cisto da soja e mofo-branco.",
-    "Feijão seguida de Soja: mesma família (Fabaceae) e ambas hospedam nematoide-de-cisto da soja e mofo-branco."
+    "Soybean followed by Common bean: both belong to Fabaceae and host soybean cyst nematode and white mold.",
+    "Common bean followed by Soybean: both belong to Fabaceae and host soybean cyst nematode and white mold."
    ]
   }
  ],
  "warnings": [],
  "human_judgment": [
-  "Pressão local de pragas e doenças e resistência a defensivos.",
-  "Mercado real, logística e contratos.",
-  "Disponibilidade de sementes, máquinas e mão de obra.",
-  "Microclima (baixadas de geada, encharcamento) menor que o pixel do satélite.",
-  "Tradição, preferências e segurança alimentar da família."
+  "Local pest and disease pressure, and resistance to crop protection products.",
+  "Actual market conditions, logistics, and contracts.",
+  "Availability of seed, equipment, and labor.",
+  "Field microclimates below satellite resolution, including frost pockets and waterlogging.",
+  "Family traditions, preferences, and food security."
  ],
  "sources": [
   {
    "code": "POWER",
    "name": "NASA POWER (Prediction Of Worldwide Energy Resources)",
-   "citation": "NASA Langley Research Center (LaRC) POWER Project, financiado pelo NASA Earth Science/Applied Science Program. https://power.larc.nasa.gov",
+   "citation": "NASA Langley Research Center (LaRC) POWER Project, funded by the NASA Earth Science/Applied Science Program. https://power.larc.nasa.gov",
    "period": "2005–2025",
-   "resolution": "Dados em grade (~0,5° × 0,625° para meteorologia, MERRA-2; ~1° para radiação, CERES). Representam a região do talhão, não uma estação dentro dele.",
+   "resolution": "Gridded data (~0.5° × 0.625° for MERRA-2 weather; ~1° for CERES radiation). These describe conditions around the field.",
    "api_version": "test"
   },
   {
    "code": "CATALOGO",
-   "name": "Catálogo GeoSafra de culturas",
-   "citation": "Atributos médios e simplificados para apoio à decisão. Campos marcados como hipótese precisam ser validados com agrônomos da região.",
+   "name": "GeoSafra crop catalog",
+   "citation": "Average, simplified attributes for decision support. Check assumptions with local agronomists.",
    "period": null,
    "resolution": null
   }
  ],
  "field_id": 1,
- "_aviso": "Exemplo gerado com série climática SINTÉTICA para desenvolvimento do front. Não use como dado real."
+ "_aviso": "Synthetic climate example for front-end development. Unsuitable for use as observational data."
 }

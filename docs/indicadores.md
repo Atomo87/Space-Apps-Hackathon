@@ -1,37 +1,41 @@
-# Indicadores históricos (B3) — regras documentadas
+# Historical indicators (B3) — documented rules
 
-Fonte: NASA POWER, API diária por ponto, comunidade `ag`, horário solar local (LST), unidades métricas. Período padrão: **2005–2025** (21 anos completos), em consultas **anuais** com cache.
+The source is the NASA POWER daily point API for the `ag` community, using local solar time (LST) and metric units. The default period is **2005–2025** (21 full years), retrieved through cached annual requests.
 
-Variáveis: `T2M`, `T2M_MAX`, `T2M_MIN`, `T2MDEW`, `PRECTOTCORR`, `RH2M`, `WS2M`, `ALLSKY_SFC_SW_DWN`, `PS` (obrigatórias) e `GWETROOT`, `GWETTOP` (opcionais: se a API recusar com 422, a consulta é refeita sem elas e a lacuna é registrada).
+Required variables are `T2M`, `T2M_MAX`, `T2M_MIN`, `T2MDEW`, `PRECTOTCORR`, `RH2M`, `WS2M`, `ALLSKY_SFC_SW_DWN`, and `PS`. The optional variables are `GWETROOT` and `GWETTOP`. If the API returns HTTP 422, the client retries without the optional variables and records the gap.
 
-## Tratamento de dados
-- `fill_value` (−999) → `null`, **nunca zero**. As séries são alinhadas pela data.
-- Mês com menos de **90%** dos dias válidos não entra nas médias. Entre 90% e 100%, a soma é completada proporcionalmente.
-- Um dia sem dado **interrompe** a contagem de dias secos (não assumimos que foi seco).
-- A unidade de radiação é lida da resposta (`parameters.ALLSKY_SFC_SW_DWN.units`) e convertida explicitamente. Se for desconhecida, a ETo não é calculada.
+## Data handling
 
-## Indicadores
-| Indicador | Regra |
+- Convert the `fill_value` (−999) to `null` and align series by date.
+- Exclude months with fewer than **90%** valid days from averages. At coverage between 90% and 100%, scale totals in proportion to the number of valid days.
+- A day with missing data breaks the dry-day count.
+- Read the radiation unit from `parameters.ALLSKY_SFC_SW_DWN.units` and convert it explicitly. Skip the ETo calculation if the unit is unknown.
+
+## Indicators
+
+| Indicator | Rule |
 |---|---|
-| Chuva mensal | soma dos dias válidos. Média, P10, P50 e P90 entre os anos |
-| **ETo** | FAO-56 Penman-Monteith diária. `ea` pelo ponto de orvalho (eq. 14), com RH média como alternativa (eq. 19). `G = 0`. Albedo 0,23. Rso pela altitude. Conferida com os Exemplos 8 e 18 do FAO-56 (testes automatizados) |
-| Balanço hídrico | chuva média − ETo média (mm/mês) |
-| Dias de calor | dias com Tmax ≥ L, para L = 28…42 °C (média por mês). O calendário usa 34 °C. O motor usa o limiar de cada cultura |
-| Risco de geada | fração dos anos com ao menos um dia de Tmin ≤ L no mês, para L = −2…6 °C. Referência: **2 °C** (abrigo), porque a folha pode congelar antes de o ar chegar a 0 °C |
-| Veranico | maior sequência de dias com chuva < **1 mm**. Por mês e por safra (out–mar). % de safras com ≥ 10 e ≥ 15 dias |
-| Chuva extrema | dias acima do **P95** dos dias chuvosos (≥ 1 mm). Máximas anuais de 1 e de 5 dias |
-| Tendência | Sen's slope (por década) + Mann-Kendall (p bicaudal) da chuva anual, Tmax e Tmin. Só é citada no diagnóstico se p < 0,1 |
-| Anomalia recente | últimos 3 anos × média do período |
-| Umidade do solo | média mensal de `GWETROOT` (0–1, modelo MERRA-2) |
+| Monthly rainfall | Sum of valid days. Report the mean, P10, P50, and P90 across years. |
+| **ETo** | Daily FAO-56 Penman–Monteith. Calculate `ea` from dew point (equation 14), with mean relative humidity as the fallback (equation 19). Use `G = 0`, an albedo of 0.23, and elevation to calculate Rso. Automated tests check FAO-56 examples 8 and 18. |
+| Water balance | Mean rainfall − mean ETo (mm/month). |
+| Heat days | Days with Tmax ≥ L for L = 28–42 °C, averaged by month. The calendar uses 34 °C. The engine uses the threshold for each crop. |
+| Frost risk | Fraction of years with at least one day in the month with Tmin ≤ L for L = −2 to 6 °C. The reference is **2 °C** in a weather shelter because leaves can freeze before the air reaches 0 °C. |
+| Dry spell | Longest run of days with rainfall below **1 mm**, by month and by growing season (October–March). Includes the percentage of seasons with runs of ≥ 10 and ≥ 15 days. |
+| Extreme rainfall | Days above the **P95** of wet days (≥ 1 mm), plus annual 1-day and 5-day maxima. |
+| Trend | Sen’s slope (per decade) and the two-sided Mann–Kendall test for annual rainfall, Tmax, and Tmin. The diagnosis reports trends only when p < 0.1. |
+| Recent anomaly | The last 3 years compared with the full-period mean. |
+| Soil moisture | Monthly mean of `GWETROOT` (0–1, MERRA-2 model). |
 
-## Calendário de vulnerabilidade (0 = baixo, 1 = atenção, 2 = alto)
-| Risco | 1 | 2 |
+## Vulnerability calendar (0 = low, 1 = caution, 2 = high)
+
+| Risk | 1 | 2 |
 |---|---|---|
-| Calor | ≥ 2 dias/mês com Tmax ≥ 34 °C | ≥ 5 dias |
-| Geada | P(Tmin ≤ 2 °C) ≥ 10% | ≥ 30% |
-| Seca | balanço < −20 mm, ou veranico médio ≥ 7 dias (out–mar) | balanço < −60 mm, ou veranico ≥ 10 dias |
-| Chuva forte | ≥ 0,5 dia/mês acima do P95 | ≥ 1 dia |
-| Solo descoberto | ≥ 15 dias sem cultura no mês (histórico informado), fora da estação chuvosa | idem, dentro da estação chuvosa |
+| Heat | ≥ 2 days/month with Tmax ≥ 34 °C | ≥ 5 days |
+| Frost | P(Tmin ≤ 2 °C) ≥ 10% | ≥ 30% |
+| Drought | Water balance < −20 mm, or an average dry spell ≥ 7 days (October–March) | Water balance < −60 mm, or a dry spell ≥ 10 days |
+| Heavy rainfall | ≥ 0.5 day/month above P95 | ≥ 1 day |
+| Bare soil | ≥ 15 days without a crop during the month, based on the reported history, outside the rainy season | Same threshold during the rainy season |
 
-## Confiança
-Dado em grade regional sem calibração local tem teto de **0,6** × cobertura das variáveis principais. Os critérios baseados no catálogo variam de 0,4 a 0,55. Mercado conhecido sobe para 0,8. Análise de solo eleva a confiança do critério de água.
+## Confidence
+
+For regional grid data without local calibration, the confidence limit is **0.6** × the coverage of key variables. Catalog-based criteria range from 0.4 to 0.55. A known buyer raises market confidence to 0.8. A soil test increases confidence in the water-use criterion.

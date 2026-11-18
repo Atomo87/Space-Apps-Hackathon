@@ -68,7 +68,7 @@ def mann_kendall_p(ys: list[float]) -> float | None:
     return 2 * (1 - 0.5 * (1 + math.erf(abs(z) / math.sqrt(2))))
 
 
-def build_calendar(monthly: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def build_calendar(monthly: list[dict[str, Any]], rainy_season: tuple[int, ...] = RAINY_SEASON) -> list[dict[str, Any]]:
     """Calendário de risco por mês (0 = baixo, 1 = atenção, 2 = alto) — somente clima."""
     calendar = []
     for mo in monthly:
@@ -77,7 +77,7 @@ def build_calendar(monthly: list[dict[str, Any]]) -> list[dict[str, Any]]:
         wb = mo["water_balance_mm"]
         dry = mo["dry_spell_max_days"] or 0
         ext = mo["extreme_rain_days"] or 0
-        rainy = mo["month"] in RAINY_SEASON
+        rainy = mo["month"] in rainy_season
         drought = 0
         if wb is not None:
             drought = 2 if wb < -60 else 1 if wb < -20 else 0
@@ -117,7 +117,7 @@ def _daily_eto(series: DailySeries) -> tuple[list[float | None], str | None]:
     return out, None
 
 
-def build_climate_profile(series: DailySeries) -> dict[str, Any]:
+def build_climate_profile(series: DailySeries, rainy_season: tuple[int, ...] = RAINY_SEASON) -> dict[str, Any]:
     dates = series.dates
     years = sorted({d.year for d in dates})
     rain = series.get("PRECTOTCORR")
@@ -231,15 +231,17 @@ def build_climate_profile(series: DailySeries) -> dict[str, Any]:
             "years_valid": len(rain_vals),
         })
 
-    # ---- estação chuvosa (out–mar): maior veranico por safra
+    # ---- maior veranico por safra, inclusive em estações que atravessam dezembro
     season_spells = []
-    for y in years[:-1]:
-        ii = [i for i, d in enumerate(dates) if (d.year == y and d.month >= 10) or (d.year == y + 1 and d.month <= 3)]
+    season_wraps = rainy_season[0] > rainy_season[-1]
+    for y in years[:-1] if season_wraps else years:
+        ii = [i for i, d in enumerate(dates) if d.month in rainy_season
+              and d.year == y + int(season_wraps and d.month < rainy_season[0])]
         if not ii:
             continue
         s = longest_dry(ii)
         if s is not None:
-            season_spells.append({"season": f"{y}/{str(y + 1)[-2:]}", "max_dry_spell_days": s})
+            season_spells.append({"season": f"{y}/{str(y + 1)[-2:]}" if season_wraps else str(y), "max_dry_spell_days": s})
     spell_vals = [s["max_dry_spell_days"] for s in season_spells]
 
     # ---- extremos anuais
@@ -279,7 +281,7 @@ def build_climate_profile(series: DailySeries) -> dict[str, Any]:
     clim_tx = mean(yearly["tmax_c"])
     rec_tx = mean([v for y, v in zip(yearly["years"], yearly["tmax_c"]) if y in recent_years])
 
-    calendar = build_calendar(monthly)
+    calendar = build_calendar(monthly, rainy_season)
 
     # ---- cobertura e confiança
     coverage = {c: r(sum(v is not None for v in series.get(c)) / max(1, len(dates)), 3) for c in series.values}
@@ -309,12 +311,12 @@ def build_climate_profile(series: DailySeries) -> dict[str, Any]:
             "requests": series.requests,
             "cache_hits": series.cache_hits,
         },
-        "thresholds": {"dry_day_mm": DRY_DAY_MM, "frost_tmin_c": FROST_TMIN_C, "heat_generic_c": HEAT_GENERIC_C, "rainy_season_months": list(RAINY_SEASON), "extreme_rain_p95_mm": r(p95)},
+        "thresholds": {"dry_day_mm": DRY_DAY_MM, "frost_tmin_c": FROST_TMIN_C, "heat_generic_c": HEAT_GENERIC_C, "rainy_season_months": list(rainy_season), "extreme_rain_p95_mm": r(p95)},
         "coverage": coverage,
         "confidence": {"value": confidence, "notes": notes},
         "monthly": monthly,
         "season": {
-            "rainy_months": list(RAINY_SEASON),
+            "rainy_months": list(rainy_season),
             "dry_spells": season_spells,
             "dry_spell_mean_max_days": r(mean(spell_vals)),
             "dry_spell_p90_days": r(percentile(spell_vals, 0.9)),

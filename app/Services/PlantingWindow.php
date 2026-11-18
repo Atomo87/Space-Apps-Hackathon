@@ -44,7 +44,7 @@ class PlantingWindow
     /**
      * @param  array<string, array{rain: float, tmin: float, tmax: float}>  $daily  chave AAAAMMDD
      */
-    public function compute(array $daily): array
+    public function compute(array $daily, array $seasonRules = self::SEASONS): array
     {
         ksort($daily);
         $days = array_keys($daily);
@@ -54,7 +54,7 @@ class PlantingWindow
         $years = range($first->year, $last->year);
 
         $seasons = [];
-        foreach (self::SEASONS as $key => $cfg) {
+        foreach ($seasonRules as $key => $cfg) {
             $weeks = [];
             [$fm, $fd] = array_map('intval', explode('-', $cfg['from']));
             [$tm, $td] = array_map('intval', explode('-', $cfg['to']));

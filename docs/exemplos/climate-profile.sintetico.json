@@ -1,6 +1,6 @@
 {
  "source": {
-  "dataset": "SINTÉTICO (teste) — NÃO são dados da NASA",
+  "dataset": "SYNTHETIC (test) — contains no NASA observations",
   "dataset_code": "POWER",
   "community": "ag",
   "api_version": "test",
@@ -64,8 +64,8 @@
   "fetched_at": "synthetic",
   "messages": [],
   "missing_optional": [],
-  "grid_note": "Dados em grade (~0,5° × 0,625° para meteorologia, MERRA-2; ~1° para radiação, CERES). Representam a região do talhão, não uma estação dentro dele.",
-  "citation": "NASA Langley Research Center (LaRC) POWER Project, financiado pelo NASA Earth Science/Applied Science Program. https://power.larc.nasa.gov",
+  "grid_note": "Gridded data (~0.5° × 0.625° for MERRA-2 weather; ~1° for CERES radiation). These describe conditions around the field.",
+  "citation": "NASA Langley Research Center (LaRC) POWER Project, funded by the NASA Earth Science/Applied Science Program. https://power.larc.nasa.gov",
   "requests": 0,
   "cache_hits": 0
  },
@@ -99,13 +99,13 @@
  "confidence": {
   "value": 0.6,
   "notes": [
-   "Dados em grade (~0,5° × 0,625° para meteorologia, MERRA-2; ~1° para radiação, CERES). Representam a região do talhão, não uma estação dentro dele."
+   "Gridded data (~0.5° × 0.625° for MERRA-2 weather; ~1° for CERES radiation). These describe conditions around the field."
   ]
  },
  "monthly": [
   {
    "month": 1,
-   "name": "jan",
+   "name": "Jan",
    "rain_mm": {
     "mean": 309.1,
     "p10": 218.9,
@@ -209,7 +209,7 @@
   },
   {
    "month": 2,
-   "name": "fev",
+   "name": "Feb",
    "rain_mm": {
     "mean": 290.8,
     "p10": 210.8,
@@ -313,7 +313,7 @@
   },
   {
    "month": 3,
-   "name": "mar",
+   "name": "Mar",
    "rain_mm": {
     "mean": 242.0,
     "p10": 172.5,
@@ -417,7 +417,7 @@
   },
   {
    "month": 4,
-   "name": "abr",
+   "name": "Apr",
    "rain_mm": {
     "mean": 145.0,
     "p10": 85.1,
@@ -521,7 +521,7 @@
   },
   {
    "month": 5,
-   "name": "mai",
+   "name": "May",
    "rain_mm": {
     "mean": 77.4,
     "p10": 21.2,
@@ -625,7 +625,7 @@
   },
   {
    "month": 6,
-   "name": "jun",
+   "name": "Jun",
    "rain_mm": {
     "mean": 23.5,
     "p10": 5.0,
@@ -729,7 +729,7 @@
   },
   {
    "month": 7,
-   "name": "jul",
+   "name": "Jul",
    "rain_mm": {
     "mean": 13.2,
     "p10": 0.0,
@@ -833,7 +833,7 @@
   },
   {
    "month": 8,
-   "name": "ago",
+   "name": "Aug",
    "rain_mm": {
     "mean": 16.7,
     "p10": 0.0,
@@ -937,7 +937,7 @@
   },
   {
    "month": 9,
-   "name": "set",
+   "name": "Sep",
    "rain_mm": {
     "mean": 76.4,
     "p10": 39.0,
@@ -1041,7 +1041,7 @@
   },
   {
    "month": 10,
-   "name": "out",
+   "name": "Oct",
    "rain_mm": {
     "mean": 155.5,
     "p10": 88.7,
@@ -1145,7 +1145,7 @@
   },
   {
    "month": 11,
-   "name": "nov",
+   "name": "Nov",
    "rain_mm": {
     "mean": 224.7,
     "p10": 142.2,
@@ -1249,7 +1249,7 @@
   },
   {
    "month": 12,
-   "name": "dez",
+   "name": "Dec",
    "rain_mm": {
     "mean": 288.3,
     "p10": 198.0,
@@ -1577,7 +1577,7 @@
  "calendar": [
   {
    "month": 1,
-   "name": "jan",
+   "name": "Jan",
    "heat": 0,
    "frost": 0,
    "drought": 0,
@@ -1585,7 +1585,7 @@
   },
   {
    "month": 2,
-   "name": "fev",
+   "name": "Feb",
    "heat": 0,
    "frost": 0,
    "drought": 0,
@@ -1593,7 +1593,7 @@
   },
   {
    "month": 3,
-   "name": "mar",
+   "name": "Mar",
    "heat": 1,
    "frost": 0,
    "drought": 0,
@@ -1601,7 +1601,7 @@
   },
   {
    "month": 4,
-   "name": "abr",
+   "name": "Apr",
    "heat": 1,
    "frost": 0,
    "drought": 0,
@@ -1609,7 +1609,7 @@
   },
   {
    "month": 5,
-   "name": "mai",
+   "name": "May",
    "heat": 1,
    "frost": 0,
    "drought": 2,
@@ -1617,7 +1617,7 @@
   },
   {
    "month": 6,
-   "name": "jun",
+   "name": "Jun",
    "heat": 0,
    "frost": 0,
    "drought": 2,
@@ -1625,7 +1625,7 @@
   },
   {
    "month": 7,
-   "name": "jul",
+   "name": "Jul",
    "heat": 0,
    "frost": 0,
    "drought": 2,
@@ -1633,7 +1633,7 @@
   },
   {
    "month": 8,
-   "name": "ago",
+   "name": "Aug",
    "heat": 0,
    "frost": 0,
    "drought": 2,
@@ -1641,7 +1641,7 @@
   },
   {
    "month": 9,
-   "name": "set",
+   "name": "Sep",
    "heat": 0,
    "frost": 0,
    "drought": 2,
@@ -1649,7 +1649,7 @@
   },
   {
    "month": 10,
-   "name": "out",
+   "name": "Oct",
    "heat": 0,
    "frost": 0,
    "drought": 0,
@@ -1657,7 +1657,7 @@
   },
   {
    "month": 11,
-   "name": "nov",
+   "name": "Nov",
    "heat": 0,
    "frost": 0,
    "drought": 0,
@@ -1665,7 +1665,7 @@
   },
   {
    "month": 12,
-   "name": "dez",
+   "name": "Dec",
    "heat": 0,
    "frost": 0,
    "drought": 0,

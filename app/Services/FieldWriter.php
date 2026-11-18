@@ -17,7 +17,7 @@ class FieldWriter
     public function save(array $data, ?Field $field = null, array $ownership = []): Field
     {
         return DB::transaction(function () use ($data, $field, $ownership) {
-            $farmData = Arr::only($data['farm'], ['name', 'municipality', 'state', 'has_livestock']);
+            $farmData = Arr::only($data['farm'], ['name', 'municipality', 'state', 'country_code', 'has_livestock']);
             $farm = $field
                 ? tap($field->farm)->update($farmData)
                 : Farm::create($farmData + Arr::only($ownership, ['user_id', 'is_demo']));

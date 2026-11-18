@@ -51,7 +51,7 @@ def build_diagnosis(ctx: Ctx, history_meta: dict[str, Any]) -> dict[str, Any]:
     smap_month = {sm["month"]: sm for sm in smap["monthly"]} if smap else {}
     for c in cal:
         m = c["month"]
-        c["bare_soil"] = (2 if m in RAINY_SEASON else 1) if m in bare else 0
+        c["bare_soil"] = (2 if m in prof["season"].get("rainy_months", RAINY_SEASON) else 1) if m in bare else 0
         if veg:
             # 30 m (HLS) onde houver mediana do mês; senão a série longa de 250 m (MODIS).
             vm = prim_month[m] if prim_month[m]["p50"] is not None else modis_month[m]

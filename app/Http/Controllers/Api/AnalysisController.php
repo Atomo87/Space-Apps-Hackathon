@@ -27,7 +27,8 @@ class AnalysisController extends Controller
             'priorities.*' => ['integer', 'between:0,5'],
         ]);
 
-        $isPublicDemo = $demo->appliesTo($field);
+        $region = $demo->region($field);
+        $isPublicDemo = $region !== null;
         $field = $isPublicDemo ? $demo->prepare($field) : $field;
 
         if ($field->status !== Field::STATUS_READY) {
@@ -46,10 +47,18 @@ class AnalysisController extends Controller
         );
         // A chave muda com os dados; depois de atualizar o motor no geo-service, rode `php artisan cache:clear`.
         $key = GeoServiceClient::analysisCacheKey($payload);
+        $isBaseline = $isPublicDemo && $demo->isBaseline($region, $payload);
+
+        if ($region === 'texas' && ! $isBaseline) {
+            return response()->json([
+                'type' => 'about:blank', 'title' => __('Simulação indisponível'), 'status' => 422,
+                'detail' => __('O exemplo do Texas mostra um cenário de referência fixo.'),
+            ], 422, ['Content-Type' => 'application/problem+json']);
+        }
 
         try {
-            $result = $isPublicDemo && $demo->isBaseline($payload)
-                ? $demo->baseline()
+            $result = $isBaseline
+                ? $demo->baseline($region)
                 : Cache::remember($key, now()->addMinutes(10), fn () => $geo->analysis($payload));
         } catch (RuntimeException $e) {
             if ($isPublicDemo) {

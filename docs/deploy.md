@@ -1,122 +1,137 @@
-# Deploy: geo-service no Render + Laravel na Hostinger (compartilhada)
+# Deployment — geo-service on Render and Laravel on Hostinger shared hosting
 
-> Os nomes dos menus da Hostinger e do Render podem variar. Os passos abaixo são o caminho usual.
+Hostinger and Render menu names may vary. These steps describe the usual setup.
 
-## 1. geo-service no Render (Python)
-1. Suba o repositório no GitHub.
-2. Render → **New → Blueprint** → escolha o repositório. O `render.yaml` cria o serviço `geosafra-geo-service` (Docker, plano free, health check em `/health`).
-3. Depois do deploy, abra **Environment** e copie o valor de `GEOSAFRA_TOKEN`.
-4. Ainda em **Environment**, preencha `EARTHDATA_TOKEN` com o token de serviço da NASA Earthdata (liga SMAP, GPM, ECOSTRESS e GRACE-FO). Nunca coloque esse token no repositório. Sem ele, o resto funciona e a análise declara a lacuna.
-5. Teste: `https://SEU-SERVICO.onrender.com/health` deve responder `{"status":"ok",...}`.
+## 1. Deploy geo-service (Python) on Render
 
-Observações:
-- No plano free, o serviço **dorme após ~15 min sem uso** e leva cerca de 1 min para acordar. O ping agendado do Laravel (item 3) evita isso durante a demonstração.
-- O disco é efêmero: o cache dos satélites se perde a cada novo deploy. Não é um problema, porque o Laravel guarda clima, relevo e dados de satélite de cada talhão no MySQL.
-- O token Earthdata expira (cerca de 60 dias). Quando vencer, gere outro e troque a variável; os talhões já processados não são afetados.
+1. Push the repository to GitHub.
+2. In Render, select **New → Blueprint** and choose the repository. The `render.yaml` file creates `geosafra-geo-service` as a free Docker service with a health check at `/health`.
+3. After deployment, open **Environment** and copy the value of `GEOSAFRA_TOKEN`.
+4. In **Environment**, set `EARTHDATA_TOKEN` to the NASA Earthdata service token to enable SMAP, GPM, ECOSTRESS, and GRACE-FO. Keep the token out of the repository. The rest of the analysis works without this token and reports the missing data.
+5. Verify that `https://YOUR-SERVICE.onrender.com/health` returns `{"status":"ok",...}`.
 
-## 2. Laravel na Hostinger
-Na sua máquina:
+On the free plan, the service **sleeps after about 15 minutes of inactivity** and takes about one minute to wake up. The Laravel cron job in section 3 keeps it awake during the demo. The disk is ephemeral, so deployments clear the satellite cache. Laravel retains field climate, terrain, and satellite data in MySQL.
+
+The Earthdata token expires after about 60 days. When it expires, generate a replacement and update the variable. Previously processed fields retain their data.
+
+## 2. Deploy Laravel on Hostinger
+
+On your local machine, install dependencies and build the front end. The build writes to `public/build`, which you can upload to a shared host that lacks Node.js.
+
 ```bash
 composer install --no-dev --optimize-autoloader
-npm ci && npm run build          # gera public/build (a hospedagem compartilhada costuma não ter Node)
+npm ci && npm run build
 ```
-No hPanel:
-1. **PHP 8.2** (ou superior) para o domínio.
-2. Crie um **banco MySQL** e anote o nome, o usuário e a senha.
-3. Envie o projeto inteiro (com `vendor/`, `public/build/` e a pasta `geo-service/app/catalog/`, que o seeder usa) para uma pasta **fora** de `public_html`, por exemplo `~/geosafra`.
-4. Faça o domínio servir `~/geosafra/public`. Pelo SSH (planos com acesso SSH):
+
+In hPanel:
+
+1. Set the domain to **PHP 8.2** or later.
+2. Create a **MySQL database** and record the database name, username, and password.
+3. Upload the project, including `vendor/`, `public/build/`, and the `geo-service/app/catalog/` directory used by the seeder, to a directory **outside** `public_html`, such as `~/geosafra`.
+4. Configure the domain to serve `~/geosafra/public`. On plans with SSH access, run:
+
    ```bash
-   mv ~/domains/SEUDOMINIO/public_html ~/domains/SEUDOMINIO/public_html_old
-   ln -s ~/geosafra/public ~/domains/SEUDOMINIO/public_html
+   mv ~/domains/YOUR-DOMAIN/public_html ~/domains/YOUR-DOMAIN/public_html_old
+   ln -s ~/geosafra/public ~/domains/YOUR-DOMAIN/public_html
    ```
-5. Crie o `.env` a partir do `.env.example`:
+
+5. Create `.env` from `.env.example`. Replace the domain and service placeholders with your own values.
+
    ```dotenv
    APP_ENV=production
    APP_DEBUG=false
-   APP_URL=https://SEUDOMINIO
+   APP_URL=https://YOUR-DOMAIN
    DB_CONNECTION=mysql
    DB_HOST=localhost
    DB_DATABASE=...  DB_USERNAME=...  DB_PASSWORD=...
    QUEUE_CONNECTION=sync
-   GEO_SERVICE_URL=https://SEU-SERVICO.onrender.com
-   GEO_SERVICE_TOKEN=<valor de GEOSAFRA_TOKEN>
+   GEO_SERVICE_URL=https://YOUR-SERVICE.onrender.com
+   GEO_SERVICE_TOKEN=<value of GEOSAFRA_TOKEN>
    ```
-6. Pelo SSH:
+
+6. Run the following commands over SSH and confirm that the ping reports `{"status":"ok",...}`.
+
    ```bash
    cd ~/geosafra
    php artisan key:generate
    php artisan migrate --seed --force
    php artisan config:cache && php artisan route:cache && php artisan view:cache
-   php artisan geosafra:ping          # deve mostrar {"status":"ok"...}
+   php artisan geosafra:ping
    ```
-7. A cada novo deploy do geo-service (motor atualizado), rode `php artisan cache:clear` na Hostinger: as análises ficam 10 min em cache e mostrariam o texto antigo.
 
-> **Tempo da primeira análise:** buscar 20 anos de clima e todos os satélites leva de 2 a 5 min por talhão. O processamento pede até 12 min ao PHP (`set_time_limit`); se a hospedagem cortar antes, o talhão volta a oferecer "Tentar de novo" após 15 min, e a nova tentativa aproveita o cache do que já foi baixado.
+7. After deploying a new geo-service engine version, run `php artisan cache:clear` on Hostinger. This removes old analysis text from the 10-minute cache.
 
-## Atualizações: `deploy.cmd` (só o que mudou)
+> **First analysis.** Retrieving 20 years of climate data and all satellite datasets takes two to five minutes per field. The job requests up to 12 minutes of PHP execution time (`set_time_limit`). If the host stops the job early, the field shows “Try again” after 15 minutes. Retrying reuses any data already cached.
 
-Depois da primeira instalação, use o script da raiz do projeto, no Windows:
+## Updates with `deploy.cmd`
 
-```bat
-deploy.cmd            :: roda os testes e o build, mostra o que mudou e pede confirmação
-deploy.cmd -DryRun    :: só lista o que seria enviado
-deploy.cmd -Yes       :: envia sem perguntar
-deploy.cmd -SkipTests -SkipBuild
-deploy.cmd -Seed AssistantKnowledgeSeeder   :: roda também um seeder no servidor
-deploy.cmd -Baseline  :: marca o estado local como já publicado (não envia nada)
-```
+After the first installation, run the script from the project root on Windows.
 
-O que ele faz:
-- Compara o hash de cada arquivo com o do último deploy, guardado em `.deploy/manifest.tsv`. Envia só os arquivos novos ou alterados de `app`, `bootstrap`, `config`, `database`, `public`, `resources`, `routes`, `vendor`, `docs`, `geo-service/app/catalog`, `artisan` e `composer.*`. Também apaga no servidor o que foi apagado localmente.
-- Nunca envia o `.env`, `bootstrap/cache` nem `public/hot`.
-- Antes de trocar qualquer arquivo, guarda uma cópia em `~/backups/deploy-<data>/before.tgz`.
-- Copia o que é de `public/` para `public_html/geosafra`, sem tocar no `index.php` próprio do servidor.
-- Roda `migrate --force` quando há migration nova e `package:discover` quando o `vendor` muda. Sempre refaz os caches (`config`, `route` e `view`).
-- Confere se o site responde. O manifesto só é atualizado depois que o servidor confirma o deploy.
+| Command | Effect |
+|---|---|
+| `deploy.cmd` | Runs tests and builds, shows the changes, and asks for confirmation. |
+| `deploy.cmd -DryRun` | Lists the files that would be deployed. |
+| `deploy.cmd -Yes` | Deploys without asking for confirmation. |
+| `deploy.cmd -SkipTests -SkipBuild` | Skips tests and the build. |
+| `deploy.cmd -Seed AssistantKnowledgeSeeder` | Also runs the specified seeder on the server. |
+| `deploy.cmd -Baseline` | Records the local state as already deployed without uploading it. |
 
-A configuração (chave SSH, porta, usuário e caminhos no servidor) fica no topo de `scripts/deploy.ps1`.
+The script:
 
-**Para desfazer** um deploy, no servidor: `cd ~/domains/softrix.com.br/geosafra && tar -xzf ~/backups/deploy-<data>/before.tgz`. Depois, copie de novo para `public_html/geosafra` o que for de `public/` e refaça os caches.
+- Compares the hash of each file with the last deployed hash in `.deploy/manifest.tsv`. It uploads new or changed files in `app`, `bootstrap`, `config`, `database`, `public`, `resources`, `routes`, `vendor`, `docs`, `geo-service/app/catalog`, `artisan`, and `composer.*`. It removes corresponding remote files when they have been deleted locally.
+- Excludes `.env`, `bootstrap/cache`, and `public/hot` from uploads.
+- Saves a copy to `~/backups/deploy-<date>/before.tgz` before replacing any files.
+- Copies files from `public/` to `public_html/geosafra` while preserving the server’s own `index.php`.
+- Runs `migrate --force` when there is a new migration and `package:discover` when `vendor` changes. It rebuilds the configuration, route, and view caches on every deployment.
+- Checks that the site responds and updates the manifest only after the server confirms deployment.
 
-## Base de conhecimento do assistente
+SSH settings, including the key, port, username, and server paths, are at the top of `scripts/deploy.ps1`.
 
-Em uma instalação existente, rode a migração e carregue as perguntas de referência iniciais:
+**To roll back a deployment**, run `cd ~/domains/softrix.com.br/geosafra && tar -xzf ~/backups/deploy-<date>/before.tgz` on the server. Copy the restored files from `public/` back to `public_html/geosafra` and rebuild the caches.
+
+## Assistant knowledge base
+
+On an existing installation, run the migration and load the initial reference questions.
 
 ```bash
 php artisan migrate --force
 php artisan db:seed --class=AssistantKnowledgeSeeder --force
 ```
 
-Depois de revisar uma pergunta e sua resposta, publique um arquivo JSON com uma lista de entradas:
+After reviewing a question and its answer, publish a JSON file containing an array of entries.
 
 ```json
 [
   {
-    "locale": "pt-BR",
-    "slug": "leitura-do-mapa",
-    "question": "Onde vejo as imagens do talhão?",
-    "aliases": ["Onde ficam as imagens do talhão?"],
-    "answer": "Abra o diagnóstico do talhão e procure a seção Imagens do talhão.",
-    "source": "Interface do GeoSafra"
+    "locale": "en-US",
+    "slug": "field-imagery",
+    "question": "Where can I see imagery for my field?",
+    "aliases": ["Where do I find the field images?"],
+    "answer": "Open the field diagnosis and look for the Field imagery section.",
+    "source": "GeoSafra interface"
   }
 ]
 ```
 
 ```bash
-php artisan geosafra:knowledge:publish respostas-revisadas.json
+php artisan geosafra:knowledge:publish reviewed-answers.json
 ```
 
-Use o mesmo identificador e idioma para revisar uma entrada. O campo opcional `source_url` aceita URL HTTP ou HTTPS. Para retirar uma resposta da busca, ponha `published_at` como `NULL`. Uma correspondência com a pergunta ou uma variante publicada retorna a referência direto do banco. Outras perguntas podem usar a mesma referência como contexto, junto com os dados do talhão. Mudanças nas referências recuperadas invalidam a resposta anterior em cache.
+To revise an entry, keep its identifier and locale. The optional `source_url` field accepts HTTP or HTTPS URLs. To remove an answer from search, set `published_at` to `NULL`. A match on a published question or alias returns the reference directly from the database. Other questions can use the same reference alongside the field data. Changes to retrieved references invalidate the previously cached answer.
 
-## 3. Cron (opcional, recomendado na demo)
-hPanel → **Avançado → Cron Jobs** → a cada minuto:
-```
-php /home/SEU_USUARIO/geosafra/artisan schedule:run
-```
-Ele pinga o geo-service a cada 10 min.
+## 3. Cron job (optional, recommended for the demo)
 
-## 4. Checklist antes de apresentar
-- [ ] `/health` do Render responde.
-- [ ] O exemplo de Uberlândia foi processado **antes** da apresentação (o resultado fica no MySQL).
-- [ ] Teste no celular, em 4G.
-- [ ] Mantenha um talhão já pronto como plano B, caso a rede do evento falhe.
+In hPanel, go to **Advanced → Cron Jobs** and run this command once a minute.
+
+```
+php /home/YOUR_USERNAME/geosafra/artisan schedule:run
+```
+
+The scheduled task pings geo-service every 10 minutes.
+
+## 4. Pre-presentation checklist
+
+- [ ] Check that Render’s `/health` endpoint responds.
+- [ ] Process the Uberlândia example before the presentation. MySQL retains the result.
+- [ ] Test on a phone using 4G.
+- [ ] Keep a processed field ready as a backup in case the venue’s network fails.

@@ -49,7 +49,7 @@ $Include = @(
     'app', 'bootstrap', 'config', 'database', 'lang', 'public', 'resources', 'routes',
     'vendor', 'docs', 'geo-service/app/catalog', 'artisan', 'composer.json', 'composer.lock'
 )
-$ExcludeRegex = '^(bootstrap/cache/|public/hot$|public/storage(/|$)|vendor/pestphp/pest/\.temp/)|(^|/)\.env|(^|/)(\.DS_Store|Thumbs\.db)$'
+$ExcludeRegex = '^(bootstrap/cache/|public/hot$|public/storage(/|$)|vendor/pestphp/pest/\.temp/)|(^|/)__pycache__/|\.pyc$|(^|/)\.env|(^|/)(\.DS_Store|Thumbs\.db)$'
 
 $StateDir = Join-Path $Root '.deploy'
 $Manifest = Join-Path $StateDir 'manifest.tsv'

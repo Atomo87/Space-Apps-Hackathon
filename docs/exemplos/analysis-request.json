@@ -1,6 +1,6 @@
 {
  "climate": {
-  "...": "ClimateProfile devolvido por POST /v1/climate-profile (ver climate-profile.sintetico.json)"
+  "...": "ClimateProfile returned by POST /v1/climate-profile (see climate-profile.sintetico.json)"
  },
  "field": {
   "latitude": -18.9186,

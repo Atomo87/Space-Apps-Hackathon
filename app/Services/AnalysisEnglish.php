@@ -6,11 +6,11 @@ namespace App\Services;
 class AnalysisEnglish
 {
     private const TEXT_FIELDS = [
-        'text', 'title', 'name', 'focus', 'note', 'notes', 'source_note', 'grid_note',
+        'text', 'title', 'name', 'label', 'focus', 'note', 'notes', 'source_note', 'grid_note',
         'dataset', 'datasets', 'period', 'resolution', 'citation', 'relief_class',
         'driest', 'wettest', 'disclaimer', 'rationale', 'explanation', 'benefits',
         'information_gaps', 'local_review_risks', 'conflicts', 'warnings', 'human_judgment',
-        'reasons', 'risks', 'crops', 'current_crops',
+        'reasons', 'risks', 'crops', 'crop_names', 'current_crops',
     ];
 
     private array $messages;
@@ -100,7 +100,7 @@ class AnalysisEnglish
         }
 
         // Older responses join separately formatted sentences, crop names and months.
-        foreach (['/(; )/u', '/(, | e | → | \+ )/u'] as $separator) {
+        foreach (['/(; )/u', '/(, )/u', '/( e | → | \+ )/u'] as $separator) {
             $parts = preg_split($separator, $text, -1, PREG_SPLIT_DELIM_CAPTURE);
             if (count($parts) > 1) {
                 $english = implode('', array_map(fn ($part) => $this->translate($part, $depth + 1), $parts));

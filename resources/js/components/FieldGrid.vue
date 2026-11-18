@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { t, locale, tf } from '@/lib/i18n';
+import { countryName, t, locale, tf } from '@/lib/i18n';
 import { Link } from '@inertiajs/vue3';
 import { fmt } from '@/lib/labels';
 import Icon, { type IconName } from './Icon.vue';
@@ -11,6 +11,7 @@ export interface FieldRow {
     farm: string;
     municipality: string | null;
     state: string | null;
+    country_code: string;
     area_ha: number | null;
     status: string;
     analyzed_at: string | null;
@@ -47,7 +48,10 @@ function since(iso: string | null): string {
                 <p class="mt-0.5 truncate text-sm text-stone-500">{{ f.farm }}</p>
             </div>
             <div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-stone-100 pt-3 text-xs text-stone-500">
-                <span v-if="f.municipality" class="inline-flex items-center gap-1"><Icon name="pin" class="h-3.5 w-3.5" /> {{ f.municipality }}<template v-if="f.state">/{{ f.state }}</template></span>
+                <span v-if="f.municipality" class="inline-flex items-center gap-1">
+                    <Icon name="pin" class="h-3.5 w-3.5 shrink-0" />
+                    {{ [f.municipality, f.state, f.country_code !== 'BR' ? countryName(f.country_code) : null].filter(Boolean).join(', ') }}
+                </span>
                 <span v-if="f.area_ha" class="inline-flex items-center gap-1"><Icon name="grid" class="h-3.5 w-3.5" /> {{ fmt(f.area_ha, 1) }} ha</span>
                 <span class="inline-flex items-center gap-1"><Icon name="clock" class="h-3.5 w-3.5" /> {{ since(f.analyzed_at) }}</span>
             </div>

@@ -4,6 +4,7 @@ use App\Models\Field;
 use App\Models\User;
 use Database\Seeders\CropSeeder;
 use Illuminate\Support\Facades\Http;
+use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
     $this->seed(CropSeeder::class);
@@ -18,9 +19,31 @@ it('salva o talhão com histórico, prioridades e restrições (A2)', function (
     $field = Field::with(['history', 'farm.priorities', 'farm.constraints'])->sole();
     expect($field->status)->toBe('pending')
         ->and($field->farm->user_id)->toBeNull() // acesso livre: sem dono
+        ->and($field->farm->country_code)->toBe('BR')
         ->and($field->history)->toHaveCount(2)
         ->and($field->farm->priorities->save_water)->toBe(4)
         ->and($field->farm->constraints->buyer_crops)->toBe(['soja']);
+});
+
+it('mantém cidade, região e país internacionais ao cadastrar e editar um talhão', function () {
+    $payload = fieldPayload([
+        'farm' => ['municipality' => 'Fresno', 'state' => 'California', 'country_code' => 'US'],
+        'field' => ['latitude' => 36.7477, 'longitude' => -119.7724],
+    ]);
+    $this->post('/talhoes', $payload)->assertRedirect();
+
+    $field = Field::sole();
+    $this->get("/talhoes/{$field->id}/editar")->assertInertia(fn (Assert $page) => $page
+        ->component('Fields/Form')
+        ->where('initial.farm.municipality', 'Fresno')
+        ->where('initial.farm.state', 'California')
+        ->where('initial.farm.country_code', 'US')
+        ->where('initial.field.latitude', 36.7477));
+
+    $id = $field->id;
+    $payload['farm'] = array_replace($payload['farm'], ['municipality' => 'Pergamino', 'state' => 'Buenos Aires', 'country_code' => 'AR']);
+    $this->put("/talhoes/{$id}", $payload)->assertRedirect();
+    $this->assertDatabaseHas('farms', ['id' => $field->farm_id, 'municipality' => 'Pergamino', 'state' => 'Buenos Aires', 'country_code' => 'AR']);
 });
 
 it('rejeita colheita antes do plantio', function () {

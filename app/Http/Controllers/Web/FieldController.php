@@ -17,15 +17,15 @@ use Inertia\Response;
 class FieldController extends Controller
 {
     /** Página inicial (acesso livre): apresentação. A lista de talhões fica em "Meus talhões" (/talhoes). */
-    public function index(): Response
+    public function index(PublicDemo $demo): Response
     {
-        return Inertia::render('Welcome');
+        return Inertia::render('Welcome', ['demoRegions' => $demo->options()]);
     }
 
     /** Tela "Meus talhões": todos os talhões cadastrados, com busca e filtro. */
-    public function list(): Response
+    public function list(PublicDemo $demo): Response
     {
-        return Inertia::render('Fields/Index', $this->fieldList());
+        return Inertia::render('Fields/Index', $this->fieldList() + ['demoRegions' => $demo->options()]);
     }
 
     /** @return array{fields: list<array<string,mixed>>, stats: array<string,int|float>} */
@@ -33,10 +33,11 @@ class FieldController extends Controller
     {
         $fields = Field::with('farm')->latest('fields.updated_at')->get()->map(fn (Field $f) => [
             'id' => $f->id,
-            'name' => $f->name,
-            'farm' => $f->farm->name,
+            'name' => $f->farm->isPublicDemo() ? __($f->name) : $f->name,
+            'farm' => $f->farm->isPublicDemo() ? __($f->farm->name) : $f->farm->name,
             'municipality' => $f->farm->municipality,
             'state' => $f->farm->state,
+            'country_code' => $f->farm->country_code,
             'area_ha' => $f->area_ha,
             'status' => $f->status,
             'analyzed_at' => $f->analyzed_at?->toIso8601String(),
@@ -70,9 +71,11 @@ class FieldController extends Controller
         Gate::authorize('view', $field);
         $field = $demo->prepare($field);
         $field->load(['farm.priorities', 'soil', 'history.crop']);
-        $isPublicDemo = $demo->appliesTo($field);
+        $region = $demo->region($field);
+        $isPublicDemo = $region !== null;
 
         return Inertia::render('Fields/Show', [
+            'demoRegions' => $isPublicDemo ? $demo->options() : [],
             'field' => [
                 'id' => $field->id,
                 'name' => $isPublicDemo ? __($field->name) : $field->name,
@@ -92,7 +95,12 @@ class FieldController extends Controller
                 'status_message' => $field->status_message,
                 'is_demo' => $field->farm->is_demo,
                 'is_public_demo' => $isPublicDemo,
-                'farm' => ['id' => $field->farm->id, 'name' => $isPublicDemo ? __($field->farm->name) : $field->farm->name, 'municipality' => $field->farm->municipality, 'state' => $field->farm->state],
+                'demo_region' => $region,
+                'farm' => [
+                    'id' => $field->farm->id,
+                    'name' => $isPublicDemo ? __($field->farm->name) : $field->farm->name,
+                    ...$field->farm->only(['municipality', 'state', 'country_code']),
+                ],
                 'soil_source' => $field->soil?->source ?? 'unknown',
                 'history' => $field->history->map(fn ($h) => ['crop' => $h->crop->name_pt, 'sown_at' => $h->sown_at->toDateString(), 'harvested_at' => $h->harvested_at->toDateString()]),
                 'priorities' => $field->farm->priorities?->weights() ?? array_fill_keys(FarmerPriority::KEYS, 3),
@@ -143,7 +151,7 @@ class FieldController extends Controller
             'equipment' => collect($equipment)->map(fn ($label, $key) => ['key' => $key, 'label' => $label])->values(),
             'initial' => $field ? [
                 'id' => $field->id,
-                'farm' => $field->farm->only(['name', 'municipality', 'state', 'has_livestock']),
+                'farm' => $field->farm->only(['name', 'municipality', 'state', 'country_code', 'has_livestock']),
                 'field' => $field->only(['name', 'latitude', 'longitude', 'boundary', 'area_ha', 'irrigated', 'irrigation_mm_day']),
                 'soil' => $field->soil
                     ? $field->soil->only(['source', 'texture', 'clay_pct', 'ph_water', 'organic_matter_pct', 'p_mg_dm3', 'k_cmolc_dm3', 'ctc_cmolc_dm3', 'v_pct']) + ['sampled_at' => $field->soil->sampled_at?->toDateString()]

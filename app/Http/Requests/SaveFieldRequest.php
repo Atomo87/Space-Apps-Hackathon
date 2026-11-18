@@ -20,7 +20,8 @@ class SaveFieldRequest extends FormRequest
         return [
             'farm.name' => ['required', 'string', 'max:150'],
             'farm.municipality' => ['nullable', 'string', 'max:150'],
-            'farm.state' => ['nullable', 'string', 'size:2'],
+            'farm.state' => ['nullable', 'string', $this->input('farm.country_code', 'BR') === 'BR' ? 'size:2' : 'max:150'],
+            'farm.country_code' => ['sometimes', 'required', 'string', 'regex:/^[A-Z]{2}$/D'],
             'farm.has_livestock' => ['boolean'],
 
             'field.name' => ['required', 'string', 'max:100'],

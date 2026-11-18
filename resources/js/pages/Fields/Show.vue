@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { t, locale, tf } from '@/lib/i18n';
+import { countryName, t, locale, tf } from '@/lib/i18n';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import { url } from '@/lib/url';
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 import ConfidenceBadge from '@/components/ConfidenceBadge.vue';
 import DatasetBadge from '@/components/DatasetBadge.vue';
+import DemoPicker, { type DemoRegion } from '@/components/DemoPicker.vue';
 import EarthdataCard from '@/components/EarthdataCard.vue';
 import Icon from '@/components/Icon.vue';
 import StarRating from '@/components/StarRating.vue';
@@ -34,14 +35,16 @@ interface FieldProps {
     status_message: string | null;
     is_demo: boolean;
     is_public_demo: boolean;
-    farm: { id: number; name: string; municipality: string | null; state: string | null };
+    demo_region: string | null;
+    farm: { id: number; name: string; municipality: string | null; state: string | null; country_code: string };
     soil_source: string;
     history: { crop: string; sown_at: string; harvested_at: string }[];
     priorities: Priorities;
     power_period: { start_year: number | null; end_year: number | null; first_year: number; last_year: number; min_years: number };
     boundary: Polygon | null;
 }
-const props = defineProps<{ field: FieldProps; can: { update: boolean; delete: boolean } }>();
+const props = defineProps<{ field: FieldProps; can: { update: boolean; delete: boolean }; demoRegions: DemoRegion[] }>();
+const fixedDemo = computed(() => props.field.demo_region === 'texas');
 const page = usePage<SharedProps>();
 // Gráficos carregados depois do resumo (conexão fraca — RNF08).
 const ClimateCharts = defineAsyncComponent(() => import('@/components/ClimateCharts.vue'));
@@ -233,6 +236,8 @@ const TABS = [
     { k: 'compare', l: t('Comparar estratégias'), s: t('Comparar'), i: 'scale' },
     { k: 'whatif', l: t('E se o clima mudar?'), s: t('E se…?'), i: 'sliders' },] as const;
 
+const visibleTabs = computed(() => TABS.filter((entry) => !fixedDemo.value || entry.k !== 'whatif'));
+
 const reliefTone = computed(() => {
     const s = data.value?.diagnosis.terrain?.slope_pct.mean ?? 0;
     return s < 3 ? 'bg-safra-100 text-safra-800' : s < 8 ? 'bg-lime-100 text-lime-800' : s < 20 ? 'bg-amber-100 text-amber-900' : 'bg-red-100 text-red-800';
@@ -343,7 +348,7 @@ onBeforeUnmount(() => {
                     <span class="hidden h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-safra-700 to-safra-950 text-lime-300 shadow-[0_8px_20px_-8px_rgb(5_46_22/0.6)] sm:grid"><Icon name="sprout" class="h-6 w-6" /></span>
                     <div class="min-w-0">
                         <p class="text-[13px] font-medium text-stone-500">
-                            {{ field.farm.name }}<template v-if="field.farm.municipality"> · {{ field.farm.municipality }}/{{ field.farm.state }}</template>
+                            {{ field.farm.name }}<template v-if="field.farm.municipality"> · {{ [field.farm.municipality, field.farm.state, field.farm.country_code !== 'BR' ? countryName(field.farm.country_code) : null].filter(Boolean).join(', ') }}</template>
                         </p>
                         <div class="mt-0.5 flex flex-wrap items-center gap-2">
                             <h1 class="text-2xl font-extrabold tracking-tight text-stone-900 sm:text-[1.75rem]">{{ field.name }}</h1>
@@ -354,7 +359,7 @@ onBeforeUnmount(() => {
                             <div v-if="field.area_ha" class="flex items-center gap-1.5"><dt class="sr-only">{{ $t('Área') }}</dt><Icon name="grid" class="h-3.5 w-3.5 text-stone-400" /><dd class="font-medium">{{ fmt(field.area_ha, 1) }} ha</dd></div>
                             <div class="flex items-center gap-1.5"><dt class="sr-only">{{ $t('Coordenadas') }}</dt><Icon name="target" class="h-3.5 w-3.5 text-stone-400" /><dd class="tabular-nums">{{ field.latitude.toFixed(4) }}, {{ field.longitude.toFixed(4) }}</dd></div>
                             <div class="flex items-center gap-1.5"><dt class="sr-only">{{ $t('Solo') }}</dt><Icon name="layers" class="h-3.5 w-3.5 text-stone-400" /><dd>{{ $t('Solo') }} {{ { lab_analysis: $t('por análise de laboratório'), farmer_estimate: $t('estimado pelo produtor'), unknown: $t('a confirmar') }[field.soil_source] }}</dd></div>
-                            <div class="flex items-center gap-1.5"><dt class="sr-only">{{ $t('Histórico') }}</dt><Icon name="sprout" class="h-3.5 w-3.5 text-stone-400" /><dd class="capitalize">{{ field.history.map((h) => h.crop).join(' → ') || $t('sem histórico') }}</dd></div>
+                            <div class="flex items-center gap-1.5"><dt class="sr-only">{{ $t('Histórico') }}</dt><Icon name="sprout" class="h-3.5 w-3.5 text-stone-400" /><dd class="capitalize">{{ field.history.map((h) => $t(h.crop)).join(' → ') || $t('sem histórico') }}</dd></div>
                             <div class="flex items-center gap-1.5">
                                 <dt class="sr-only">{{ $t('Período do clima') }}</dt><Icon name="calendar" class="h-3.5 w-3.5 text-stone-400" />
                                 <dd>
@@ -410,7 +415,8 @@ onBeforeUnmount(() => {
         </section>
 
         <div v-if="!can.update" class="notice-warn mb-6 flex-wrap items-center justify-between print:hidden">
-            <div class="flex items-start gap-3"><Icon name="eye" class="mt-0.5 h-5 w-5 shrink-0" /><span>{{ $t('Este é o') }} <strong>{{ $t('exemplo público') }}</strong> {{ $t('de referência: não pode ser editado nem excluído. Mude prioridades e cenários à vontade: nada é gravado.') }} <template v-if="field.is_public_demo">{{ $t('Os dados climáticos deste exemplo são ilustrativos.') }}</template></span></div>
+            <div class="flex w-full items-start gap-3"><Icon name="eye" class="mt-0.5 h-5 w-5 shrink-0" /><span>{{ $t('Este é o') }} <strong>{{ $t('exemplo público') }}</strong> {{ $t(fixedDemo ? 'do Texas, com clima e histórico de safras ilustrativos e cenário fixo.' : 'de referência: não pode ser editado nem excluído. Mude prioridades e cenários à vontade: nada é gravado.') }} <template v-if="field.is_public_demo && !fixedDemo">{{ $t('Os dados climáticos deste exemplo são ilustrativos.') }}</template></span></div>
+            <DemoPicker v-if="field.is_public_demo" :regions="demoRegions" :current="field.demo_region" />
             <Link :href="$url('/talhoes/novo')" class="btn-primary btn-sm"><Icon name="plus" /> {{ $t('Analisar o meu talhão') }}</Link>
         </div>
 
@@ -444,7 +450,7 @@ onBeforeUnmount(() => {
         <template v-else>
             <div class="sticky top-[64px] z-20 -mx-4 mb-6 bg-stone-50/90 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 print:hidden">
                 <nav class="tabs" role="tablist" :aria-label="$t('Seções da análise')">
-                    <button v-for="t in TABS" :key="t.k" type="button" role="tab" class="tab" :aria-selected="tab === t.k" @click="tab = t.k">
+                    <button v-for="t in visibleTabs" :key="t.k" type="button" role="tab" class="tab" :aria-selected="tab === t.k" @click="tab = t.k">
                         <Icon :name="t.i" /> <span class="sm:hidden">{{ t.s }}</span><span class="hidden sm:inline">{{ t.l }}</span>
                     </button>
                     <button
@@ -527,7 +533,7 @@ onBeforeUnmount(() => {
 
                         <template v-if="data.planting">
                             <h2 class="section-kicker">{{ $t('Quando plantar') }}</h2>
-                            <PlantingCard :planting="data.planting" :illustrative="field.is_public_demo" />
+                            <PlantingCard :planting="data.planting" :illustrative="field.is_public_demo" :texas-demo="fixedDemo" />
                         </template>
 
                         <h2 class="section-kicker">{{ $t('Riscos ao longo do ano') }}</h2>
@@ -663,7 +669,7 @@ onBeforeUnmount(() => {
                 <section v-show="tab === 'compare'" class="space-y-5">
                     <div class="notice-info"><Icon name="info" /><p>{{ data.disclaimer }}</p></div>
 
-                    <details class="card print:hidden" :open="prioritiesDirty">
+                    <details v-if="!fixedDemo" class="card print:hidden" :open="prioritiesDirty">
                         <summary><span class="flex items-center gap-2.5"><Icon name="star" class="h-[18px] w-[18px] text-amber-500" /> {{ $t('Suas prioridades') }} <span class="hidden font-normal text-stone-500 sm:inline">{{ $t('— mude e veja a comparação mudar') }}</span></span></summary>
                         <div class="mt-4 grid gap-x-8 gap-y-1 border-t border-stone-100 pt-4 sm:grid-cols-2">
                             <div v-for="p in PRIORITIES" :key="p.key" class="flex items-center justify-between gap-2 py-1.5">
@@ -714,7 +720,7 @@ onBeforeUnmount(() => {
                 <!-- E SE -->
                 <AssistantModal v-if="data" :field-id="field.id" :open="askOpen" @close="askOpen = false" />
 
-                <section v-show="tab === 'whatif'" class="space-y-5">
+                <section v-if="!fixedDemo" v-show="tab === 'whatif'" class="space-y-5">
                     <div class="card space-y-6">
                         <div class="card-head !mb-0">
                             <div>

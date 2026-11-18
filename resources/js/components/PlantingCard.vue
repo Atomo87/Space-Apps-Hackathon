@@ -6,7 +6,7 @@ import DatasetBadge from './DatasetBadge.vue';
 import Icon from './Icon.vue';
 
 /** Janela de plantio: para cada safra, a chance de um ano "bom" semeando em cada semana (clima diário da NASA POWER). */
-const props = defineProps<{ planting: Planting; illustrative?: boolean }>();
+const props = defineProps<{ planting: Planting; illustrative?: boolean; texasDemo?: boolean }>();
 
 const pct = (x: number | null) => (x === null ? '—' : `${Math.round(x * 100)}%`);
 const selected = ref<Record<string, PlantingWeek | null>>({});
@@ -111,7 +111,10 @@ function rangeDate(label: string, weeks: PlantingWeek[]): string {
             <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm bg-orange-300" /> {{ $t('abaixo de 30%') }}</span>
             <span class="inline-flex items-center gap-1.5"><span class="h-3 w-3 rounded-sm bg-stone-200" /> {{ $t('nenhum ano') }}</span>
         </div>
-        <p class="mt-3 text-xs leading-relaxed text-stone-500">
+        <p v-if="texasDemo" class="mt-3 text-xs leading-relaxed text-stone-500">
+            {{ $t('As janelas usam apenas chuva e temperatura ilustrativas. A irrigação do cenário não entra neste cálculo.') }}
+        </p>
+        <p v-else class="mt-3 text-xs leading-relaxed text-stone-500">
             {{ $t('Regras: ≥') }} {{ planting.rules.onset_mm }} {{ $t('mm nos 10 dias antes (só na safra de verão), sem') }} {{ planting.rules.dry_spell_days }} {{ $t('dias seguidos secos nos 30 dias depois, chuva do ciclo (90 dias) acima da necessidade e mínima acima de') }} {{ planting.rules.frost_tmin_c }} {{ $t('°C. Toque numa semana para ver os detalhes. É clima, não previsão: confira o') }} <strong>{{ $t('zoneamento agrícola (ZARC)') }}</strong>{{ $t(', a variedade e a umidade real do solo antes de plantar.') }}
         </p>
     </div>

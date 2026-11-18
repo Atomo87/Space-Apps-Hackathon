@@ -96,3 +96,33 @@ it('abre e recupera o diagnóstico do exemplo público sem consultar o serviço 
 
     Http::assertNothingSent();
 });
+
+it('abre exemplos independentes no Texas e no Brasil sem consultar serviços externos', function () {
+    Http::fake();
+    $this->post('/demo', ['region' => 'texas'])->assertStatus(303);
+    $texas = Field::whereHas('farm', fn ($q) => $q->where('is_demo', true)->where('country_code', 'US'))->sole();
+
+    $this->post('/demo', ['region' => 'texas'])->assertRedirect("/talhoes/{$texas->id}");
+    $this->post('/demo')->assertRedirect();
+    $brasil = Field::whereHas('farm', fn ($q) => $q->where('is_demo', true)->where('country_code', 'BR'))->sole();
+    expect($texas->farm->municipality)->toBe('Lubbock')
+        ->and($brasil->farm->municipality)->toBe('Uberlândia');
+
+    $this->get("/talhoes/{$texas->id}")->assertOk()
+        ->assertInertia(fn ($page) => $page->where('field.demo_region', 'texas')->has('demoRegions', 2)->where('can.update', false));
+
+    $path = "/api/v1/fields/{$texas->id}/analysis";
+    $this->getJson($path)->assertOk()
+        ->assertJsonPath('diagnosis.source.location.latitude', 33.57)
+        ->assertJsonPath('diagnosis.season.rainy_months', [5, 6, 7, 8, 9])
+        ->assertJsonPath('planting.seasons.0.key', 'cotton')
+        ->assertJsonPath('strategies.1.title', 'Summer grain sorghum');
+    $this->getJson($path.'?rain_delta_pct=-10')->assertUnprocessable();
+    $this->withCredentials()->withUnencryptedCookie('geosafra_locale', 'pt-BR')->getJson($path)->assertOk()
+        ->assertJsonPath('strategies.1.title', 'Sorgo granífero de verão');
+    $this->getJson("/api/v1/fields/{$brasil->id}/analysis")->assertOk()
+        ->assertJsonPath('diagnosis.source.location.latitude', -18.9);
+
+    $this->postJson('/demo', ['region' => 'missing'])->assertUnprocessable();
+    Http::assertNothingSent();
+});

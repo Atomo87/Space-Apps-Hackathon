@@ -2,6 +2,11 @@ import english from '../locales/en-US.json';
 
 export type Locale = 'en-US' | 'pt-BR';
 export const locale: Locale = document.documentElement.lang === 'pt-BR' ? 'pt-BR' : 'en-US';
+const regions = new Intl.DisplayNames(locale, { type: 'region' });
+
+export function countryName(code: string): string {
+    return regions.of(code) ?? code;
+}
 
 const messages: Readonly<Record<string, string>> = english;
 

@@ -156,6 +156,12 @@
   "Talhão 1 (demo)": "Field 1 (demo)",
   "Exemplo de Uberlândia (MG). Para analisar o seu, use \"Cadastrar talhão\".": "Demo from Uberlândia, Brazil. Select \"Add field\" to analyze your own.",
   "Dados climáticos ilustrativos": "Illustrative climate data",
+  "Uberlândia, Brasil": "Uberlândia, Brazil",
+  "Lubbock, Texas, EUA": "Lubbock, Texas, USA",
+  "Fazenda Demonstração do Texas": "Texas Demo Farm",
+  "Talhão de Lubbock (demo)": "Lubbock Field (demo)",
+  "Simulação indisponível": "Simulation unavailable",
+  "O exemplo do Texas mostra um cenário de referência fixo.": "The Texas demo uses a fixed baseline scenario.",
   "Série sintética de 2005 a 2025 para demonstrar o GeoSafra.": "Synthetic 2005–2025 series for the GeoSafra demo.",
   "O serviço de análise está indisponível para recalcular a simulação. Restaure os valores iniciais para consultar o diagnóstico de demonstração.": "The analysis service is unavailable to recalculate this simulation. Reset the inputs to view the demo analysis."
 }

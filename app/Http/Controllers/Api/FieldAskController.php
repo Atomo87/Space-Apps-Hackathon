@@ -36,7 +36,8 @@ class FieldAskController extends Controller
             ]);
         }
 
-        $isPublicDemo = $demo->appliesTo($field);
+        $region = $demo->region($field);
+        $isPublicDemo = $region !== null;
         $field = $isPublicDemo ? $demo->prepare($field) : $field;
 
         if ($field->status !== Field::STATUS_READY) {
@@ -50,7 +51,7 @@ class FieldAskController extends Controller
         $payload = AnalysisPayload::for($field);
         try {
             $analysis = $isPublicDemo
-                ? $demo->baseline()
+                ? $demo->baseline($region)
                 : Cache::remember(GeoServiceClient::analysisCacheKey($payload), now()->addMinutes(10), fn () => $geo->analysis($payload));
         } catch (RuntimeException $e) {
             return response()->json([

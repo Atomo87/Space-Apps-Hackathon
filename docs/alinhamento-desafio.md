@@ -1,73 +1,73 @@
-# Alinhamento com o desafio — NASA Space Apps 2026
+# NASA Space Apps 2026 challenge alignment
 
-Para cada pedido do desafio *"Virada no Campo: adaptando fazendas com dados da NASA"*, este documento mostra **onde** o GeoSafra o atende. Também lista o que ainda **não** foi feito, para a equipe falar disso com honestidade na apresentação.
+This document maps each requirement in the *“Turning the Tables on Farming: Adapting Farms with NASA Data”* challenge to the corresponding GeoSafra feature. It also identifies remaining work so the team can present the project accurately.
 
-Legenda: ✅ atendido · 🟡 parcial · ⏭️ próxima fase
+Status key. ✅ Complete · 🟡 Partial · ⏭️ Planned
 
-## Objetivo central
+## Core objective
 
-| Pedido | Status | Onde |
+| Requirement | Status | Where to find it |
 |---|---|---|
-| Ferramenta de apoio à decisão que combina observações da NASA com solo local, características das culturas e prioridades do produtor | ✅ | Cadastro do talhão (`Fields/Form.vue`): solo, histórico, prioridades e restrições · motor `geo-service/app/engine/` |
-| Ajudar a explorar rotações que melhorem a saúde do solo e a resiliência ao clima e à água | ✅ | Aba **Comparar**, com 10 critérios ([motor.md](motor.md)) |
-| Comparar **pelo menos três estratégias, incluindo a atual** | ✅ | Estratégia A (atual) + até 3 alternativas com diversidade garantida (Jaccard) |
-| Para cada estratégia: **por que** foi sugerida, **evidências**, **benefícios**, **lacunas de informação** e **riscos para revisão local** | ✅ | `StrategyCard.vue`: `rationale`, `evidences` (com dataset e período), `benefits`, `information_gaps`, `local_review_risks`, `conflicts` |
-| Apoiar, **sem substituir**, o julgamento do agricultor | ✅ | Aviso fixo em todas as análises, aceite no cadastro da conta, seção "Onde o seu julgamento é essencial", selo de baixa confiança e feedback "faz sentido / precisa de ajuste" |
+| A decision-support tool that combines NASA observations with local soil data, crop characteristics, and grower priorities | ✅ | The field form (`Fields/Form.vue`) captures soil, crop history, priorities, and constraints. The engine is in `geo-service/app/engine/`. |
+| Explore rotations that improve soil health and resilience to climate and water stress | ✅ | The **Compare** tab uses 10 criteria ([rotation engine](motor.md)). |
+| Compare **at least three strategies, including the current rotation** | ✅ | Strategy A is the current rotation. Up to three alternatives are selected using a Jaccard similarity rule to preserve diversity. |
+| For every strategy, explain **why** it was suggested and show **evidence**, **benefits**, **information gaps**, and **risks to review locally** | ✅ | `StrategyCard.vue` uses `rationale`, `evidences` (with dataset and period), `benefits`, `information_gaps`, `local_review_risks`, and `conflicts`. |
+| Support grower judgment | ✅ | Every analysis displays a disclaimer. Account registration includes an acknowledgment. The tool also provides a “Where your judgment matters most” section, a low-confidence badge, and “Makes sense” and “Needs adjustment” feedback. |
 
-## Dados da NASA
+## NASA data
 
-| Conjunto | Status | Uso |
+| Dataset | Status | Use |
 |---|---|---|
-| **NASA POWER** (diário, 2005–2025) | ✅ | Temperatura, chuva, umidade, vento, radiação, pressão e umidade do solo (GWETROOT/GWETTOP) → ETo FAO-56, balanço hídrico, veranicos, geada, calor, chuva extrema, tendências |
-| **SRTM** (elevação, ~30 m) | ✅ | Declividade do talhão, classe de relevo (Embrapa) e fator LS da RUSLE no risco de erosão (`geo-service/app/terrain/`) |
-| **MODIS** (NDVI MOD13Q1/MYD13Q1 v061, 250 m, 16 dias, últimos 5 anos) | ✅ | Cobertura verde mês a mês (P10/P50/P90), meses com pouco verde cruzados com o solo descoberto informado, imagem recente versus o normal e tendência (`geo-service/app/vegetation/`). Lido pelo espelho público da NASA LP DAAC no Microsoft Planetary Computer. Entra no diagnóstico, nas evidências e nas lacunas, **não na nota** |
-| **HLS** v2.0 (Landsat 8/9 + Sentinel-2, NDVI 30 m, últimos 2 anos) | ✅ | Verde na escala do talhão, imagem a imagem (máscara Fmask de nuvem/sombra). Vira a referência do calendário e do diagnóstico quando cobre ≥ 10 meses; senão vale o MODIS |
-| **MODIS LST** (MOD11A2, temperatura da superfície, 1 km, 8 dias, 3 anos) | ✅ | Linha "Chão quente" no calendário e comparação superfície × máxima do ar (POWER): sinal de solo exposto ou planta sem água. Complementa o ECOSTRESS: cobre todos os meses na escala de 1 km, enquanto o ECOSTRESS mede o estresse a 70 m só nas passagens sem nuvem |
-| **MODIS ET/PET** (MOD16A3GF, 500 m, anual, 5 anos) | ✅ | Razão evapotranspiração real/potencial = estresse hídrico observado (baixo/moderado/alto), nas evidências de todas as estratégias |
-| **SMAP** (SPL3SMP_E, umidade do solo 9 km, 2 anos) | ✅ | Linha "Solo seco" no calendário (secura relativa ao próprio solo), último mês contra o normal (`geo-service/app/earthdata/`, OPeNDAP Earthdata Cloud) |
-| **ECOSTRESS** (ECO_L4T_ESI, 70 m, 2 anos) | ✅ | Índice de estresse evaporativo no próprio talhão, passagem a passagem (só sem nuvem), nas evidências |
-| **GRACE/GRACE-FO** (mascons JPL RL06.3 v04, desde 2002) | ✅ | Água total armazenada na região e tendência (Sen + Mann-Kendall); alerta quando a região perde água |
-| **GPM IMERG** (chuva mensal 0,1°, desde 2016) | ✅ | Chuva medida por satélite comparada com a do POWER (no exemplo: GPM 1.449 mm × POWER 1.106 mm/ano → alerta para conferir com o pluviômetro) e últimos 12 meses contra a média. Exige que a conta Earthdata tenha aceitado o EULA da GES DISC |
+| **NASA POWER** (daily, 2005–2025) | ✅ | Temperature, precipitation, humidity, wind, radiation, pressure, and soil moisture (GWETROOT/GWETTOP) support FAO-56 ETo, water balance, dry spell, frost, heat, extreme rainfall, and trend calculations. |
+| **SRTM** (elevation, ~30 m) | ✅ | Field slope, Embrapa terrain class, and the RUSLE LS factor for erosion risk (`geo-service/app/terrain/`). |
+| **MODIS** (NDVI MOD13Q1/MYD13Q1 v061, 250 m, 16-day composites, past 5 years) | ✅ | Monthly vegetation cover (P10/P50/P90), low-greenness months compared with bare soil from crop history, and recent imagery compared with typical conditions and trends (`geo-service/app/vegetation/`). Reads NASA LP DAAC data through its public Microsoft Planetary Computer mirror. This dataset informs diagnosis, evidence, and information gaps. Strategy scores are independent of it. |
+| **HLS** v2.0 (Landsat 8/9 + Sentinel-2, 30 m NDVI, past 2 years) | ✅ | Field-scale greenness per image, with cloud and shadow screening by Fmask. The calendar and diagnosis use HLS when it covers ≥ 10 months, with MODIS as the fallback. |
+| **MODIS LST** (MOD11A2, land surface temperature, 1 km, 8-day composites, 3 years) | ✅ | The calendar highlights hot surfaces. It compares land surface temperature with maximum air temperature from POWER as a potential sign of bare soil or water stress. MODIS covers all months at 1 km and complements 70 m ECOSTRESS observations from cloud-free overpasses. |
+| **MODIS ET/PET** (MOD16A3GF, 500 m, annual, 5 years) | ✅ | The ratio of actual to potential evapotranspiration describes observed water stress (low, moderate, or high) in the evidence for all strategies. |
+| **SMAP** (SPL3SMP_E, 9 km soil moisture, 2 years) | ✅ | The “Dry soil” row shows conditions relative to the site’s typical soil moisture. The diagnosis also compares the latest month with typical conditions (`geo-service/app/earthdata/`, Earthdata Cloud OPeNDAP). |
+| **ECOSTRESS** (ECO_L4T_ESI, 70 m, 2 years) | ✅ | The evidence includes the field-scale evaporative stress index for each cloud-free overpass. |
+| **GRACE/GRACE-FO** (JPL RL06.3 v04 mascons, since 2002) | ✅ | Tracks total regional water storage and its trend using Sen’s slope and the Mann–Kendall test. Warns when water storage is declining. |
+| **GPM IMERG** (monthly precipitation, 0.1°, since 2016) | ✅ | Compares satellite precipitation with POWER. The example shows 1,449 mm/year from GPM and 1,106 mm/year from POWER, which prompts a check against the farm’s rain gauge. It also compares the past 12 months with the long-term mean. The Earthdata account must accept the GES DISC EULA. |
 
-## Condições e dados
+## Conditions and data
 
-| Pedido | Status | Onde |
+| Requirement | Status | Where to find it |
 |---|---|---|
-| Relacionar temperatura, umidade do solo, chuva, evaporação e estresse com a vulnerabilidade das culturas | ✅ | Calendário de vulnerabilidade e "Quando a sua lavoura atual fica mais exposta" |
-| Explicar termos científicos (evapotranspiração, anomalia de umidade, NDVI, geada, balanço hídrico) | ✅ | Glossário com ícones "?" em toda a interface (`database/data/glossary.php`), mais de 25 termos |
-| Explicar a diferença entre satélite e medição de campo, e como combinar as duas | ✅ | Página **Como funciona**, seção 2. A confiança sobe quando o produtor informa análise de solo e mercado |
+| Relate temperature, soil moisture, rainfall, evaporation, and stress to crop vulnerability | ✅ | The vulnerability calendar and “When your current crop is most exposed.” |
+| Explain scientific terms such as evapotranspiration, moisture anomaly, NDVI, frost, and water balance | ✅ | Question-mark icons throughout the interface open a glossary with more than 25 terms (`database/data/glossary.php`). |
+| Explain how satellite observations differ from field measurements and how to combine them | ✅ | Section 2 of **How it works**. Confidence increases when growers provide soil test and market data. |
 
-## Modelagem e incerteza
+## Modeling and uncertainty
 
-| Pedido | Status | Onde |
+| Requirement | Status | Where to find it |
 |---|---|---|
-| Abordagens estatísticas para padrões históricos | ✅ | Percentis P10/P50/P90, Mann-Kendall e Sen's slope, anomalia dos últimos 3 anos |
-| Destacar transições sazonais, solo descoberto e meses de estresse | ✅ | Calendário mensal com níveis 0/1/2 de calor, geada, seca, chuva forte, solo descoberto (histórico), pouco verde (HLS/MODIS) e chão quente (MODIS LST) + cards de NDVI e de calor/água observados |
-| Explicar como o modelo trata a incerteza e onde validar localmente | ✅ | Confiança por critério e por estratégia, faixa de nota entre anos secos e chuvosos, lacunas declaradas |
-| Por que não há "IA caixa-preta" na escolha | ✅ | Decisão nº 5 do README: o motor é de regras + multicritério, e toda nota é rastreável até um dado e uma regra |
-| Harmonizar datasets de resoluções diferentes numa grade comum | 🟡 | Clima, relevo e vegetação são combinados no nível do talhão (ponto POWER ~50 km + grade SRTM 30 m + pixels HLS 30 m, MODIS 250 m/500 m/1 km), sem reamostragem raster |
+| Use statistics to describe historical patterns | ✅ | P10/P50/P90 percentiles, the Mann–Kendall test and Sen’s slope, and anomalies over the latest 3 years. |
+| Highlight seasonal transitions, bare soil, and months of stress | ✅ | The monthly calendar ranks heat, frost, drought, heavy rainfall, bare soil (crop history), low greenness (HLS/MODIS), and hot surfaces (MODIS LST) at levels 0/1/2. Cards show NDVI and observed heat and water stress. |
+| Explain how the model handles uncertainty and where local validation is needed | ✅ | Confidence by criterion and strategy, score ranges across dry and wet years, and documented information gaps. |
+| Explain how the ranking can be audited | ✅ | README decision 5. The engine combines rules and multiple criteria, and every score is traceable to its data and rule. |
+| Harmonize datasets at different resolutions on a common grid | 🟡 | The tool combines climate, terrain, and vegetation at the field level, using a POWER grid point (~50 km), a 30 m SRTM grid, 30 m HLS pixels, and MODIS pixels at 250 m, 500 m, and 1 km. Raster resampling is still pending. |
 
-## Estratégias de rotação
+## Rotation strategies
 
-| Pedido | Status | Onde |
+| Requirement | Status | Where to find it |
 |---|---|---|
-| Ciclagem de nutrientes, erosão, matéria orgânica, pragas, uso de água, forragem, mercado | ✅ | 9 critérios ajustáveis + segurança climática |
-| Alinhar as ideias às prioridades do agricultor | ✅ | Estrelas de 0 a 5 por critério; o ranking muda na hora |
-| Explicar fixadoras de N, plantas de cobertura, raízes profundas e tolerantes à seca | ✅ | Termos `fixacao`, `cobertura`, `raiz` e `tolerante_seca` no glossário + explicação de cada critério |
+| Cover nutrient cycling, erosion, organic matter, pests, water use, forage, and markets | ✅ | Nine adjustable criteria plus climate resilience. |
+| Align options with grower priorities | ✅ | Set each criterion to 0–5 stars. The ranking updates when the weights change. |
+| Explain nitrogen-fixing crops, cover crops, deep roots, and drought-tolerant crops | ✅ | Glossary keys `fixacao`, `cobertura`, `raiz`, and `tolerante_seca`, plus explanations for each criterion. |
 
-## Mapas e visualização
+## Maps and visualization
 
-| Pedido | Status | Onde |
+| Requirement | Status | Where to find it |
 |---|---|---|
-| Mapa interativo do talhão | ✅ | `MapPicker.vue` (MapLibre + imagem de satélite): desenho do contorno e cálculo da área |
-| Vulnerabilidades no nível do talhão (erosão, estresse hídrico, geada) | 🟡 | Calendário mensal + card de **relevo** (declividade, classe, fator LS). Ainda não há mapa de zonas dentro do talhão |
-| Linhas do tempo e controles de cenário (chuva/temperatura) | ✅ | Gráficos de séries anuais e aba **E se…?** (chuva −40% a +20%, temperatura +0 a +3 °C) |
+| Interactive field map | ✅ | `MapPicker.vue` (MapLibre and satellite imagery) supports boundary drawing and area calculation. |
+| Field-level vulnerabilities such as erosion, water stress, and frost | 🟡 | The monthly calendar and **terrain** card show slope, terrain class, and the LS factor. Maps of zones within the field are still pending. |
+| Timelines and scenario controls for rainfall and temperature | ✅ | Annual time-series charts and the **What if?** tab (rainfall −40% to +20%, temperature +0 to +3 °C). |
 
-## Design centrado no agricultor
+## Grower-centered design
 
-| Pedido | Status | Onde |
+| Requirement | Status | Where to find it |
 |---|---|---|
-| Fácil para quem tem pouca experiência técnica | ✅ | Linguagem simples, ícones, celular primeiro, gráficos carregados depois do resumo (conexão fraca) |
-| Informar prioridades e restrições (água, equipamento, mercado) | ✅ | Irrigação (mm/dia), equipamentos que faltam, culturas excluídas, com comprador e sem comprador |
-| Lembretes de que a ferramenta apoia e não substitui | ✅ | Aviso no rodapé, na comparação e no cadastro da conta |
-| Dados do produtor protegidos | ✅ | Conta com login; cada usuário vê só os próprios talhões; exclusão a qualquer momento (LGPD); exemplo público somente leitura |
+| Accessible to people with limited technical experience | ✅ | Plain language, icons, and a mobile-first layout. Charts load after the summary to accommodate slow connections. |
+| Capture priorities and constraints such as water, equipment, and markets | ✅ | Record irrigation (mm/day), unavailable equipment, excluded crops, and crops with or without known buyers. |
+| Remind users that the tool supports grower judgment | ✅ | The footer, comparison, and account registration display a disclaimer. |
+| Protect grower data | ✅ | Account sign-in restricts users to their own fields. Users can delete their fields at any time under Brazil’s LGPD. The public example is read-only. |
