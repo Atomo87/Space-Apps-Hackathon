@@ -60,3 +60,17 @@ it('retoma sozinho um processamento interrompido, sem refazer as etapas já grav
     Http::assertNotSent(fn ($r) => str_ends_with($r->url(), '/v1/climate-profile') || str_ends_with($r->url(), '/v1/terrain'));
     Http::assertSent(fn ($r) => str_ends_with($r->url(), '/v1/vegetation'));
 });
+
+it('não deixa o talhão parado em "pending" quando a retomada encontra a trava ainda presa', function () {
+    $field = resumeField();
+    $field->update(['status' => Field::STATUS_PROCESSING, 'status_message' => AnalyzeFieldJob::STEPS['earthdata'][0]]);
+    Field::whereKey($field->id)->update(['updated_at' => now()->subMinutes(10)]);
+    $held = cache()->lock("field-process-{$field->id}", 600);
+    $held->get(); // o processamento antigo ainda segura a trava
+
+    $this->getJson("/api/v1/fields/{$field->id}/status")->assertOk()->assertJson(['status' => 'processing']);
+    expect($field->refresh()->status)->toBe('processing')
+        ->and(cache()->get("field-resumes-{$field->id}", 0))->toBe(0); // tentativa sem efeito não gasta retomada
+
+    $held->release();
+});

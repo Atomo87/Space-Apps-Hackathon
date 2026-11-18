@@ -67,9 +67,12 @@ class FieldProcessController extends Controller
         $key = "field-resumes-{$field->id}";
         $resumes = (int) Cache::get($key, 0);
         if ($resumes < self::MAX_RESUMES) {
-            Cache::put($key, $resumes + 1, now()->addHours(3));
-            $field->update(['status' => Field::STATUS_PENDING]);
-            $processor->start($field, 'Retomando de onde parou…');
+            // Só conta a retomada se ela de fato começou. Com a trava ainda presa (processo antigo vivo ou
+            // morto sem liberar), o talhão continua "processing" e a próxima consulta tenta de novo,
+            // em vez de ficar parado em "pending".
+            if ($processor->start($field, 'Retomando de onde parou…')) {
+                Cache::put($key, $resumes + 1, now()->addHours(3));
+            }
 
             return;
         }
