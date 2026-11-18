@@ -25,6 +25,17 @@ it('mostra andamento e tempo gravados no servidor enquanto processa', function (
         ->assertJsonPath('elapsed_s', fn ($s) => $s >= 90 && $s < 100);
 });
 
+it('mostra a etapa do processamento no idioma escolhido', function () {
+    $field = resumeField();
+    $field->update(['status' => Field::STATUS_PROCESSING, 'status_message' => AnalyzeFieldJob::STEPS['earthdata'][0]]);
+    $path = "/api/v1/fields/{$field->id}/status";
+
+    $this->getJson($path)->assertJson(['message' => 'Reading SMAP, GPM, ECOSTRESS and GRACE-FO (NASA Earthdata)…', 'progress' => 68]);
+    $this->get("/talhoes/{$field->id}")->assertInertia(fn ($page) => $page->where('field.status_message', 'Reading SMAP, GPM, ECOSTRESS and GRACE-FO (NASA Earthdata)…'));
+    $this->withCredentials()->withUnencryptedCookie('geosafra_locale', 'pt-BR')->getJson($path)
+        ->assertJson(['message' => 'Lendo SMAP, GPM, ECOSTRESS e GRACE-FO (NASA Earthdata)…', 'progress' => 68]);
+});
+
 it('retoma sozinho um processamento interrompido, sem refazer as etapas já gravadas', function () {
     Http::fake([
         'geo.test/v1/climate-profile' => Http::response(['monthly' => [], 'source' => [], 'engine_version' => 'test']),

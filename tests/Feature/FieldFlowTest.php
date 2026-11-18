@@ -190,5 +190,6 @@ it('depois de retomar sem sucesso, libera o "Tentar de novo" (servidor matou o P
     $this->getJson("/api/v1/fields/{$field->id}/status")
         ->assertOk()
         ->assertJson(['status' => 'error'])
-        ->assertJsonPath('message', fn ($m) => str_contains($m, 'interrompido'));
+        ->assertJsonPath('message', fn ($m) => str_contains($m, 'interrupted'));
+    expect($field->refresh()->status_message)->toContain('interrompido'); // gravada em português, traduzida na saída
 });

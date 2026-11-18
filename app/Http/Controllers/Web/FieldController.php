@@ -92,7 +92,7 @@ class FieldController extends Controller
                     'min_years' => Field::POWER_MIN_YEARS,
                 ],
                 'status' => $field->status,
-                'status_message' => $field->status_message,
+                'status_message' => $field->status_message !== null ? __($field->status_message) : null,
                 'is_demo' => $field->farm->is_demo,
                 'is_public_demo' => $isPublicDemo,
                 'demo_region' => $region,

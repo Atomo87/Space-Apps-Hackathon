@@ -88,7 +88,8 @@ class FieldProcessController extends Controller
         return [
             'id' => $field->id,
             'status' => $field->status,
-            'message' => $field->status_message,
+            // Gravada em português (chave estável do progresso); traduzida na saída conforme o idioma.
+            'message' => $field->status_message !== null ? __($field->status_message) : null,
             'analyzed_at' => $field->analyzed_at?->toIso8601String(),
             // Andamento gravado no servidor: a tela retoma de onde estava ao voltar.
             'progress' => $processing ? AnalyzeFieldJob::progressFor($field->status_message) : null,
